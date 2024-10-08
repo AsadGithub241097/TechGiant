@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 # TechGiant
-
-Here’s a sample README.md file text for a project using React, TypeScript, Tailwind CSS, and Vite:
-
-Project Name
 A modern web application built with React, TypeScript, Tailwind CSS, and Vite.
 
 Table of Contents
@@ -14,8 +9,8 @@ Getting Started
 Available Scripts
 Project Structure
 Contributing
-License
-Features
+
+# Features
 ⚡ Fast development using Vite
 🏗️ TypeScript for type safety and better code maintenance
 💅 Tailwind CSS for rapid UI development
@@ -27,46 +22,35 @@ Language: TypeScript
 CSS Framework: Tailwind CSS
 Build Tool: Vite
 Prerequisites
-Node.js >= 14
-npm or yarn
+Node.js : 21.9.0
+yarn
 Getting Started
 Clone the repository:
 
-bash
+# bash
 Copy code
 git clone https://github.com/your-username/project-name.git
 Navigate to the project directory:
 
-bash
+# bash
 Copy code
 cd project-name
 Install dependencies:
 
-Using npm:
-
-bash
-Copy code
-npm install
-Using yarn:
-
+# Using yarn:
 bash
 Copy code
 yarn install
 Run the development server:
 
-Using npm:
 
-bash
-Copy code
-npm run dev
-Using yarn:
-
+# Using yarn:
 bash
 Copy code
 yarn dev
 The application will start at http://localhost:3000.
 
-Available Scripts
+# Available Scripts
 dev: Starts the development server with hot-reloading.
 build: Builds the application for production.
 serve: Serves the production build.
