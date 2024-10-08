@@ -29,7 +29,7 @@ Clone the repository:
 
 # bash
 Copy code
-git clone https://github.com/your-username/project-name.git
+git clone git@github.com:AsadGithub241097/TechGiant.git
 Navigate to the project directory:
 
 # bash
