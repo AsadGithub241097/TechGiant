@@ -1,13 +1,7 @@
 import React from "react";
-import testLogo from "../../assets/logo.svg";
-import axis from "../../assets/ourPartners/axis.svg";
-import falahzar from "../../assets/ourPartners/falahzar.png";
-import imflux from "../../assets/ourPartners/imflux.png";
-import istaff from "../../assets/ourPartners/iStaff.png";
-import forest from "../../assets/ourPartners/forest.webp";
-import keycube from "../../assets/ourPartners/keycube.png";
+import { IMAGE_URLS } from "../../constants/mediaUrls";
 
-const images = [testLogo, axis, falahzar, imflux, istaff, forest, keycube];
+const images = [IMAGE_URLS.logo, IMAGE_URLS.partners.axis, IMAGE_URLS.partners.falahzar, IMAGE_URLS.partners.imflux, IMAGE_URLS.partners.iStaff, IMAGE_URLS.partners.forest, IMAGE_URLS.partners.keyCube];
 
 const SliderRow: React.FC<{ reverse?: boolean }> = ({ reverse }) => {
   const animationClass = reverse ? "animate-scrollReverse" : "animate-scroll";

@@ -8,11 +8,8 @@ import React, {
   useMemo,
 } from "react";
 import { gsap } from "gsap";
+import { IMAGE_URLS } from '../../constants/mediaUrls';
 import "tailwindcss/tailwind.css";
-import innovationSvg from "../../assets/svg/innovation.svg";
-import qualitySvg from "../../assets/svg/quality.svg";
-import centricSvg from "../../assets/svg/centric.svg";
-import reliabilitySvg from "../../assets/svg/reliability.svg";
 
 interface CardProps {
   title: string;
@@ -95,22 +92,22 @@ const Gallery: React.FC = memo(() => {
       {
         title: "Innovation",
         description: `We embrace the latest technologies and industry trends to develop cutting-edge software solutions. Our commitment to innovation drives us to continuously explore new possibilities, ensuring that we stay ahead in a rapidly evolving digital landscape.`,
-        svg: innovationSvg,
+        svg: IMAGE_URLS.icons.innovation,
       },
       {
         title: "Quality",
         description: `Delivering excellence is at the core of what we do. We follow rigorous testing, coding standards, and best practices to ensure that every solution we create meets the highest standards of performance, reliability, and security.`,
-        svg: qualitySvg,
+        svg: IMAGE_URLS.icons.quality,
       },
       {
         title: "Centric Approach",
         description: `Our success is measured by our clients' success. We take the time to understand their unique challenges and business goals, tailoring our solutions to deliver maximum impact and value for their business.`,
-        svg: centricSvg,
+        svg: IMAGE_URLS.icons.centric,
       },
       {
         title: "Reliability",
         description: `Trust and dependability define our work. We ensure our solutions are robust, scalable, and future-proof, providing ongoing support and maintenance to guarantee optimal performance and longevity.`,
-        svg: reliabilitySvg,
+        svg: IMAGE_URLS.icons.reliability,
       },
     ],
     []
@@ -283,22 +280,21 @@ const Gallery: React.FC = memo(() => {
     ));
   }, [cardsData, currentIndex]);
 
-  const isFirstCard = currentIndex === 0;
-  const isLastCard = currentIndex === cardsData.length - 1;
   useEffect(() => {
     const autoAdvance = setTimeout(() => {
-      if (!isLastCard && !isAnimating) {
+      if (!isAnimating) {
         handleNext();
       }
     }, 8000);
 
     return () => clearTimeout(autoAdvance);
-  }, [currentIndex, isLastCard, handleNext, isAnimating]);
+  }, [currentIndex, handleNext, isAnimating]);
 
   return (
     <div
       ref={galleryRef}
-      className="relative w-full overflow-hidden flex flex-col items-center justify-center bg-bgColor h-screen bg-[url('/Users/asad.mulla/Documents/TechGiant/TechGiant/techgiantweb/src/assets/liquid.jpg')] bg-fixed transition-all bg-cover"
+      className="relative w-full overflow-hidden flex flex-col items-center justify-center bg-bgColor h-screen bg-fixed transition-all bg-cover"
+      style={{backgroundImage: `url(${IMAGE_URLS.liquid})`}}
     >
       <div className="absolute inset-0 z-0 opacity-20 h-screen">
         {/* <div className="absolute w-96 h-96 -top-48 -left-48 bg-purple-600 rounded-full filter blur-3xl opacity-20 animate-pulse"></div> */}
@@ -320,8 +316,8 @@ const Gallery: React.FC = memo(() => {
         <div className="relative w-full h-96 md:h-[30rem] lg:h-[35rem] mt-4 mb-16">
           <button
             onClick={handlePrev}
-            disabled={isFirstCard || isAnimating}
-            className={`absolute left-0 top-1/2 transform -translate-y-1/2 z-20 p-3 rounded-full bg-black bg-opacity-50 hover:bg-opacity-70 transition-all duration-300 ${isFirstCard || isAnimating
+            disabled={isAnimating}
+            className={`absolute left-0 top-1/2 transform -translate-y-1/2 z-20 p-3 rounded-full bg-black bg-opacity-50 hover:bg-opacity-70 transition-all duration-300 ${isAnimating
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:shadow-lg"
               }`}
@@ -351,8 +347,8 @@ const Gallery: React.FC = memo(() => {
           </ul>
           <button
             onClick={handleNext}
-            disabled={isLastCard || isAnimating}
-            className={`absolute right-0 top-1/2 transform -translate-y-1/2 z-20 p-3 rounded-full bg-black bg-opacity-50 hover:bg-opacity-70 transition-all duration-300 ${isLastCard || isAnimating
+            disabled={isAnimating}
+            className={`absolute right-0 top-1/2 transform -translate-y-1/2 z-20 p-3 rounded-full bg-black bg-opacity-50 hover:bg-opacity-70 transition-all duration-300 ${isAnimating
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:shadow-lg"
               }`}

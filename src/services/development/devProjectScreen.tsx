@@ -1,5 +1,5 @@
 import React from "react";
-import LaptopScreen from "../../assets/laptopScreen.png";
+import { IMAGE_URLS } from "../../constants/mediaUrls";
 
 interface DevProjectScreenProps {
   src: string;
@@ -11,7 +11,7 @@ const DevProjectScreen: React.FC<DevProjectScreenProps> = ({ src }) => {
       <div className="relative w-[800px] h-auto">
         {/* Laptop Image */}
         <img
-          src={LaptopScreen}
+          src={IMAGE_URLS.laptopScreen}
           alt="Laptop"
           className="w-full h-full object-contain"
         />

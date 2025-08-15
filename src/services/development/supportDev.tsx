@@ -1,18 +1,13 @@
-import falazar from "../../assets/ourPartners/falahzar.png";
-import forest from "../../assets/ourPartners/forest.webp";
-import influx from "../../assets/ourPartners/imflux.png";
-import istaff from "../../assets/ourPartners/iStaff.png";
-import keycube from "../../assets/ourPartners/Keycube.png";
-import prayas from "../../assets/ourPartners/Prayas.png";
+import { IMAGE_URLS } from "../../constants/mediaUrls";
 
 const SupportDev = () => {
   const clients = [
-    { id: 1, logo: falazar, alt: "UBS" },
-    { id: 2, logo: forest, alt: "Babbel" },
-    { id: 3, logo: influx, alt: "Solaris" },
-    { id: 4, logo: istaff, alt: "Moonfare" },
-    { id: 5, logo: keycube, alt: "KW" },
-    { id: 6, logo: prayas, alt: "Merck" },
+    { id: 1, logo: IMAGE_URLS.partners.falahzar, alt: "UBS" },
+    { id: 2, logo: IMAGE_URLS.partners.forest, alt: "Babbel" },
+    { id: 3, logo: IMAGE_URLS.partners.imflux, alt: "Solaris" },
+    { id: 4, logo: IMAGE_URLS.partners.iStaff, alt: "Moonfare" },
+    { id: 5, logo: IMAGE_URLS.partners.keyCube, alt: "KW" },
+    { id: 6, logo: IMAGE_URLS.partners.prayas, alt: "Merck" },
   ];
 
   return (

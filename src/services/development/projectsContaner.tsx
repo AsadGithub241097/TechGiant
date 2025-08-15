@@ -1,9 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import DevProjectScreen from "../development/devProjectScreen";
-import ForestHerbs from "../../assets/forestHearbs.mp4";
-import Falahzar from "../../assets/falahzar.mp4";
-import Influx from "../../assets/influx1.mp4";
-import PrayasVid from "../../assets/Prayas.mp4";
+import { VIDEO_URLS } from "../../constants/mediaUrls";
 
 // Reusable section component
 interface ProjectSectionProps {
@@ -97,7 +94,7 @@ const ProjectsContaner = () => {
       <ProjectSection
         title="Interactive app development of Forest Herbs"
         description="At Tech Giant, we take pride in creating ventures that promote holistic well-being, and The Forest Herbs is a testament to that vision. This initiative is dedicated to delivering 100% pure, chemical-free, and preservative-free natural products, crafted with utmost care to preserve nature’s authenticity."
-        videoSrc={ForestHerbs}
+        videoSrc={VIDEO_URLS.forestHearbs}
         reverse={false} // text left, video right
         href="https://theforestherbs.com/"
         directProjectLink="Forest Herbs"
@@ -106,7 +103,7 @@ const ProjectsContaner = () => {
       <ProjectSection
         title="Falahzar – Elevating Everyday Retail Experiences"
         description="At Tech Giant, we believe in creating ventures that elevate everyday experiences, and Falahzar stands as a shining example of our commitment to quality, diversity, and customer satisfaction. Launched on 07-09-2023, Falahzar has quickly emerged as a trusted name in the retail industry, offering a curated selection of high-quality products paired with exceptional service."
-        videoSrc={Falahzar}
+        videoSrc={VIDEO_URLS.falahzar}
         reverse={true}
         href="https://falahzar.com/"
         directProjectLink="Falahzar"
@@ -115,7 +112,7 @@ const ProjectsContaner = () => {
 <ProjectSection
         title="Influx – Digital Growth, Redefined"
         description="Influx is a full-service digital agency dedicated to helping businesses thrive in the online landscape. From stunning web design to data-driven marketing strategies, we provide end-to-end digital solutions tailored to elevate brands, drive engagement, and maximize ROI."
-        videoSrc={Influx}
+        videoSrc={VIDEO_URLS.influx}
         reverse={false}
         href="https://www.influxmarketing.com/"
         directProjectLink="Influx Marketing"
@@ -124,7 +121,7 @@ const ProjectsContaner = () => {
 <ProjectSection
         title="Prayas Financial Services Pvt Ltd– Empowering Financial Inclusion"
         description="Prayas Financial Services Pvt Ltd (PFSPL) is a Reserve Bank of India (RBI)-registered Non-Banking Finance Company (NBFC – MFI) committed to fostering financial inclusion for underserved households and informal micro-enterprises. Incorporated on March 3, 2017, and commencing operations on February 6, 2020, PFSPL provides tailored financial solutions to help low-income individuals and micro-entrepreneurs achieve self-reliance and sustainable growth."
-        videoSrc={PrayasVid}
+        videoSrc={VIDEO_URLS.prayas}
         reverse={true}
         href="https://prayasfinance.com/"
         directProjectLink="Prayas"
