@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dashboard Colors */
+    --dashboard-sidebar-bg: #ffffff;
+    --dashboard-sidebar-text: #64748b;
+    --dashboard-sidebar-active: #3b82f6;
+    --dashboard-sidebar-active-bg: #eff6ff;
+    --dashboard-stats-bg: #ffffff;
+    
+    /* Base Colors */
+    --background: #f8fafc;
+    --foreground: #1e293b;
+    --card: #ffffff;
+    --card-foreground: #1e293b;
+    --popover: #ffffff;
+    --popover-foreground: #1e293b;
+    --primary: #3b82f6;
+    --primary-foreground: #ffffff;
+    --secondary: #f1f5f9;
+    --secondary-foreground: #475569;
+    --muted: #f1f5f9;
+    --muted-foreground: #64748b;
+    --accent: #f1f5f9;
+    --accent-foreground: #475569;
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+    --border: #e2e8f0;
+    --input: #e2e8f0;
+    --ring: #3b82f6;
+    
+    /* Shadows */
+    --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-soft: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+}
+
+/* LMS Header Hover Functionality */
+.lms-header-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease-in-out;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure LMS content is not hidden behind header */
+.lms-page-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Create hover zone at the top of the screen */
+.lms-header-container::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: transparent;
+}
+
+/* Show header on hover */
+.lms-header-container:hover {
+  transform: translateY(0);
+}
+
+/* Also show header when hovering near the top of the viewport */
+body:has(.lms-header-container) {
+  position: relative;
+}
+
+/* Alternative approach using a hover trigger zone */
+.lms-hover-trigger {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  z-index: 999;
+  background: transparent;
+}
+
+.lms-hover-trigger:hover + .lms-header-container {
+  transform: translateY(0);
+}
