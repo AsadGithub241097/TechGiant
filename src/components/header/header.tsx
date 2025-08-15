@@ -239,6 +239,11 @@ const Header: React.FC = () => {
                   Home
                 </Link>
               </li>
+              <li>
+                <Link to="/LMS" className="text-white hover:text-blue-600">
+                  LMS
+                </Link>
+              </li>
               <li
                 className="relative"
                 onMouseEnter={handleMouseEnter}
@@ -331,6 +336,14 @@ const Header: React.FC = () => {
                       className="block w-full text-left py-2 text-black rounded-sm hover:text-white hover:bg-navBg hover:rounded-xl pl-3 pr-3 hover:font-sans"
                     >
                       Home
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => handleMobileServiceClick("/LMS")}
+                      className="block w-full text-left py-2 text-black rounded-sm hover:text-white hover:bg-navBg hover:rounded-xl pl-3 pr-3 hover:font-sans"
+                    >
+                      LMS
                     </button>
                   </li>
                   <li className="relative">
