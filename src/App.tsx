@@ -11,6 +11,11 @@ const HomePage = lazy(() => import("./components/Home/homePage"));
 const VaptContaner = lazy(() => import("./services/vaptContanar"));
 const DevContaner = lazy(() => import("./services/development/devContaner"));
 const MarketingPage = lazy(() => import("./services/markating/markating"));
+const LMSDashboard = lazy(() => import("./components/LMS/Dashboard"));
+const Login = lazy(() => import("./components/auth/Login"));
+const CourseCategories = lazy(() => import("./components/courses/CourseCategories"));
+const CourseListing = lazy(() => import("./components/courses/CourseListing"));
+const CourseDetail = lazy(() => import("./components/courses/CourseDetail"));
 
 // Loading component
 const LoadingSpinner = () => (
@@ -32,19 +37,38 @@ function App() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [location.pathname]);
 
+  // Check if current path is LMS, Login, or Courses to conditionally render footer
+  const isLMSPage = location.pathname === '/LMS';
+  const isLoginPage = location.pathname === '/login';
+  const isCoursePage = location.pathname.startsWith('/course');
+
   return (
     <div className="bg-bgColor overflow-x-hidden">
-      <Header />
+      {/* Hover trigger zone for LMS page */}
+      {isLMSPage && <div className="lms-hover-trigger"></div>}
+      
+      {/* Header with conditional styling for LMS page */}
+      <div className={isLMSPage ? "lms-header-container" : ""}>
+        {!isLoginPage && !isCoursePage && <Header />}
+      </div>
+      
       <Suspense fallback={<LoadingSpinner />}>
-        <Routes key={location.pathname}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/Vapt" element={<VaptContaner />} />
-          <Route path="/Development" element={<DevContaner />} />
-          <Route path="/Marketing" element={<MarketingPage />} />
-        </Routes>
+        <div className={isLMSPage ? "lms-page-content" : ""}>
+          <Routes key={location.pathname}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/Vapt" element={<VaptContaner />} />
+            <Route path="/Development" element={<DevContaner />} />
+            <Route path="/Marketing" element={<MarketingPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/LMS" element={<LMSDashboard />} />
+            <Route path="/courses" element={<CourseCategories />} />
+            <Route path="/courses/:category" element={<CourseListing />} />
+            <Route path="/course/:courseId" element={<CourseDetail />} />
+          </Routes>
+        </div>
       </Suspense>
-      <ConnectWithUsSection />
-      <Footer />
+      {!isLMSPage && !isLoginPage && !isCoursePage && <ConnectWithUsSection />}
+      {!isLMSPage && !isLoginPage && !isCoursePage && <Footer />}
     </div>
   );
 }
