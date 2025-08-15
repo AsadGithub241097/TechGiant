@@ -21,12 +21,12 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+    <div className="flex h-screen bg-gray-50">
       <Sidebar activeItem={activeItem} onItemClick={handleSidebarItemClick} />
       
       <div className="flex-1 overflow-auto">
         {/* Header */}
-        <div style={{ background: 'rgba(255, 255, 255, 0.95)', padding: '20px', borderBottom: '1px solid rgba(255, 255, 255, 0.2)', backdropFilter: 'blur(10px)' }}>
+        <div style={{ background: 'white', padding: '20px', borderBottom: '1px solid #e2e8f0' }}>
           <h1 style={{ color: '#1e293b', fontSize: '24px', fontWeight: 'bold', margin: 0 }}>
             Hi Tarun, Welcome to Tech Giant LMS
           </h1>
@@ -36,23 +36,23 @@ const Dashboard = () => {
           {/* Stats and Discussion Row */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Learning Time Card */}
-            <div style={{ background: 'rgba(255, 255, 255, 0.1)', padding: '20px', borderRadius: '12px', boxShadow: '0 8px 32px rgba(0,0,0,0.1)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.2)' }}>
+            <div style={{ background: 'white', padding: '20px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', border: '1px solid #e2e8f0' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <Clock style={{ width: '24px', height: '24px', color: '#3b82f6' }} />
                 <div>
-                  <h3 style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px', margin: 0 }}>Learning Time</h3>
-                  <p style={{ color: 'white', fontSize: '20px', fontWeight: 'bold', margin: 0 }}>2h 37m</p>
+                  <h3 style={{ color: '#64748b', fontSize: '14px', margin: 0 }}>Learning Time</h3>
+                  <p style={{ color: '#1e293b', fontSize: '20px', fontWeight: 'bold', margin: 0 }}>2h 37m</p>
                 </div>
               </div>
             </div>
             
             {/* My Activities Card */}
-            <div style={{ background: 'rgba(255, 255, 255, 0.1)', padding: '20px', borderRadius: '12px', boxShadow: '0 8px 32px rgba(0,0,0,0.1)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 255, 255, 0.2)' }}>
+            <div style={{ background: 'white', padding: '20px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', border: '1px solid #e2e8f0' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <TrendingUp style={{ width: '24px', height: '24px', color: '#3b82f6' }} />
                 <div>
-                  <h3 style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px', margin: 0 }}>My Activities</h3>
-                  <p style={{ color: 'white', fontSize: '20px', fontWeight: 'bold', margin: 0 }}>21 Tasks</p>
+                  <h3 style={{ color: '#64748b', fontSize: '14px', margin: 0 }}>My Activities</h3>
+                  <p style={{ color: '#1e293b', fontSize: '20px', fontWeight: 'bold', margin: 0 }}>21 Tasks</p>
                 </div>
               </div>
             </div>
