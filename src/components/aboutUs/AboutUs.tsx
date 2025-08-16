@@ -9,19 +9,14 @@ import {
   Award, 
   Lightbulb, 
   Shield, 
-  Globe, 
-  Code, 
   TrendingUp,
   CheckCircle,
   Calendar,
-  MapPin,
-  Mail,
   Phone,
   Linkedin,
   Twitter,
   ArrowRight,
   ArrowLeft,
-  Star,
   Heart,
   Zap,
   Eye,
@@ -51,61 +46,68 @@ const AboutUs: React.FC = () => {
       icon: Lightbulb,
       title: "Innovation",
       description: "Pushing boundaries with cutting-edge technology solutions and creative problem-solving approaches.",
-      color: "from-yellow-400 to-orange-500"
+      color: "text-blue-400"
     },
     {
       icon: Shield,
       title: "Security First",
       description: "Prioritizing cybersecurity in every solution we deliver, ensuring robust protection for our clients.",
-      color: "from-blue-400 to-cyan-500"
+      color: "text-indigo-400"
     },
     {
       icon: Heart,
       title: "Client-Centric",
       description: "Building lasting partnerships through dedicated support and understanding client needs deeply.",
-      color: "from-pink-400 to-red-500"
+      color: "text-slate-400"
     },
     {
       icon: CheckCircle,
       title: "Quality Excellence",
       description: "Maintaining the highest standards in every project with rigorous testing and quality assurance.",
-      color: "from-green-400 to-emerald-500"
+      color: "text-gray-400"
     },
     {
       icon: Users,
       title: "Team Collaboration",
       description: "Fostering a collaborative environment where diverse talents unite to achieve exceptional results.",
-      color: "from-purple-400 to-indigo-500"
+      color: "text-zinc-400"
     },
     {
       icon: Zap,
       title: "Agile Delivery",
       description: "Implementing agile methodologies for faster, more efficient project delivery and adaptability.",
-      color: "from-orange-400 to-yellow-500"
+      color: "text-stone-400"
     }
   ];
 
   const teamMembers = [
     {
       name: "Ibrahim",
-      role: "Founder & CEO",
-      description: "Visionary leader with expertise in business strategy and technology innovation.",
+      role: "Co-Founder / CEO",
+      description: "Visionary leader with expertise in business strategy and technology innovation, driving Tech Giant's mission to empower businesses through digital transformation.",
       image: IMAGE_URLS.techGiantPng,
-      social: { linkedin: "#", twitter: "#" }
+      social: { linkedin: "https://www.linkedin.com/", twitter: "#" }
     },
     {
       name: "Sameer",
-      role: "Co-Founder & CTO",
-      description: "Technical architect driving our technology stack and development processes.",
+      role: "Co-Founder / CMO",
+      description: "Strategic marketing visionary leading our brand positioning and client relationship initiatives with a focus on sustainable business growth.",
       image: IMAGE_URLS.techGiantPng,
-      social: { linkedin: "#", twitter: "#" }
+      social: { linkedin: "https://www.linkedin.com/in/sameer-mohd-a50634a8/", twitter: "#" }
     },
     {
       name: "Asad",
-      role: "Lead Developer",
-      description: "Full-stack expert leading our development team with cutting-edge solutions.",
+      role: "CTO",
+      description: "Technical architect and full-stack expert leading our development team with cutting-edge solutions and innovative engineering practices.",
       image: IMAGE_URLS.techGiantPng,
-      social: { linkedin: "#", twitter: "#" }
+      social: { linkedin: "https://www.linkedin.com/in/asad-mulla-522aa815b/", twitter: "#" }
+    },
+    {
+      name: "Md. Shahraz Sarfaraz",
+      role: "CIO",
+      description: "Information systems strategist overseeing our technology infrastructure and digital operations to ensure optimal performance and security.",
+      image: IMAGE_URLS.techGiantPng,
+      social: { linkedin: "https://www.linkedin.com/in/shahraz-sarfaraz/", twitter: "#" }
     }
   ];
 
@@ -160,12 +162,12 @@ const AboutUs: React.FC = () => {
       className: "text-white"
     },
     {
-      text: "innovative",
-      className: "bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600"
+      text: "professional",
+      className: "text-blue-400"
     },
     {
       text: "technology",
-      className: "bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600"
+      className: "text-indigo-400"
     }
   ];
 
@@ -336,7 +338,7 @@ const AboutUs: React.FC = () => {
             transition={{ duration: 0.6 }}
           >
             <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-carousel2/20 to-carousel1/20 backdrop-blur-sm border border-carousel2/30 rounded-full px-6 py-3 mb-8">
-              <Building className="w-5 h-5 text-carousel2" />
+              <Building className="w-5 h-5 text-blue-400" />
               <span className="text-sm font-medium text-gray-300">About Tech Giant</span>
             </div>
           </motion.div>
@@ -358,11 +360,16 @@ const AboutUs: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            Founded by visionaries Ibrahim and Sameer, Tech Giant is a dynamic IT services company specializing in 
-            <span className="text-carousel2 font-semibold"> cybersecurity</span>, 
-            <span className="text-carousel3 font-semibold"> web development</span>, 
-            <span className="text-carousel1 font-semibold"> digital marketing</span>, and 
-            <span className="text-blue-400 font-semibold"> training & placement services</span>.
+            Founded by visionary leaders <br/>
+             Ibrahim (Co-Founder/CEO) and <br/>
+             Sameer (Co-Founder/CMO), and <br/>
+             Led by our technical team including Asad (CTO) and <br/>
+             Md. Shahraz Sarfaraz (CIO), <br/>
+             Tech Giant is a professional IT services company specializing in 
+            <span className="text-gray-300 font-medium">cybersecurity</span>, 
+            <span className="text-gray-300 font-medium">web development</span>, 
+            <span className="text-gray-300 font-medium">digital marketing</span>, and 
+            <span className="text-gray-300 font-medium">training & placement services</span>.
           </motion.p>
 
           <motion.div 
@@ -399,7 +406,7 @@ const AboutUs: React.FC = () => {
             <div className="space-y-8">
               <div className="story-element">
                 <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-carousel1/20 to-carousel3/20 backdrop-blur-sm border border-carousel1/30 rounded-full px-4 py-2 mb-6">
-                  <BookOpen className="w-4 h-4 text-carousel1" />
+                  <BookOpen className="w-4 h-4 text-indigo-400" />
                   <span className="text-sm font-medium text-gray-300">Our Story</span>
                 </div>
                 <h2 className="text-4xl lg:text-5xl font-bold mb-6">
@@ -412,28 +419,30 @@ const AboutUs: React.FC = () => {
 
               <div className="story-element space-y-6 text-lg text-gray-300 leading-relaxed">
                 <p>
-                  In 2020, two visionary entrepreneurs, <span className="text-carousel2 font-semibold">Ibrahim</span> and 
-                  <span className="text-carousel1 font-semibold"> Sameer</span>, recognized a critical gap in the market: 
+                  In 2020, two visionary entrepreneurs, <span className="text-blue-400 font-medium">Ibrahim (Co-Founder/CEO)</span> and 
+                  <span className="text-indigo-400 font-medium"> Sameer (Co-Founder/CMO)</span>, recognized a critical gap in the market: 
                   businesses struggling to navigate the complex digital landscape while maintaining robust security postures.
                 </p>
                 <p>
                   With their combined expertise in technology and business strategy, they founded Tech Giant with a clear mission: 
-                  to empower businesses with cutting-edge technology solutions while nurturing the next generation of IT talent.
+                  to empower businesses with cutting-edge technology solutions while nurturing the next generation of IT talent. 
+                  Soon joined by <span className="text-slate-400 font-medium">Asad (CTO)</span> and 
+                  <span className="text-gray-400 font-medium"> Md. Shahraz Sarfaraz (CIO)</span>, the leadership team was complete.
                 </p>
                 <p>
-                  Today, we've grown from a small startup to a trusted partner for <span className="text-carousel3 font-semibold">500+ clients</span>, 
+                  Today, we've grown from a small startup to a trusted partner for <span className="text-gray-300 font-medium">500+ clients</span>, 
                   delivering scalable digital solutions that drive real business results.
                 </p>
               </div>
 
               <div className="story-element grid grid-cols-2 gap-6">
-                <div className="p-6 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-2xl border border-carousel2/20 backdrop-blur-sm">
-                  <Crown className="w-8 h-8 text-carousel2 mb-4" />
+                <div className="p-6 bg-gray-800/70 rounded-2xl border border-gray-600/30 backdrop-blur-sm">
+                  <Crown className="w-8 h-8 text-blue-400 mb-4" />
                   <h3 className="text-xl font-bold text-white mb-2">Leadership</h3>
                   <p className="text-gray-400 text-sm">Experienced founders driving innovation and growth</p>
                 </div>
-                <div className="p-6 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-2xl border border-carousel1/20 backdrop-blur-sm">
-                  <Target className="w-8 h-8 text-carousel1 mb-4" />
+                <div className="p-6 bg-gray-800/70 rounded-2xl border border-gray-600/30 backdrop-blur-sm">
+                  <Target className="w-8 h-8 text-indigo-400 mb-4" />
                   <h3 className="text-xl font-bold text-white mb-2">Mission</h3>
                   <p className="text-gray-400 text-sm">Bridging technology gaps and empowering businesses</p>
                 </div>
@@ -442,12 +451,12 @@ const AboutUs: React.FC = () => {
 
             <div className="story-element">
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-carousel2/20 to-carousel1/20 rounded-3xl transform rotate-3"></div>
-                <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl p-8 border border-carousel2/30">
+                <div className="absolute inset-0 bg-gray-700/20 rounded-3xl transform rotate-3"></div>
+                <div className="relative bg-gray-800 rounded-3xl p-8 border border-gray-600/50">
                   <div className="space-y-6">
                     <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-carousel2 to-carousel1 rounded-full flex items-center justify-center">
-                        <Eye className="w-6 h-6 text-white" />
+                      <div className="w-12 h-12 bg-gray-700 border border-gray-600 rounded-full flex items-center justify-center">
+                        <Eye className="w-6 h-6 text-blue-400" />
                       </div>
                       <div>
                         <h3 className="text-xl font-bold text-white">Our Vision</h3>
@@ -462,11 +471,11 @@ const AboutUs: React.FC = () => {
                     
                     <div className="grid grid-cols-2 gap-4 pt-6 border-t border-gray-700">
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-carousel2">2020</div>
+                        <div className="text-2xl font-bold text-blue-400">2020</div>
                         <div className="text-sm text-gray-400">Founded</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-carousel1">India</div>
+                        <div className="text-2xl font-bold text-indigo-400">India</div>
                         <div className="text-sm text-gray-400">Headquartered</div>
                       </div>
                     </div>
@@ -485,7 +494,7 @@ const AboutUs: React.FC = () => {
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-carousel3/20 to-carousel2/20 backdrop-blur-sm border border-carousel3/30 rounded-full px-6 py-3 mb-8">
-              <Heart className="w-5 h-5 text-carousel3" />
+              <Heart className="w-5 h-5 text-slate-400" />
               <span className="text-sm font-medium text-gray-300">Our Values</span>
             </div>
             <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
@@ -509,12 +518,11 @@ const AboutUs: React.FC = () => {
                   whileHover={{ y: -5 }}
                 >
                   <div className="relative">
-                    <div className={`w-16 h-16 bg-gradient-to-br ${value.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 relative overflow-hidden`}>
-                      <IconComponent className="w-8 h-8 text-white relative z-10" />
-                      <div className="absolute inset-0 bg-white/20 rounded-2xl group-hover:bg-white/30 transition-colors duration-300"></div>
+                    <div className="w-16 h-16 bg-gray-700 border border-gray-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-gray-600 transition-all duration-300">
+                      <IconComponent className={`w-8 h-8 ${value.color} relative z-10`} />
                     </div>
                     
-                    <h3 className="text-xl font-bold text-white mb-4 group-hover:text-carousel2 transition-colors duration-300">
+                    <h3 className="text-xl font-bold text-white mb-4 group-hover:text-gray-200 transition-colors duration-300">
                       {value.title}
                     </h3>
                     
@@ -539,7 +547,7 @@ const AboutUs: React.FC = () => {
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-carousel1/20 to-carousel2/20 backdrop-blur-sm border border-carousel1/30 rounded-full px-6 py-3 mb-8">
-              <Users className="w-5 h-5 text-carousel1" />
+              <Users className="w-5 h-5 text-indigo-400" />
               <span className="text-sm font-medium text-gray-300">Our Leadership</span>
             </div>
             <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
@@ -553,7 +561,7 @@ const AboutUs: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {teamMembers.map((member, index) => (
               <motion.div
                 key={index}
@@ -564,17 +572,17 @@ const AboutUs: React.FC = () => {
                   <div className="relative inline-block mb-6">
                     <div className="w-24 h-24 mx-auto bg-gradient-to-br from-carousel2 to-carousel1 rounded-full p-[3px] group-hover:from-carousel1 group-hover:to-carousel3 transition-all duration-300">
                       <div className="w-full h-full bg-gray-800 rounded-full flex items-center justify-center">
-                        <Users className="w-8 h-8 text-carousel2" />
+                        <Users className="w-8 h-8 text-blue-400" />
                       </div>
                     </div>
                     <div className="absolute -inset-2 bg-gradient-to-r from-carousel2/20 to-carousel1/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
                   
-                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-carousel2 transition-colors duration-300">
+                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors duration-300">
                     {member.name}
                   </h3>
                   
-                  <p className="text-carousel1 font-semibold mb-4">
+                  <p className="text-indigo-400 font-medium mb-4">
                     {member.role}
                   </p>
                   
@@ -583,23 +591,33 @@ const AboutUs: React.FC = () => {
                   </p>
 
                   <div className="flex justify-center space-x-4">
-                    <a 
-                      href={member.social.linkedin}
-                      className="w-10 h-10 bg-gradient-to-br from-gray-700 to-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:text-blue-400 hover:from-blue-600/20 hover:to-blue-700/20 transition-all duration-300"
+                    <button 
+                      onClick={() => {
+                        const linkedinUrl = member.social.linkedin !== "#" && member.social.linkedin 
+                          ? member.social.linkedin 
+                          : "https://www.linkedin.com/";
+                        window.open(linkedinUrl, '_blank', 'noopener,noreferrer');
+                      }}
+                      className="w-10 h-10 bg-gradient-to-br from-gray-700 to-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:text-blue-400 hover:from-blue-600/20 hover:to-blue-700/20 transition-all duration-300 cursor-pointer"
                     >
                       <Linkedin className="w-5 h-5" />
-                    </a>
-                    <a 
-                      href={member.social.twitter}
-                      className="w-10 h-10 bg-gradient-to-br from-gray-700 to-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:text-blue-400 hover:from-blue-400/20 hover:to-blue-500/20 transition-all duration-300"
+                    </button>
+                    <button 
+                      onClick={() => {
+                        const twitterUrl = member.social.twitter !== "#" && member.social.twitter 
+                          ? member.social.twitter 
+                          : "https://twitter.com/";
+                        window.open(twitterUrl, '_blank', 'noopener,noreferrer');
+                      }}
+                      className="w-10 h-10 bg-gradient-to-br from-gray-700 to-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:text-blue-400 hover:from-blue-400/20 hover:to-blue-500/20 transition-all duration-300 cursor-pointer"
                     >
                       <Twitter className="w-5 h-5" />
-                    </a>
+                    </button>
                   </div>
                 </div>
 
-                {/* Hover gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-carousel2/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                {/* Hover overlay */}
+                <div className="inset-0 bg-gradient-to-t from-gray-700/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
               </motion.div>
             ))}
           </div>
@@ -613,7 +631,7 @@ const AboutUs: React.FC = () => {
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-carousel2/20 to-carousel3/20 backdrop-blur-sm border border-carousel2/30 rounded-full px-6 py-3 mb-8">
-              <TrendingUp className="w-5 h-5 text-carousel2" />
+              <TrendingUp className="w-5 h-5 text-blue-400" />
               <span className="text-sm font-medium text-gray-300">Our Impact</span>
             </div>
             <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
@@ -636,10 +654,10 @@ const AboutUs: React.FC = () => {
                   className="stat-card text-center p-6 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-2xl border border-carousel2/20 backdrop-blur-sm hover:border-carousel2/60 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-carousel2/25"
                   whileHover={{ y: -5 }}
                 >
-                  <div className="w-12 h-12 bg-gradient-to-br from-carousel2 to-carousel1 rounded-xl flex items-center justify-center mx-auto mb-4">
-                    <IconComponent className="w-6 h-6 text-white" />
+                  <div className="w-12 h-12 bg-gray-700 border border-gray-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <IconComponent className="w-6 h-6 text-blue-400" />
                   </div>
-                  <div className="text-2xl lg:text-3xl font-bold text-carousel2 mb-1">
+                  <div className="text-2xl lg:text-3xl font-bold text-white mb-1">
                     {stat.number}
                   </div>
                   <div className="text-sm text-gray-400 font-medium">
@@ -659,7 +677,7 @@ const AboutUs: React.FC = () => {
         <div className="relative z-10 max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-carousel3/20 to-carousel1/20 backdrop-blur-sm border border-carousel3/30 rounded-full px-6 py-3 mb-8">
-              <Calendar className="w-5 h-5 text-carousel3" />
+              <Calendar className="w-5 h-5 text-slate-400" />
               <span className="text-sm font-medium text-gray-300">Our Journey</span>
             </div>
             <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
@@ -699,11 +717,11 @@ const AboutUs: React.FC = () => {
                       : 'bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-carousel2/20'
                   }`}>
                     <div className="flex items-center space-x-3 mb-3">
-                      <span className="text-2xl font-bold text-carousel2">
+                      <span className="text-2xl font-bold text-blue-400">
                         {milestone.year}
                       </span>
                       <Rocket className={`w-5 h-5 transition-colors duration-300 ${
-                        activeTimeline === index ? 'text-carousel1' : 'text-gray-500'
+                        activeTimeline === index ? 'text-indigo-400' : 'text-gray-500'
                       }`} />
                     </div>
                     <h3 className={`text-xl font-bold mb-3 transition-colors duration-300 ${

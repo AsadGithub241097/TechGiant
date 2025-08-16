@@ -248,7 +248,7 @@ export const TypewriterEffectSmooth = ({
   };
 
   return (
-    <div className={cn("flex items-center space-x-1 my-6 w-full justify-center", className)}>
+    <div className={cn("flex items-center space-x-1 my-6 w-full justify-start", className)}>
       <motion.div
         className="pb-2 text-wrap text-clip relative"
         initial={{ 
@@ -275,10 +275,11 @@ export const TypewriterEffectSmooth = ({
         }}
       >
         <motion.div
-          className="text-xs sm:text-base md:text-xl lg:text-3xl xl:text-5xl font-bold"
+          className="text-xs sm:text-base md:text-lg lg:text-2xl xl:text-4xl font-bold"
           style={{ 
             whiteSpace: "nowrap",
-            minWidth: "max-content"
+            minWidth: "max-content",
+            maxWidth: "100%"
           }}
           animate={{
             backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
@@ -311,12 +312,13 @@ export const TypewriterEffectSmooth = ({
             ease: [0.4, 0, 0.6, 1], // Matching smoother easing
           }}
         >
-          <div
-            className="text-xs sm:text-base md:text-xl lg:text-3xl xl:text-5xl font-bold"
-            style={{ 
-              whiteSpace: "nowrap",
-              minWidth: "max-content"
-            }}
+                      <div
+              className="text-xs sm:text-base md:text-lg lg:text-2xl xl:text-4xl font-bold"
+              style={{ 
+                whiteSpace: "nowrap",
+                minWidth: "max-content",
+                maxWidth: "100%"
+              }}
           >
             {renderWords()}
           </div>

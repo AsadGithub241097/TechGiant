@@ -5,6 +5,7 @@ import "./App.css";
 import Header from "./components/header/header";
 import Footer from "./components/footer/heroFooter";
 import ConnectWithUsSection from "./services/vapt/contactUs";
+import WhatsAppFloat from "./components/ui/WhatsAppFloat";
 
 // Lazy load components
 const HomePage = lazy(() => import("./components/Home/homePage"));
@@ -72,6 +73,9 @@ function App() {
       </Suspense>
       {!isLMSPage && !isLoginPage && !isCoursePage && !isAboutPage && <ConnectWithUsSection />}
       {!isLMSPage && !isLoginPage && !isCoursePage && !isAboutPage && <Footer />}
+      
+      {/* WhatsApp Float Button - Show on all pages */}
+      <WhatsAppFloat />
     </div>
   );
 }
