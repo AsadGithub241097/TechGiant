@@ -11,9 +11,7 @@ import {
   BookOpen, 
   CheckCircle, 
   User,
-  Calendar,
   Globe,
-  Download,
   Heart,
   Share2,
   Home

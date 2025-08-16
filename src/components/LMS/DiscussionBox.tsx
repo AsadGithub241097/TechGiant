@@ -22,7 +22,7 @@ const DiscussionBox = ({
         </div>
         <Button 
           variant="ghost" 
-          size="icon"
+          size="sm"
           onClick={onClick}
           className="text-primary-foreground hover:bg-primary-foreground/20 rounded-full"
         >

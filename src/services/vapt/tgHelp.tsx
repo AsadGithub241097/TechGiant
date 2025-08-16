@@ -15,9 +15,9 @@ interface SecurityCardProps {
   index: number;
 }
 
-const SecurityCard: React.FC<SecurityCardProps> = ({ 
-  title, 
-  description, 
+const SecurityCard: React.FC<SecurityCardProps> = ({
+  title,
+  description,
   icon: IconComponent,
   features,
   index 

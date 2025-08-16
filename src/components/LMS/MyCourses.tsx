@@ -1,4 +1,4 @@
-import { Card } from "../ui/card";
+// import { Card } from "../ui/card"; // Removed unused import
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
 import CourseCard from "./CourseCard";

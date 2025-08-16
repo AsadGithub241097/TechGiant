@@ -63,7 +63,7 @@ const Header: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const arrowRef = useRef<SVGSVGElement>(null);
   const mobileDropdownRef = useRef<HTMLDivElement>(null);
-  let timeoutId: NodeJS.Timeout | null = null;
+  let timeoutId: number | null = null;
 
   const handleMouseEnter = useCallback(() => {
     if (timeoutId) clearTimeout(timeoutId);

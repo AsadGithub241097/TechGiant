@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Crown, Clock, Target, RefreshCw, CheckCircle, Users, BookOpen, Award } from "lucide-react";
@@ -10,7 +10,7 @@ const WhyChooseUs: React.FC = () => {
   const leftRef = useRef<HTMLDivElement | null>(null);
   const rightRef = useRef<HTMLDivElement | null>(null);
   const featureCards = useRef<(HTMLDivElement | null)[]>([]);
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  // const [hoveredCard, setHoveredCard] = useState<number | null>(null); // Removed unused state
 
   useEffect(() => {
     if (!sectionRef.current || !leftRef.current || !rightRef.current) return;
@@ -174,8 +174,8 @@ const WhyChooseUs: React.FC = () => {
                   key={index}
                   ref={el => addToRefs(el, index)}
                   className="group relative cursor-pointer"
-                  onMouseEnter={() => setHoveredCard(index)}
-                  onMouseLeave={() => setHoveredCard(null)}
+                  onMouseEnter={() => {/* Future hover logic */}}
+                  onMouseLeave={() => {/* Future hover logic */}}
                 >
                   {/* Modern feature card */}
                   <div className="relative p-6 bg-gradient-to-br from-gray-800/50 via-bgColor to-gray-800/50 backdrop-blur-sm border border-carousel2/30 rounded-2xl group-hover:border-carousel2/60 transition-all duration-500 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-carousel2/25 h-full">
