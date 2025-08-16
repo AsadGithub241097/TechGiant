@@ -1,5 +1,7 @@
 import React from "react";
 import { IMAGE_URLS } from "../../constants/mediaUrls";
+import { LoadingImage } from "../../components/ui/LoadingImage";
+import { LoadingVideo } from "../../components/ui/LoadingVideo";
 
 interface DevProjectScreenProps {
   src: string;
@@ -10,10 +12,12 @@ const DevProjectScreen: React.FC<DevProjectScreenProps> = ({ src }) => {
     <div className="flex justify-center items-center">
       <div className="relative w-[800px] h-auto">
         {/* Laptop Image */}
-        <img
+        <LoadingImage
           src={IMAGE_URLS.laptopScreen}
           alt="Laptop"
           className="w-full h-full object-contain"
+          skeletonClassName="w-full h-full"
+          aspectRatio="aspect-auto"
         />
 
         {/* Video inside laptop screen */}
@@ -26,13 +30,14 @@ const DevProjectScreen: React.FC<DevProjectScreenProps> = ({ src }) => {
             height: "44%",
           }}
         >
-          <video
+          <LoadingVideo
             src={src}
             autoPlay
             loop
             muted
             playsInline
             className="w-full h-full object-cover"
+            skeletonClassName="w-full h-full"
           />
         </div>
       </div>

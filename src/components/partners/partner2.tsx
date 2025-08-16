@@ -1,5 +1,6 @@
 import React from "react";
 import { IMAGE_URLS } from "../../constants/mediaUrls";
+import { LoadingImage } from "../ui/LoadingImage";
 
 const images = [IMAGE_URLS.logo, IMAGE_URLS.partners.axis, IMAGE_URLS.partners.falahzar, IMAGE_URLS.partners.imflux, IMAGE_URLS.partners.iStaff, IMAGE_URLS.partners.forest, IMAGE_URLS.partners.keyCube];
 
@@ -21,10 +22,12 @@ const SliderRow: React.FC<{ reverse?: boolean }> = ({ reverse }) => {
               sm:max-w-[150px] sm:h-[60px] 
               xs:max-w-[100px] xs:h-[40px]"
           >
-            <img
+            <LoadingImage
               src={src}
               alt={`Partner ${index}`}
               className="w-full h-full object-contain"
+              skeletonClassName="w-full h-full"
+              aspectRatio="aspect-auto"
             />
           </div>
         ))}

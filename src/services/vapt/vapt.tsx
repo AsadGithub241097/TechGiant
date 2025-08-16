@@ -1,4 +1,5 @@
-import adaptiveImg from "../../assets/adaptive.png";
+import { IMAGE_URLS } from "../../constants/mediaUrls";
+import { LoadingImage } from "../../components/ui/LoadingImage";
 const TGCyberDefense = () => {
   return (
     <div className="w-full bg-bgColor text-white">
@@ -41,10 +42,12 @@ const TGCyberDefense = () => {
           {/* Right content - Image with play button */}
           <div className="w-full md:w-1/2">
             <div className="relative rounded overflow-hidden shadow-md">
-              <img
-                src={adaptiveImg}
+              <LoadingImage
+                src={IMAGE_URLS.adaptive}
                 alt="Tech giant security dashboard with graph data"
                 className="w-full h-full object-cover"
+                skeletonClassName="w-full h-full"
+                aspectRatio="aspect-auto"
               />
 
               {/* <div className="absolute inset-0 bg-black bg-opacity-10 flex items-center justify-center">

@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { gsap } from "gsap";
 import { IMAGE_URLS } from '../../constants/mediaUrls';
+import { LoadingImage } from '../ui/LoadingImage';
 import "tailwindcss/tailwind.css";
 
 interface CardProps {
@@ -55,10 +56,12 @@ const Card: React.FC<CardProps> = memo(
           {isVisible ? (
             <div className="relative w-full h-full">
               <div className="absolute inset-0 bg-purple-500 bg-opacity-20 rounded-full filter blur-xl scale-75 opacity-0 group-hover:opacity-70 transition-all duration-700"></div>
-              <img
+              <LoadingImage
                 src={svg}
                 alt={title}
                 className="w-full h-full object-contain relative z-10 transition-all duration-700 group-hover:scale-110 drop-shadow-[0_5px_15px_rgba(139,92,246,0.4)]"
+                skeletonClassName="w-full h-full relative z-10"
+                aspectRatio="aspect-square"
               />
             </div>
           ) : (
