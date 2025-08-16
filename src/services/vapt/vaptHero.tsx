@@ -1,15 +1,19 @@
 import React from "react";
 import ScrollDown from "../../icons/scrollDown";
+import { IMAGE_URLS } from "../../constants/mediaUrls";
+import { LoadingImage } from "../../components/ui/LoadingImage";
 
 const SecurityOperationsHero: React.FC = () => {
   return (
     <div className="w-full relative h-screen md:h-[66rem] mt-[58px]">
       {/* Background image container */}
       <div className="absolute inset-0 w-full h-[80%]">
-        <img
-          src="./src/assets/vaptBG.png"
+        <LoadingImage
+          src={IMAGE_URLS.vaptBg}
           alt="Security operations background"
           className="w-full h-full object-cover"
+          skeletonClassName="w-full h-full"
+          aspectRatio="aspect-auto"
         />
       </div>
 

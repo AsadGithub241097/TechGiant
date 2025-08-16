@@ -10,6 +10,7 @@ import React, {
 import { gsap } from "gsap";
 import { IMAGE_URLS } from '../../constants/mediaUrls';
 import { LoadingImage } from '../ui/LoadingImage';
+import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import "tailwindcss/tailwind.css";
 
 interface CardProps {
@@ -49,33 +50,55 @@ const Card: React.FC<CardProps> = memo(
     return (
       <div
         ref={cardRef}
-        className={`absolute font-sans top-0 left-0 w-full h-full text-center bg-gradient-to-br from-[#11071f] via-[#452170] to-[#11071f] rounded-xl flex flex-col md:flex-row items-center justify-between p-6 md:p-8 lg:p-10 xl:p-12 2xl:p-16 shadow-2xl transition-all duration-500 ease-in-out hover:shadow-[0_0_30px_rgba(139,92,246,0.3)] ${isBlurred ? "filter blur-md" : ""
+        className={`absolute font-sans top-0 left-0 w-full h-full text-center bg-gradient-to-br from-gray-900/90 via-bgColor to-gray-900/90 backdrop-blur-sm border border-carousel2/30 rounded-2xl flex flex-col md:flex-row items-center justify-between p-6 md:p-8 lg:p-10 xl:p-12 2xl:p-16 shadow-2xl transition-all duration-500 ease-in-out hover:shadow-[0_0_40px_rgba(170,96,200,0.4)] hover:border-carousel2/60 ${isBlurred ? "filter blur-md opacity-70" : ""
           }`}
       >
+        {/* Glow effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-carousel2/10 via-transparent to-carousel1/10 opacity-0 hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+        
+        {/* Icon section with enhanced styling */}
         <div className="h-24 w-24 sm:h-32 sm:w-32 md:h-40 md:w-40 lg:h-48 lg:w-48 xl:h-64 xl:w-64 2xl:h-80 2xl:w-80 relative flex justify-center items-center group">
           {isVisible ? (
             <div className="relative w-full h-full">
-              <div className="absolute inset-0 bg-purple-500 bg-opacity-20 rounded-full filter blur-xl scale-75 opacity-0 group-hover:opacity-70 transition-all duration-700"></div>
-              <LoadingImage
-                src={svg}
-                alt={title}
-                className="w-full h-full object-contain relative z-10 transition-all duration-700 group-hover:scale-110 drop-shadow-[0_5px_15px_rgba(139,92,246,0.4)]"
-                skeletonClassName="w-full h-full relative z-10"
-                aspectRatio="aspect-square"
-              />
+              {/* Enhanced background glow */}
+              <div className="absolute inset-0 bg-gradient-to-br from-carousel2/20 to-carousel1/20 rounded-full filter blur-2xl scale-90 opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
+              
+              {/* Icon container with gradient border */}
+              <div className="relative w-full h-full bg-gradient-to-br from-carousel2/20 to-carousel1/20 rounded-full p-1 group-hover:from-carousel2/40 group-hover:to-carousel1/40 transition-all duration-500">
+                <div className="w-full h-full bg-gradient-to-br from-gray-900/50 to-bgColor/50 rounded-full flex items-center justify-center backdrop-blur-sm">
+                  <LoadingImage
+                    src={svg}
+                    alt={title}
+                    className="w-3/4 h-3/4 object-contain relative z-10 transition-all duration-700 group-hover:scale-110 drop-shadow-[0_10px_25px_rgba(170,96,200,0.6)]"
+                    skeletonClassName="w-3/4 h-3/4 relative z-10 rounded-full"
+                    aspectRatio="aspect-square"
+                  />
+                </div>
+              </div>
+              
+              {/* Animated ring */}
+              <div className="absolute inset-0 rounded-full border-2 border-carousel2/30 opacity-0 group-hover:opacity-100 group-hover:animate-pulse transition-opacity duration-300"></div>
             </div>
           ) : (
-            <div className="w-full h-full bg-gray-700/50 animate-pulse rounded-full" />
+            <div className="w-full h-full bg-gradient-to-br from-gray-700/50 to-gray-800/50 animate-pulse rounded-full border border-carousel2/20" />
           )}
         </div>
-        <div className="flex flex-col font-sans items-center md:items-start text-center md:text-left mt-6 md:mt-0 md:ml-8 lg:ml-10 xl:ml-12 2xl:ml-16 flex-1">
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-300 to-indigo-200 mb-4 md:mb-6 leading-tight tracking-tight">
-            {title}
-          </h2>
-          <p className="text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl text-gray-300 font-light leading-relaxed max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-3xl">
+        
+        {/* Content section with enhanced typography */}
+        <div className="relative z-10 flex flex-col font-sans items-center md:items-start text-center md:text-left mt-6 md:mt-0 md:ml-8 lg:ml-10 xl:ml-12 2xl:ml-16 flex-1">
+          <div className="flex items-center gap-3 mb-4 md:mb-6">
+            <Sparkles className="w-6 h-6 text-carousel3 opacity-80" />
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-carousel3 to-carousel2 leading-tight tracking-tight">
+              {title}
+            </h2>
+          </div>
+          <p className="text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl text-gray-300 hover:text-gray-200 font-light leading-relaxed max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-3xl transition-colors duration-300">
             {description}
           </p>
         </div>
+
+        {/* Bottom gradient line */}
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-carousel2/50 to-transparent hover:via-carousel1 transition-all duration-500 rounded-b-2xl"></div>
       </div>
     );
   }
@@ -296,96 +319,95 @@ const Gallery: React.FC = memo(() => {
   return (
     <div
       ref={galleryRef}
-      className="relative w-full overflow-hidden flex flex-col items-center justify-center bg-bgColor h-screen bg-fixed transition-all bg-cover"
-      style={{backgroundImage: `url(${IMAGE_URLS.liquid})`}}
+      className="relative w-full overflow-hidden flex flex-col items-center justify-center bg-gradient-to-b from-bgColor via-gray-900/50 to-bgColor h-screen transition-all"
+      style={{backgroundImage: `url(${IMAGE_URLS.liquid})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed'}}
     >
-      <div className="absolute inset-0 z-0 opacity-20 h-screen">
-        {/* <div className="absolute w-96 h-96 -top-48 -left-48 bg-purple-600 rounded-full filter blur-3xl opacity-20 animate-pulse"></div> */}
-        <div className="absolute w-96 h-96 -bottom-48 -right-48 bg-indigo-600 rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
+      {/* Enhanced background decoration */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-carousel2/10 via-transparent to-transparent"></div>
+      
+      {/* Enhanced decorative elements */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <div className="absolute w-96 h-96 -top-48 -left-48 bg-gradient-to-br from-carousel2/20 to-carousel1/20 rounded-full filter blur-3xl opacity-30 animate-pulse"></div>
+        <div className="absolute w-96 h-96 -bottom-48 -right-48 bg-gradient-to-br from-carousel1/20 to-carousel3/20 rounded-full filter blur-3xl opacity-30 animate-pulse"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-carousel3/5 to-carousel2/5 rounded-full filter blur-3xl opacity-20"></div>
       </div>
+      
       <div className="relative z-10 w-full max-w-6xl px-4">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight font-sans">
             Our Core{" "}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-300 to-indigo-200">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-carousel3 to-carousel2 animate-pulse">
               Values
             </span>
           </h1>
-          <p className="text-gray-400 max-w-2xl mx-auto">
-            What drives our passion for excellence and innovation in everything
-            we do
+          <p className="text-gray-400 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+            The fundamental principles that guide our innovation, shape our culture, and drive our commitment to excellence
           </p>
+          
+          {/* Decorative line */}
+          <div className="mt-6 mx-auto w-24 h-1 bg-gradient-to-r from-carousel2 to-carousel1 rounded-full"></div>
         </div>
         <div className="relative w-full h-96 md:h-[30rem] lg:h-[35rem] mt-4 mb-16">
+          {/* Enhanced Previous Button */}
           <button
             onClick={handlePrev}
             disabled={isAnimating}
-            className={`absolute left-0 top-1/2 transform -translate-y-1/2 z-20 p-3 rounded-full bg-black bg-opacity-50 hover:bg-opacity-70 transition-all duration-300 ${isAnimating
+            className={`absolute -left-4 top-1/2 transform -translate-y-1/2 z-20 p-4 rounded-2xl bg-gradient-to-br from-gray-900/80 via-bgColor/80 to-gray-900/80 backdrop-blur-sm border border-carousel2/30 hover:border-carousel2/60 hover:scale-110 transition-all duration-300 shadow-2xl hover:shadow-carousel2/25 ${isAnimating
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:shadow-lg"
+                : "hover:from-carousel2/20 hover:to-carousel1/20"
               }`}
-            aria-label="Previous"
+            aria-label="Previous Value"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
+            <ChevronLeft className="h-6 w-6 text-white" />
           </button>
 
+          {/* Carousel Container */}
           <ul
             ref={cardsRef}
             className="absolute w-full max-w-6xl top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-full"
           >
             {cards}
           </ul>
+          
+          {/* Enhanced Next Button */}
           <button
             onClick={handleNext}
             disabled={isAnimating}
-            className={`absolute right-0 top-1/2 transform -translate-y-1/2 z-20 p-3 rounded-full bg-black bg-opacity-50 hover:bg-opacity-70 transition-all duration-300 ${isAnimating
+            className={`absolute -right-4 top-1/2 transform -translate-y-1/2 z-20 p-4 rounded-2xl bg-gradient-to-br from-gray-900/80 via-bgColor/80 to-gray-900/80 backdrop-blur-sm border border-carousel2/30 hover:border-carousel2/60 hover:scale-110 transition-all duration-300 shadow-2xl hover:shadow-carousel2/25 ${isAnimating
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:shadow-lg"
+                : "hover:from-carousel2/20 hover:to-carousel1/20"
               }`}
-            aria-label="Next"
+            aria-label="Next Value"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
+            <ChevronRight className="h-6 w-6 text-white" />
           </button>
         </div>
+        {/* Enhanced navigation and stats */}
         <div className="flex flex-col items-center gap-8">
-          <div className="flex gap-3">
+          {/* Modern navigation dots */}
+          <div className="flex gap-4 bg-gradient-to-r from-gray-900/50 via-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-carousel2/20 rounded-full px-6 py-3">
             {cardsData.map((_, i) => (
               <button
                 key={i}
                 onClick={() => handleDotClick(i)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${i === currentIndex
-                    ? "bg-purple-500 scale-125"
-                    : "bg-gray-600 hover:bg-gray-500"
+                className={`relative w-4 h-4 rounded-full transition-all duration-300 group ${i === currentIndex
+                    ? "bg-gradient-to-r from-carousel2 to-carousel1 scale-125 shadow-lg shadow-carousel2/50"
+                    : "bg-gray-600 hover:bg-carousel2/60 hover:scale-110"
                   }`}
-                aria-label={`Go to slide ${i + 1}`}
-              />
+                aria-label={`Go to ${cardsData[i].title}`}
+              >
+                {i === currentIndex && (
+                  <div className="absolute inset-0 rounded-full border-2 border-carousel2/50 animate-pulse"></div>
+                )}
+              </button>
             ))}
+          </div>
+          
+          {/* Value counter */}
+          <div className="text-center">
+            <p className="text-sm text-gray-500">
+              <span className="text-carousel2 font-semibold">{currentIndex + 1}</span> of <span className="text-carousel2 font-semibold">{cardsData.length}</span> Core Values
+            </p>
           </div>
         </div>
       </div>

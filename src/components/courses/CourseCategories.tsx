@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Code, TrendingUp, Users } from 'lucide-react';
+import { BookOpen, Code, TrendingUp, Users, Home } from 'lucide-react';
 
 interface CategoryCardProps {
   title: string;
@@ -138,8 +138,18 @@ const CourseCategories: React.FC = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-16 relative"
         >
+          <motion.button
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            onClick={() => navigate('/')}
+            className="absolute top-0 right-0 flex items-center space-x-2 text-white/80 hover:text-white transition-colors bg-white/10 px-4 py-2 rounded-lg hover:bg-white/20"
+          >
+            <Home className="w-5 h-5" />
+            <span>Home</span>
+          </motion.button>
+          
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
             Choose Your Learning Path
           </h1>

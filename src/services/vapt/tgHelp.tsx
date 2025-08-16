@@ -16,9 +16,9 @@ const SecurityCard: React.FC<SecurityCardProps> = ({
   return (
     <div className="flex flex-col w-full">
       <img src={imageUrl} alt={title} className="w-full h-64 object-cover" />
-      <h2 className="text-xl font-medium mt-4 mb-2">{title}</h2>
+      <h2 className="text-xl font-medium mt-4 mb-2 text-white ">{title}</h2>
       <div className="w-12 h-1 bg-carousel2 mb-4"></div>
-      <p className="text-white mb-4 font-sans">{description}</p>
+      <p className="text-white mb-4 font-doto">{description}</p>
       {/* <a href="#" className="text-gray-700 hover:text-gray-900 font-medium">
         {buttonText} &gt;
       </a> */}

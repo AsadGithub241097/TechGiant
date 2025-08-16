@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Crown, Clock, Target, RefreshCw, CheckCircle, Users, BookOpen, Award } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -9,6 +10,7 @@ const WhyChooseUs: React.FC = () => {
   const leftRef = useRef<HTMLDivElement | null>(null);
   const rightRef = useRef<HTMLDivElement | null>(null);
   const featureCards = useRef<(HTMLDivElement | null)[]>([]);
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   useEffect(() => {
     if (!sectionRef.current || !leftRef.current || !rightRef.current) return;
@@ -61,86 +63,169 @@ const WhyChooseUs: React.FC = () => {
     }
   };
 
+  const features = [
+    {
+      icon: Crown,
+      title: "Best Industry Leaders",
+      description: "Learn from the best industry leaders in software testing in Hyderabad.",
+      color: "from-yellow-400 to-orange-500"
+    },
+    {
+      icon: Clock,
+      title: "Learn At Your Own Pace",
+      description: "Flexible learning at your own pace for optimal progress.",
+      color: "from-blue-400 to-cyan-500"
+    },
+    {
+      icon: Target,
+      title: "Placement Community",
+      description: "Join our thriving placement community and connect with industry professionals.",
+      color: "from-green-400 to-emerald-500"
+    },
+    {
+      icon: RefreshCw,
+      title: "Hands-on Projects",
+      description: "Practical experience with real-world projects and case studies.",
+      color: "from-purple-400 to-violet-500"
+    }
+  ];
+
+  const benefits = [
+    "Expert-led training that bridges theory and practice",
+    "Proven track record of successful placements in the software testing industry",
+    "Unparalleled expertise in software training in Hyderabad"
+  ];
+
   return (
     <section
       ref={sectionRef}
-      className="relative bg- text-white py-16 px-6 md:px-12 lg:px-24 xl:px-32 flex flex-col md:flex-row items-center justify-between gap-12 max-w-[105rem] mx-auto "
+      className="relative bg-gradient-to-b from-bgColor via-gray-900/50 to-bgColor text-white py-16 sm:py-24 overflow-hidden"
     >
-      {/* Decorative elements */}
-      <div className="absolute inset-0 overflow-hidden ">
-        <div className="absolute top-0 left-0 w-32 h-32 bg-blue-700 rounded-full filter blur-3xl opacity-20"></div>
-        <div className="absolute bottom-0 right-0 w-40 h-40 bg-purple-700 rounded-full filter blur-3xl opacity-20"></div>
+      {/* Background decoration */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-carousel2/5 via-transparent to-transparent"></div>
+      
+      {/* Enhanced decorative elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-0 left-0 w-64 h-64 bg-gradient-to-br from-carousel2/20 to-carousel1/20 rounded-full filter blur-3xl opacity-30"></div>
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-gradient-to-br from-carousel1/20 to-carousel3/20 rounded-full filter blur-3xl opacity-30"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-carousel3/10 to-carousel2/10 rounded-full filter blur-3xl opacity-20"></div>
       </div>
 
-      {/* Left Section - Always visible */}
-      <div 
-        ref={leftRef} 
-        className="md:w-1/2 z-10 opacity-100" // Force opacity to 100
-      >
-        <span className="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-blue-200 uppercase bg-blue-800 bg-opacity-50 rounded-full">
-          Features of Our Courses
-        </span>
-        <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-          Why <span className="text-blue-300">Choose</span> Us?
-        </h2>
-        <ul className="space-y-4">
-          {[
-            "Expert-led training that bridges theory and practice",
-            "Proven track record of successful placements in the software testing industry",
-            "Unparalleled expertise in software training in Hyderabad"
-          ].map((item, index) => (
-            <li key={index} className="flex items-start">
-              <svg className="w-5 h-5 mt-1 mr-3 text-blue-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-              <span className="text-lg text-blue-100">{item}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Right Section - Always visible */}
-      <div
-        ref={rightRef}
-        className="md:w-1/2 z-10 opacity-100 grid grid-cols-1 md:grid-cols-2 gap-6" // Force opacity to 100
-      >
-        {[
-          {
-            icon: "👑",
-            title: "Best Industry Leaders",
-            description: "Learn from the best industry leaders in software testing in Hyderabad."
-          },
-          {
-            icon: "⏳",
-            title: "Learn At Your Own Pace",
-            description: "Flexible learning at your own pace for optimal progress."
-          },
-          {
-            icon: "🎯",
-            title: "Placement Community",
-            description: "Join our thriving placement community and connect with industry professionals."
-          },
-          {
-            icon: "🔄",
-            title: "Hands-on Projects",
-            description: "Practical experience with real-world projects and case studies."
-          }
-        ].map((feature, index) => (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row items-start justify-between gap-16">
+          {/* Left Section - Enhanced */}
           <div 
-            key={index}
-            ref={el => addToRefs(el, index)}
-            className="p-6 bg-white bg-opacity-10 backdrop-filter backdrop-blur-sm rounded-xl border border-white border-opacity-10 hover:bg-opacity-20 transition-all duration-300 hover:-translate-y-1 shadow-lg opacity-100" // Force opacity to 100
+            ref={leftRef} 
+            className="lg:w-1/2 z-10 relative"
           >
-            <div className="flex items-start space-x-4">
-              <span className="text-3xl">{feature.icon}</span>
-              <div>
-                <h3 className="text-lg font-bold text-white mb-2">{feature.title}</h3>
-                <p className="text-blue-100 text-sm leading-relaxed">{feature.description}</p>
+            {/* Modern badge */}
+            <div className="inline-flex items-center space-x-2 px-4 py-2 mb-6 bg-gradient-to-r from-carousel2/20 to-carousel1/20 backdrop-blur-sm border border-carousel2/30 rounded-full">
+              <Award className="w-4 h-4 text-carousel3" />
+              <span className="text-sm font-semibold tracking-wider text-carousel3 uppercase">
+                Features of Our Courses
+              </span>
+            </div>
+
+            {/* Modern heading */}
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight font-sans">
+              Why{" "}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-carousel3 to-carousel2 animate-pulse">
+                Choose
+              </span>{" "}
+              Us?
+            </h2>
+
+            {/* Enhanced benefits list */}
+            <ul className="space-y-6 mb-8">
+              {benefits.map((item, index) => (
+                <li key={index} className="group flex items-start space-x-4">
+                  <div className="flex-shrink-0 w-6 h-6 mt-1 bg-gradient-to-br from-carousel2 to-carousel1 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <CheckCircle className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="text-lg text-gray-300 group-hover:text-white transition-colors duration-300 leading-relaxed">
+                    {item}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            {/* Stats section */}
+            <div className="grid grid-cols-2 gap-6 mt-8">
+              <div className="text-center p-4 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl border border-carousel2/20 backdrop-blur-sm">
+                <div className="text-2xl font-bold text-carousel2 mb-1">500+</div>
+                <div className="text-sm text-gray-400">Students Placed</div>
+              </div>
+              <div className="text-center p-4 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl border border-carousel2/20 backdrop-blur-sm">
+                <div className="text-2xl font-bold text-carousel2 mb-1">95%</div>
+                <div className="text-sm text-gray-400">Success Rate</div>
               </div>
             </div>
           </div>
-        ))}
+
+          {/* Right Section - Modern Cards */}
+          <div
+            ref={rightRef}
+            className="lg:w-1/2 z-10 grid grid-cols-1 sm:grid-cols-2 gap-6"
+          >
+            {features.map((feature, index) => {
+              const IconComponent = feature.icon;
+              return (
+                <div 
+                  key={index}
+                  ref={el => addToRefs(el, index)}
+                  className="group relative cursor-pointer"
+                  onMouseEnter={() => setHoveredCard(index)}
+                  onMouseLeave={() => setHoveredCard(null)}
+                >
+                  {/* Modern feature card */}
+                  <div className="relative p-6 bg-gradient-to-br from-gray-800/50 via-bgColor to-gray-800/50 backdrop-blur-sm border border-carousel2/30 rounded-2xl group-hover:border-carousel2/60 transition-all duration-500 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-carousel2/25 h-full">
+                    {/* Glow effect */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-carousel2/10 via-transparent to-carousel1/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                    
+                    {/* Content */}
+                    <div className="relative z-10">
+                      {/* Icon with gradient background */}
+                      <div className={`inline-flex p-3 mb-4 bg-gradient-to-br ${feature.color} rounded-xl group-hover:scale-110 transition-transform duration-300`}>
+                        <IconComponent className="w-6 h-6 text-white" />
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="text-xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-carousel3 group-hover:to-carousel2 transition-all duration-300">
+                        {feature.title}
+                      </h3>
+
+                      {/* Description */}
+                      <p className="text-gray-400 text-sm leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
+                        {feature.description}
+                      </p>
+                    </div>
+
+                    {/* Bottom gradient line */}
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-carousel2/50 to-transparent group-hover:via-carousel1 transition-all duration-500 rounded-b-2xl"></div>
+
+                    {/* Animated border */}
+                    <div className="absolute inset-0 rounded-2xl border-2 border-carousel2/30 opacity-0 group-hover:opacity-100 group-hover:animate-pulse transition-opacity duration-300"></div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Bottom CTA section */}
+        <div className="mt-16 text-center">
+          <div className="inline-flex items-center space-x-2 text-gray-500 text-sm">
+            <Users className="w-4 h-4 text-carousel2" />
+            <span>Join <span className="text-carousel2 font-semibold">1000+</span> successful graduates</span>
+            <span className="mx-4">•</span>
+            <BookOpen className="w-4 h-4 text-carousel2" />
+            <span><span className="text-carousel2 font-semibold">Industry-verified</span> curriculum</span>
+          </div>
+        </div>
       </div>
+
+      {/* Bottom gradient */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-bgColor to-transparent"></div>
     </section>
   );
 };

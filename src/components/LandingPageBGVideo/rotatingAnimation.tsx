@@ -38,7 +38,7 @@ export const RotatingAnimation: React.FC<SigmaLogoProps> = ({
   // Rotate the SVG
   useEffect(() => {
     const interval = setInterval(() => {
-      setRotation((prev) => (prev + rotationSpeed) % 360);
+      setRotation((prev) => (prev - rotationSpeed) % 360);
     }, 50);
 
     return () => clearInterval(interval); // Clear interval on unmount

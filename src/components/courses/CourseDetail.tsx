@@ -15,7 +15,8 @@ import {
   Globe,
   Download,
   Heart,
-  Share2
+  Share2,
+  Home
 } from 'lucide-react';
 import { getCourseById } from '../../data/coursesData';
 
@@ -99,15 +100,27 @@ const CourseDetail: React.FC = () => {
       {/* Header */}
       <div className={`bg-gradient-to-br ${categoryColors[course.category]} py-8`}>
         <div className="max-w-7xl mx-auto px-4">
-          <motion.button
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            onClick={() => navigate(`/courses/${course.category}`)}
-            className="flex items-center space-x-2 text-white/80 hover:text-white mb-6 transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Back to {course.category.charAt(0).toUpperCase() + course.category.slice(1)} Courses</span>
-          </motion.button>
+          <div className="flex items-center justify-between mb-6">
+            <motion.button
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              onClick={() => navigate(`/courses/${course.category}`)}
+              className="flex items-center space-x-2 text-white/80 hover:text-white transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to {course.category.charAt(0).toUpperCase() + course.category.slice(1)} Courses</span>
+            </motion.button>
+            
+            <motion.button
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              onClick={() => navigate('/')}
+              className="flex items-center space-x-2 text-white/80 hover:text-white transition-colors bg-white/10 px-4 py-2 rounded-lg hover:bg-white/20"
+            >
+              <Home className="w-5 h-5" />
+              <span>Home</span>
+            </motion.button>
+          </div>
         </div>
       </div>
 

@@ -93,3 +93,15 @@ body:has(.lms-header-container) {
 .lms-hover-trigger:hover + .lms-header-container {
   transform: translateY(0);
 }
+
+/* Prevent white background on over-scroll */
+html, body {
+  background-color: #11071F !important;
+  overscroll-behavior: none;
+}
+
+/* For webkit browsers (Safari, Chrome) */
+body {
+  -webkit-background-clip: border-box;
+  background-attachment: fixed;
+}

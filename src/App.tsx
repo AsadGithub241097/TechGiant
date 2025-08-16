@@ -8,6 +8,7 @@ import ConnectWithUsSection from "./services/vapt/contactUs";
 
 // Lazy load components
 const HomePage = lazy(() => import("./components/Home/homePage"));
+const AboutUs = lazy(() => import("./components/aboutUs/AboutUs"));
 const VaptContaner = lazy(() => import("./services/vaptContanar"));
 const DevContaner = lazy(() => import("./services/development/devContaner"));
 const MarketingPage = lazy(() => import("./services/markating/markating"));
@@ -41,6 +42,7 @@ function App() {
   const isLMSPage = location.pathname === '/LMS';
   const isLoginPage = location.pathname === '/login';
   const isCoursePage = location.pathname.startsWith('/course');
+  const isAboutPage = location.pathname === '/about';
 
   return (
     <div className="bg-bgColor overflow-x-hidden">
@@ -49,13 +51,14 @@ function App() {
       
       {/* Header with conditional styling for LMS page */}
       <div className={isLMSPage ? "lms-header-container" : ""}>
-        {!isLoginPage && !isCoursePage && <Header />}
+        {!isLoginPage && !isCoursePage && !isAboutPage && <Header />}
       </div>
       
       <Suspense fallback={<LoadingSpinner />}>
         <div className={isLMSPage ? "lms-page-content" : ""}>
           <Routes key={location.pathname}>
             <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<AboutUs />} />
             <Route path="/Vapt" element={<VaptContaner />} />
             <Route path="/Development" element={<DevContaner />} />
             <Route path="/Marketing" element={<MarketingPage />} />
@@ -67,8 +70,8 @@ function App() {
           </Routes>
         </div>
       </Suspense>
-      {!isLMSPage && !isLoginPage && !isCoursePage && <ConnectWithUsSection />}
-      {!isLMSPage && !isLoginPage && !isCoursePage && <Footer />}
+      {!isLMSPage && !isLoginPage && !isCoursePage && !isAboutPage && <ConnectWithUsSection />}
+      {!isLMSPage && !isLoginPage && !isCoursePage && !isAboutPage && <Footer />}
     </div>
   );
 }

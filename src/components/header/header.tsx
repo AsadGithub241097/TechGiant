@@ -53,63 +53,7 @@ const DropdownItem = memo(({
   </div>
 ));
 
-// Memoized mobile menu component
-const MobileMenu = memo(({ 
-  isOpen, 
-  onClose, 
-  onServiceClick 
-}: { 
-  isOpen: boolean; 
-  onClose: () => void; 
-  onServiceClick: (path: string) => void; 
-}) => {
-  if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 md:hidden">
-      <div className="fixed inset-y-0 right-0 w-64 bg-white p-4">
-        <button onClick={onClose} className="absolute top-4 right-4">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-        <nav className="mt-8">
-          <ul className="space-y-4">
-            <li>
-              <Link to="/" className="block py-2" onClick={onClose}>
-                Home
-              </Link>
-            </li>
-            <li>
-              <button
-                onClick={() => onServiceClick("/Vapt")}
-                className="block w-full text-left py-2"
-              >
-                VAPT
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => onServiceClick("/Development")}
-                className="block w-full text-left py-2"
-              >
-                Development
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => onServiceClick("/Marketing")}
-                className="block w-full text-left py-2"
-              >
-                Marketing
-              </button>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </div>
-  );
-});
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -401,11 +345,7 @@ const Header: React.FC = () => {
         </div>
       </header>
 
-      <MobileMenu
-        isOpen={isMobileMenuOpen}
-        onClose={closeAllMenus}
-        onServiceClick={handleMobileServiceClick}
-      />
+
     </div>
   );
 };

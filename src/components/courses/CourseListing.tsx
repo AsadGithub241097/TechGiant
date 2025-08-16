@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Clock, Users, Star, Award, Play } from 'lucide-react';
+import { ArrowLeft, Clock, Users, Star, Award, Play, Home } from 'lucide-react';
 import { getCoursesByCategory, Course } from '../../data/coursesData';
 
 interface CourseCardProps {
@@ -162,15 +162,27 @@ const CourseListing: React.FC = () => {
       {/* Header */}
       <div className={`bg-gradient-to-br ${categoryColors[category as keyof typeof categoryColors]} py-20`}>
         <div className="max-w-7xl mx-auto px-4">
-          <motion.button
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            onClick={() => navigate('/courses')}
-            className="flex items-center space-x-2 text-white/80 hover:text-white mb-8 transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Back to Categories</span>
-          </motion.button>
+          <div className="flex items-center justify-between mb-8">
+            <motion.button
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              onClick={() => navigate('/courses')}
+              className="flex items-center space-x-2 text-white/80 hover:text-white transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to Categories</span>
+            </motion.button>
+            
+            <motion.button
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              onClick={() => navigate('/')}
+              className="flex items-center space-x-2 text-white/80 hover:text-white transition-colors bg-white/10 px-4 py-2 rounded-lg hover:bg-white/20"
+            >
+              <Home className="w-5 h-5" />
+              <span>Home</span>
+            </motion.button>
+          </div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
