@@ -7,7 +7,7 @@ const WhatsAppFloat: React.FC = () => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   // WhatsApp number and default message
-  const whatsappNumber = '+918801630060';
+  const whatsappNumber = '+918008771893';
   const defaultMessage = encodeURIComponent(
     'Hi! I found your website and I\'m interested in your services. Could you please provide more information?'
   );

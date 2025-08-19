@@ -6,6 +6,8 @@ import Header from "./components/header/header";
 import Footer from "./components/footer/heroFooter";
 import ConnectWithUsSection from "./services/vapt/contactUs";
 import WhatsAppFloat from "./components/ui/WhatsAppFloat";
+import SEOHead from "./components/SEO/SEOHead";
+import { getPageSEO } from "./data/seoConfig";
 
 // Lazy load components
 const HomePage = lazy(() => import("./components/Home/homePage"));
@@ -45,8 +47,19 @@ function App() {
   const isCoursePage = location.pathname.startsWith('/course');
   const isAboutPage = location.pathname === '/about';
 
+  // Get SEO configuration for current page
+  const currentPageSEO = getPageSEO(location.pathname);
+
   return (
     <div className="bg-bgColor overflow-x-hidden">
+      {/* SEO Head Component */}
+      <SEOHead 
+        title={currentPageSEO.title}
+        description={currentPageSEO.description}
+        keywords={currentPageSEO.keywords}
+        ogImage={currentPageSEO.ogImage}
+        structuredData={currentPageSEO.structuredData}
+      />
       {/* Hover trigger zone for LMS page */}
       {isLMSPage && <div className="lms-hover-trigger"></div>}
       

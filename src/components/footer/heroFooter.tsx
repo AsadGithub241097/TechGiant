@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
 
   const contactInfo = [
     { icon: Mail, label: "Email", value: "Info@tech-giant.in", href: "mailto:Info@tech-giant.in" },
-    { icon: Phone, label: "Phone", value: "+91 98765 43210", href: "tel:+919876543210" },
+    { icon: Phone, label: "Phone", value: "+91 8008771893", href: "tel:+918008771893" },
     { icon: MapPin, label: "Address", value: "Hyderabad, India", href: "#" }
   ];
 

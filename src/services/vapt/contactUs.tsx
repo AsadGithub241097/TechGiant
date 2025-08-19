@@ -24,7 +24,7 @@ const ConnectWithUsSection: React.FC = () => {
     {
       icon: Phone,
       label: "Phone",
-      value: "+91 98765 43210",
+      value: "+91 8008771893",
       color: "from-green-400 to-emerald-500"
     },
     {

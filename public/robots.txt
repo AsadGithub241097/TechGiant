@@ -1,0 +1,42 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://techgiant.com/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1
+
+# Disallow admin or private areas (if any)
+Disallow: /admin/
+Disallow: /private/
+Disallow: /_*
+Disallow: /api/
+
+# Allow important directories
+Allow: /about
+Allow: /services
+Allow: /courses
+Allow: /LMS
+Allow: /Development
+Allow: /Marketing
+Allow: /Vapt
+
+# Block specific file types that don't need indexing
+Disallow: *.pdf$
+Disallow: *.doc$
+Disallow: *.docx$
+
+# Block search parameters to prevent duplicate content
+Disallow: /*?*
+Disallow: /*#*
+
+# Allow CSS, JS, and images for proper rendering
+Allow: *.css
+Allow: *.js
+Allow: *.png
+Allow: *.jpg
+Allow: *.jpeg
+Allow: *.gif
+Allow: *.svg
+Allow: *.webp

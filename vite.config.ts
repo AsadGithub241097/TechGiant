@@ -21,6 +21,10 @@ export default defineConfig({
       },
     },
     chunkSizeWarningLimit: 1000,
+    // Copy SEO files to build output
+    assetsDir: 'assets',
+    outDir: 'dist',
+    copyPublicDir: true,
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router-dom', 'gsap', 'framer-motion'],
