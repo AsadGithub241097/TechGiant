@@ -99,35 +99,35 @@ const WhyChooseUs: React.FC = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-gradient-to-b from-bgColor via-gray-900/50 to-bgColor text-white py-16 sm:py-24 overflow-hidden"
+      className="relative bg-gradient-to-b from-bgColor via-gray-900/50 to-bgColor text-white py-12 sm:py-16 lg:py-24 overflow-hidden"
     >
       {/* Background decoration */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-carousel2/5 via-transparent to-transparent"></div>
       
       {/* Enhanced decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-0 w-64 h-64 bg-gradient-to-br from-carousel2/20 to-carousel1/20 rounded-full filter blur-3xl opacity-30"></div>
-        <div className="absolute bottom-0 right-0 w-80 h-80 bg-gradient-to-br from-carousel1/20 to-carousel3/20 rounded-full filter blur-3xl opacity-30"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-carousel3/10 to-carousel2/10 rounded-full filter blur-3xl opacity-20"></div>
+        <div className="absolute top-0 left-0 w-32 sm:w-48 lg:w-64 h-32 sm:h-48 lg:h-64 bg-gradient-to-br from-carousel2/20 to-carousel1/20 rounded-full filter blur-3xl opacity-30"></div>
+        <div className="absolute bottom-0 right-0 w-40 sm:w-60 lg:w-80 h-40 sm:h-60 lg:h-80 bg-gradient-to-br from-carousel1/20 to-carousel3/20 rounded-full filter blur-3xl opacity-30"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 sm:w-72 lg:w-96 h-48 sm:h-72 lg:h-96 bg-gradient-to-br from-carousel3/10 to-carousel2/10 rounded-full filter blur-3xl opacity-20"></div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row items-start justify-between gap-16">
+        <div className="flex flex-col lg:flex-row items-start justify-between gap-8 sm:gap-12 lg:gap-16">
           {/* Left Section - Enhanced */}
           <div 
             ref={leftRef} 
             className="lg:w-1/2 z-10 relative"
           >
             {/* Modern badge */}
-            <div className="inline-flex items-center space-x-2 px-4 py-2 mb-6 bg-gradient-to-r from-carousel2/20 to-carousel1/20 backdrop-blur-sm border border-carousel2/30 rounded-full">
-              <Award className="w-4 h-4 text-carousel3" />
-              <span className="text-sm font-semibold tracking-wider text-carousel3 uppercase">
+            <div className="inline-flex items-center space-x-2 px-3 sm:px-4 py-2 mb-4 sm:mb-6 bg-gradient-to-r from-carousel2/20 to-carousel1/20 backdrop-blur-sm border border-carousel2/30 rounded-full">
+              <Award className="w-3 h-3 sm:w-4 sm:h-4 text-carousel3" />
+              <span className="text-xs sm:text-sm font-semibold tracking-wider text-carousel3 uppercase">
                 Features of Our Courses
               </span>
             </div>
 
             {/* Modern heading */}
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight font-sans">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 sm:mb-8 leading-tight font-sans">
               Why{" "}
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-carousel3 to-carousel2 animate-pulse">
                 Choose
@@ -136,13 +136,13 @@ const WhyChooseUs: React.FC = () => {
             </h2>
 
             {/* Enhanced benefits list */}
-            <ul className="space-y-6 mb-8">
+            <ul className="space-y-4 sm:space-y-6 mb-6 sm:mb-8">
               {benefits.map((item, index) => (
-                <li key={index} className="group flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-6 h-6 mt-1 bg-gradient-to-br from-carousel2 to-carousel1 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <CheckCircle className="w-4 h-4 text-white" />
+                <li key={index} className="group flex items-start space-x-3 sm:space-x-4">
+                  <div className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 mt-1 bg-gradient-to-br from-carousel2 to-carousel1 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                   </div>
-                  <span className="text-lg text-gray-300 group-hover:text-white transition-colors duration-300 leading-relaxed">
+                  <span className="text-sm sm:text-base lg:text-lg text-gray-300 group-hover:text-white transition-colors duration-300 leading-relaxed">
                     {item}
                   </span>
                 </li>
@@ -150,14 +150,14 @@ const WhyChooseUs: React.FC = () => {
             </ul>
 
             {/* Stats section */}
-            <div className="grid grid-cols-2 gap-6 mt-8">
-              <div className="text-center p-4 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl border border-carousel2/20 backdrop-blur-sm">
-                <div className="text-2xl font-bold text-carousel2 mb-1">500+</div>
-                <div className="text-sm text-gray-400">Students Placed</div>
+            <div className="grid grid-cols-2 gap-4 sm:gap-6 mt-6 sm:mt-8">
+              <div className="text-center p-3 sm:p-4 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl border border-carousel2/20 backdrop-blur-sm">
+                <div className="text-lg sm:text-xl lg:text-2xl font-bold text-carousel2 mb-1">500+</div>
+                <div className="text-xs sm:text-sm text-gray-400">Students Placed</div>
               </div>
-              <div className="text-center p-4 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl border border-carousel2/20 backdrop-blur-sm">
-                <div className="text-2xl font-bold text-carousel2 mb-1">95%</div>
-                <div className="text-sm text-gray-400">Success Rate</div>
+              <div className="text-center p-3 sm:p-4 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl border border-carousel2/20 backdrop-blur-sm">
+                <div className="text-lg sm:text-xl lg:text-2xl font-bold text-carousel2 mb-1">95%</div>
+                <div className="text-xs sm:text-sm text-gray-400">Success Rate</div>
               </div>
             </div>
           </div>
@@ -165,7 +165,7 @@ const WhyChooseUs: React.FC = () => {
           {/* Right Section - Modern Cards */}
           <div
             ref={rightRef}
-            className="lg:w-1/2 z-10 grid grid-cols-1 sm:grid-cols-2 gap-6"
+            className="lg:w-1/2 z-10 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6"
           >
             {features.map((feature, index) => {
               const IconComponent = feature.icon;
@@ -178,24 +178,24 @@ const WhyChooseUs: React.FC = () => {
                   onMouseLeave={() => {/* Future hover logic */}}
                 >
                   {/* Modern feature card */}
-                  <div className="relative p-6 bg-gradient-to-br from-gray-800/50 via-bgColor to-gray-800/50 backdrop-blur-sm border border-carousel2/30 rounded-2xl group-hover:border-carousel2/60 transition-all duration-500 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-carousel2/25 h-full">
+                  <div className="relative p-4 sm:p-6 bg-gradient-to-br from-gray-800/50 via-bgColor to-gray-800/50 backdrop-blur-sm border border-carousel2/30 rounded-xl sm:rounded-2xl group-hover:border-carousel2/60 transition-all duration-500 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-carousel2/25 h-full">
                     {/* Glow effect */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-carousel2/10 via-transparent to-carousel1/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-carousel2/10 via-transparent to-carousel1/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl sm:rounded-2xl"></div>
                     
                     {/* Content */}
                     <div className="relative z-10">
                       {/* Icon with gradient background */}
-                      <div className={`inline-flex p-3 mb-4 bg-gradient-to-br ${feature.color} rounded-xl group-hover:scale-110 transition-transform duration-300`}>
-                        <IconComponent className="w-6 h-6 text-white" />
+                      <div className={`inline-flex p-2 sm:p-3 mb-3 sm:mb-4 bg-gradient-to-br ${feature.color} rounded-lg sm:rounded-xl group-hover:scale-110 transition-transform duration-300`}>
+                        <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                       </div>
 
                       {/* Title */}
-                      <h3 className="text-xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-carousel3 group-hover:to-carousel2 transition-all duration-300">
+                      <h3 className="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-carousel3 group-hover:to-carousel2 transition-all duration-300">
                         {feature.title}
                       </h3>
 
                       {/* Description */}
-                      <p className="text-gray-400 text-sm leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
+                      <p className="text-gray-400 text-xs sm:text-sm leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
                         {feature.description}
                       </p>
                     </div>

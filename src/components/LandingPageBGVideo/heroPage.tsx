@@ -51,14 +51,14 @@ export const HeroPage = memo(() => {
 
   return (
     <div
-      className="h-screen md:h-screen w-screen overflow-hidden flex-col relative"
+      className="h-screen w-screen overflow-hidden flex-col relative"
       id="intro"
     >
       {/* Background Text */}
       <div
-        className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none "
+        className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none"
         style={{
-          fontSize: "20vw", // Adjust size as needed
+          fontSize: "clamp(8vw, 20vw, 20vw)", // Responsive font size
           fontWeight: "bold",
           color: "white",
           zIndex: 0, // Ensure it stays in the background
@@ -69,19 +69,15 @@ export const HeroPage = memo(() => {
 
       {/* Main Text */}
       <div
-        className="z-10 flex flex-col justify-center h-full text-center text-white bg-bgColor items-baseline font-bigShoulders"
+        className="z-10 flex flex-col justify-center h-full text-center text-white bg-bgColor items-center sm:items-baseline font-bigShoulders px-4 sm:px-8 md:px-12"
         style={{
           background:
             "radial-gradient(circle at left, rgba(118,60,172,1) 0%, rgba(17, 7, 31, 1) 30%)",
         }}
       >
-        {/* <span className="pl-[1rem] text-base sm:text-lg md:text-xl lg:text-2xl font-bigShoulders">
-          Benefit from our software solutions.
-        </span> */}
-
         {/* Typing Animation */}
-        <div className="relative">
-          <h1 className="sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-6xl leading-tight text-left pl-[5%] backdrop-blur-lg rounded-lg font-sans font-bold text-600">
+        <div className="relative w-full max-w-4xl">
+          <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-6xl leading-tight text-center sm:text-left sm:pl-[5%] backdrop-blur-lg rounded-lg font-sans font-bold text-600">
             {lines.map((line, index) => (
               <span key={index} className="block">
                 {line}
@@ -98,7 +94,7 @@ export const HeroPage = memo(() => {
       </div>
 
       {/* Rotating Logo */}
-      <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-[40%] max-w-[600px] min-w-[150px] hidden sm:block">
+      <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-[30%] sm:w-[40%] max-w-[600px] min-w-[120px] sm:min-w-[150px] hidden sm:block">
         <Suspense fallback={<div>Loading...</div>}>
           <RotatingAnimation />
         </Suspense>

@@ -322,24 +322,24 @@ const AboutUs: React.FC = () => {
       </div>
 
       {/* Hero Section */}
-      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 -mt-20">
+      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 -mt-16 sm:-mt-20">
         {/* Background decoration */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-carousel2/10 via-transparent to-transparent"></div>
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-carousel2/20 to-carousel1/20 rounded-full filter blur-3xl opacity-30"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-carousel1/20 to-carousel3/20 rounded-full filter blur-3xl opacity-30"></div>
+          <div className="absolute -top-20 sm:-top-40 -right-20 sm:-right-40 w-48 sm:w-96 h-48 sm:h-96 bg-gradient-to-br from-carousel2/20 to-carousel1/20 rounded-full filter blur-3xl opacity-30"></div>
+          <div className="absolute -bottom-20 sm:-bottom-40 -left-20 sm:-left-40 w-40 sm:w-80 h-40 sm:h-80 bg-gradient-to-br from-carousel1/20 to-carousel3/20 rounded-full filter blur-3xl opacity-30"></div>
         </div>
 
         <div className="relative z-10 max-w-6xl mx-auto text-center">
           <motion.div 
-            className="hero-element mb-8"
+            className="hero-element mb-6 sm:mb-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-carousel2/20 to-carousel1/20 backdrop-blur-sm border border-carousel2/30 rounded-full px-6 py-3 mb-8">
-              <Building className="w-5 h-5 text-blue-400" />
-              <span className="text-sm font-medium text-gray-300">About Tech Giant</span>
+            <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-carousel2/20 to-carousel1/20 backdrop-blur-sm border border-carousel2/30 rounded-full px-4 sm:px-6 py-2 sm:py-3 mb-6 sm:mb-8">
+              <Building className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
+              <span className="text-xs sm:text-sm font-medium text-gray-300">About Tech Giant</span>
             </div>
           </motion.div>
 
@@ -355,16 +355,16 @@ const AboutUs: React.FC = () => {
           </div>
 
           <motion.p 
-            className="hero-element text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto mb-12 leading-relaxed"
+            className="hero-element text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-300 max-w-4xl mx-auto mb-8 sm:mb-12 leading-relaxed px-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            Founded by visionary leaders <br/>
-             Ibrahim (Co-Founder/CEO) and <br/>
-             Sameer (Co-Founder/CMO), and <br/>
-             Led by our technical team including Asad (CTO) and <br/>
-             Md. Shahraz Sarfaraz (CIO), <br/>
+            Founded by visionary leaders <br className="hidden sm:block"/>
+             Ibrahim (Co-Founder/CEO) and <br className="hidden sm:block"/>
+             Sameer (Co-Founder/CMO), and <br className="hidden sm:block"/>
+             Led by our technical team including Asad (CTO) and <br className="hidden sm:block"/>
+             Md. Shahraz Sarfaraz (CIO), <br className="hidden sm:block"/>
              Tech Giant is a professional IT services company specializing in 
             <span className="text-gray-300 font-medium">cybersecurity</span>, 
             <span className="text-gray-300 font-medium">web development</span>, 
@@ -380,16 +380,16 @@ const AboutUs: React.FC = () => {
           >
             <button 
               onClick={() => navigate('/')}
-              className="group px-8 py-4 bg-gradient-to-r from-carousel2 to-carousel1 text-white font-semibold rounded-xl hover:from-carousel1 hover:to-carousel3 transition-all duration-300 shadow-lg hover:shadow-carousel2/25 hover:scale-105"
+              className="group px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-carousel2 to-carousel1 text-white font-semibold rounded-xl hover:from-carousel1 hover:to-carousel3 transition-all duration-300 shadow-lg hover:shadow-carousel2/25 hover:scale-105 text-sm sm:text-base"
             >
               <span className="flex items-center space-x-2">
                 <span>Our Services</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
               </span>
             </button>
             <button 
               onClick={() => navigate('/')}
-              className="px-8 py-4 border border-carousel2/50 text-white font-semibold rounded-xl hover:bg-carousel2/10 transition-all duration-300 backdrop-blur-sm"
+              className="px-6 sm:px-8 py-3 sm:py-4 border border-carousel2/50 text-white font-semibold rounded-xl hover:bg-carousel2/10 transition-all duration-300 backdrop-blur-sm text-sm sm:text-base"
             >
               Contact Us
             </button>
@@ -398,18 +398,18 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* Company Story Section */}
-      <section ref={storyRef} className="py-20 px-4 sm:px-6 lg:px-8 relative">
+      <section ref={storyRef} className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-900/20 to-transparent"></div>
         
         <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="space-y-8">
+          <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
+            <div className="space-y-6 sm:space-y-8">
               <div className="story-element">
-                <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-carousel1/20 to-carousel3/20 backdrop-blur-sm border border-carousel1/30 rounded-full px-4 py-2 mb-6">
-                  <BookOpen className="w-4 h-4 text-indigo-400" />
-                  <span className="text-sm font-medium text-gray-300">Our Story</span>
+                <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-carousel1/20 to-carousel3/20 backdrop-blur-sm border border-carousel1/30 rounded-full px-3 sm:px-4 py-2 mb-4 sm:mb-6">
+                  <BookOpen className="w-3 h-3 sm:w-4 sm:h-4 text-indigo-400" />
+                  <span className="text-xs sm:text-sm font-medium text-gray-300">Our Story</span>
                 </div>
-                <h2 className="text-4xl lg:text-5xl font-bold mb-6">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
                   Built on a Vision of
                   <span className="bg-clip-text text-transparent bg-gradient-to-r from-carousel1 to-carousel2 block">
                     Digital Excellence
@@ -417,7 +417,7 @@ const AboutUs: React.FC = () => {
                 </h2>
               </div>
 
-              <div className="story-element space-y-6 text-lg text-gray-300 leading-relaxed">
+              <div className="story-element space-y-4 sm:space-y-6 text-sm sm:text-base lg:text-lg text-gray-300 leading-relaxed">
                 <p>
                   In 2020, two visionary entrepreneurs, <span className="text-blue-400 font-medium">Ibrahim (Co-Founder/CEO)</span> and 
                   <span className="text-indigo-400 font-medium"> Sameer (Co-Founder/CMO)</span>, recognized a critical gap in the market: 
@@ -435,16 +435,16 @@ const AboutUs: React.FC = () => {
                 </p>
               </div>
 
-              <div className="story-element grid grid-cols-2 gap-6">
-                <div className="p-6 bg-gray-800/70 rounded-2xl border border-gray-600/30 backdrop-blur-sm">
-                  <Crown className="w-8 h-8 text-blue-400 mb-4" />
-                  <h3 className="text-xl font-bold text-white mb-2">Leadership</h3>
-                  <p className="text-gray-400 text-sm">Experienced founders driving innovation and growth</p>
+              <div className="story-element grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                <div className="p-4 sm:p-6 bg-gray-800/70 rounded-xl sm:rounded-2xl border border-gray-600/30 backdrop-blur-sm">
+                  <Crown className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400 mb-3 sm:mb-4" />
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-2">Leadership</h3>
+                  <p className="text-gray-400 text-xs sm:text-sm">Experienced founders driving innovation and growth</p>
                 </div>
-                <div className="p-6 bg-gray-800/70 rounded-2xl border border-gray-600/30 backdrop-blur-sm">
-                  <Target className="w-8 h-8 text-indigo-400 mb-4" />
-                  <h3 className="text-xl font-bold text-white mb-2">Mission</h3>
-                  <p className="text-gray-400 text-sm">Bridging technology gaps and empowering businesses</p>
+                <div className="p-4 sm:p-6 bg-gray-800/70 rounded-xl sm:rounded-2xl border border-gray-600/30 backdrop-blur-sm">
+                  <Target className="w-6 h-6 sm:w-8 sm:h-8 text-indigo-400 mb-3 sm:mb-4" />
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-2">Mission</h3>
+                  <p className="text-gray-400 text-xs sm:text-sm">Bridging technology gaps and empowering businesses</p>
                 </div>
               </div>
             </div>

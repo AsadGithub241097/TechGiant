@@ -51,14 +51,14 @@ const Card: React.FC<CardProps> = memo(
     return (
       <div
         ref={cardRef}
-        className={`absolute font-sans top-0 left-0 w-full h-full text-center bg-gradient-to-br from-gray-900/90 via-bgColor to-gray-900/90 backdrop-blur-sm border border-carousel2/30 rounded-2xl flex flex-col md:flex-row items-center justify-between p-6 md:p-8 lg:p-10 xl:p-12 2xl:p-16 shadow-2xl transition-all duration-500 ease-in-out hover:shadow-[0_0_40px_rgba(170,96,200,0.4)] hover:border-carousel2/60 ${isBlurred ? "filter blur-md opacity-70" : ""
+        className={`absolute font-sans top-0 left-0 w-full h-full text-center bg-gradient-to-br from-gray-900/90 via-bgColor to-gray-900/90 backdrop-blur-sm border border-carousel2/30 rounded-xl sm:rounded-2xl flex flex-col md:flex-row items-center justify-between p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12 2xl:p-16 shadow-2xl transition-all duration-500 ease-in-out hover:shadow-[0_0_40px_rgba(170,96,200,0.4)] hover:border-carousel2/60 ${isBlurred ? "filter blur-md opacity-70" : ""
           }`}
       >
         {/* Glow effect */}
         <div className="absolute inset-0 bg-gradient-to-br from-carousel2/10 via-transparent to-carousel1/10 opacity-0 hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
         
         {/* Icon section with enhanced styling */}
-        <div className="h-24 w-24 sm:h-32 sm:w-32 md:h-40 md:w-40 lg:h-48 lg:w-48 xl:h-64 xl:w-64 2xl:h-80 2xl:w-80 relative flex justify-center items-center group">
+        <div className="h-16 w-16 sm:h-24 sm:w-24 md:h-32 md:w-32 lg:h-40 lg:w-40 xl:h-48 xl:w-48 2xl:h-64 2xl:w-64 relative flex justify-center items-center group">
           {isVisible ? (
             <div className="relative w-full h-full">
               {/* Enhanced background glow */}
@@ -92,14 +92,14 @@ const Card: React.FC<CardProps> = memo(
         </div>
         
         {/* Content section with enhanced typography */}
-        <div className="relative z-10 flex flex-col font-sans items-center md:items-start text-center md:text-left mt-6 md:mt-0 md:ml-8 lg:ml-10 xl:ml-12 2xl:ml-16 flex-1">
-          <div className="flex items-center gap-3 mb-4 md:mb-6">
-            <Sparkles className="w-6 h-6 text-carousel3 opacity-80" />
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-carousel3 to-carousel2 leading-tight tracking-tight">
+        <div className="relative z-10 flex flex-col font-sans items-center md:items-start text-center md:text-left mt-4 sm:mt-6 md:mt-0 md:ml-6 lg:ml-8 xl:ml-10 2xl:ml-12 flex-1">
+          <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 md:mb-6">
+            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-carousel3 opacity-80" />
+            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-carousel3 to-carousel2 leading-tight tracking-tight">
               {title}
             </h2>
           </div>
-          <p className="text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl text-gray-300 hover:text-gray-200 font-light leading-relaxed max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-3xl transition-colors duration-300">
+          <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl text-gray-300 hover:text-gray-200 font-light leading-relaxed max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-3xl transition-colors duration-300">
             {description}
           </p>
         </div>
@@ -548,7 +548,7 @@ const Gallery: React.FC = memo(() => {
   return (
     <div
       ref={galleryRef}
-      className="relative w-full overflow-hidden flex flex-col items-center justify-center bg-gradient-to-b from-bgColor via-gray-900/50 to-bgColor h-screen transition-all"
+      className="relative w-full overflow-hidden flex flex-col items-center justify-center bg-gradient-to-b from-bgColor via-gray-900/50 to-bgColor min-h-screen py-8 sm:py-12 transition-all"
       style={{backgroundImage: `url(${IMAGE_URLS.liquid})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed'}}
     >
       {/* Enhanced background decoration */}
@@ -561,33 +561,33 @@ const Gallery: React.FC = memo(() => {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-carousel3/5 to-carousel2/5 rounded-full filter blur-3xl opacity-20"></div>
       </div>
       
-      <div className="relative z-10 w-full max-w-6xl px-4">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight font-sans">
+      <div className="relative z-10 w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight font-sans">
             Our Core{" "}
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-carousel3 to-carousel2 animate-pulse">
               Values
             </span>
           </h1>
-          <p className="text-gray-400 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+          <p className="text-gray-400 text-sm sm:text-base md:text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed px-4">
             The fundamental principles that guide our innovation, shape our culture, and drive our commitment to excellence
           </p>
           
           {/* Decorative line */}
-          <div className="mt-6 mx-auto w-24 h-1 bg-gradient-to-r from-carousel2 to-carousel1 rounded-full"></div>
+          <div className="mt-4 sm:mt-6 mx-auto w-16 sm:w-24 h-1 bg-gradient-to-r from-carousel2 to-carousel1 rounded-full"></div>
         </div>
-        <div className="relative w-full h-96 md:h-[30rem] lg:h-[35rem] mt-4 mb-16">
+        <div className="relative w-full h-80 sm:h-96 md:h-[30rem] lg:h-[35rem] mt-4 mb-8 sm:mb-16">
           {/* Enhanced Previous Button */}
           <button
             onClick={handlePrev}
             disabled={isAnimating}
-            className={`absolute -left-4 top-1/2 transform -translate-y-1/2 z-20 p-4 rounded-2xl bg-gradient-to-br from-gray-900/80 via-bgColor/80 to-gray-900/80 backdrop-blur-sm border border-carousel2/30 hover:border-carousel2/60 hover:scale-110 transition-all duration-300 shadow-2xl hover:shadow-carousel2/25 ${isAnimating
+            className={`absolute -left-2 sm:-left-4 top-1/2 transform -translate-y-1/2 z-20 p-2 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-gray-900/80 via-bgColor/80 to-gray-900/80 backdrop-blur-sm border border-carousel2/30 hover:border-carousel2/60 hover:scale-110 transition-all duration-300 shadow-2xl hover:shadow-carousel2/25 ${isAnimating
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:from-carousel2/20 hover:to-carousel1/20"
               }`}
             aria-label="Previous Value"
           >
-            <ChevronLeft className="h-6 w-6 text-white" />
+            <ChevronLeft className="h-4 w-4 sm:h-6 sm:w-6 text-white" />
           </button>
 
           {/* Carousel Container */}
@@ -602,24 +602,24 @@ const Gallery: React.FC = memo(() => {
           <button
             onClick={handleNext}
             disabled={isAnimating}
-            className={`absolute -right-4 top-1/2 transform -translate-y-1/2 z-20 p-4 rounded-2xl bg-gradient-to-br from-gray-900/80 via-bgColor/80 to-gray-900/80 backdrop-blur-sm border border-carousel2/30 hover:border-carousel2/60 hover:scale-110 transition-all duration-300 shadow-2xl hover:shadow-carousel2/25 ${isAnimating
+            className={`absolute -right-2 sm:-right-4 top-1/2 transform -translate-y-1/2 z-20 p-2 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-gray-900/80 via-bgColor/80 to-gray-900/80 backdrop-blur-sm border border-carousel2/30 hover:border-carousel2/60 hover:scale-110 transition-all duration-300 shadow-2xl hover:shadow-carousel2/25 ${isAnimating
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:from-carousel2/20 hover:to-carousel1/20"
               }`}
             aria-label="Next Value"
           >
-            <ChevronRight className="h-6 w-6 text-white" />
+            <ChevronRight className="h-4 w-4 sm:h-6 sm:w-6 text-white" />
           </button>
         </div>
         {/* Enhanced navigation and stats */}
-        <div className="flex flex-col items-center gap-8">
+        <div className="flex flex-col items-center gap-6 sm:gap-8">
           {/* Modern navigation dots */}
-          <div className="flex gap-4 bg-gradient-to-r from-gray-900/50 via-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-carousel2/20 rounded-full px-6 py-3">
+          <div className="flex gap-2 sm:gap-4 bg-gradient-to-r from-gray-900/50 via-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-carousel2/20 rounded-full px-4 sm:px-6 py-2 sm:py-3">
             {cardsData.map((_, i) => (
               <button
                 key={i}
                 onClick={() => handleDotClick(i)}
-                className={`relative w-4 h-4 rounded-full transition-all duration-300 group ${i === currentIndex
+                className={`relative w-3 h-3 sm:w-4 sm:h-4 rounded-full transition-all duration-300 group ${i === currentIndex
                     ? "bg-gradient-to-r from-carousel2 to-carousel1 scale-125 shadow-lg shadow-carousel2/50"
                     : "bg-gray-600 hover:bg-carousel2/60 hover:scale-110"
                   }`}
@@ -634,7 +634,7 @@ const Gallery: React.FC = memo(() => {
           
           {/* Value counter */}
           <div className="text-center">
-            <p className="text-sm text-gray-500">
+            <p className="text-xs sm:text-sm text-gray-500">
               <span className="text-carousel2 font-semibold">{currentIndex + 1}</span> of <span className="text-carousel2 font-semibold">{cardsData.length}</span> Core Values
             </p>
           </div>

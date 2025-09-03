@@ -150,10 +150,10 @@ const Header: React.FC = () => {
 
   return (
     <div className="wrap" id="headerContainer">
-      <header className="fixed z-20 px-4 md:px-20 py-2 top-0 left-0 w-full text-black h-[var(--header-height)] bg-navBg shadow-sm font-doto font-bold">
+      <header className="fixed z-20 px-4 sm:px-6 md:px-12 lg:px-20 py-2 top-0 left-0 w-full text-black h-[var(--header-height)] bg-navBg shadow-sm font-doto font-bold">
         <div className="flex justify-between items-center">
           <div onClick={() => navigate("/")} className="cursor-pointer">
-            <Icon height={60} width={100} />
+            <Icon height={40} width={80} className="sm:h-12 sm:w-20 md:h-16 md:w-24 lg:h-20 lg:w-28" />
           </div>
 
           <button
@@ -191,6 +191,11 @@ const Header: React.FC = () => {
               <li>
                 <Link to="/about" className="text-white hover:text-blue-600">
                   About Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/3d-animation" className="text-white hover:text-blue-600">
+                  3D Animation
                 </Link>
               </li>
               <li
@@ -244,7 +249,7 @@ const Header: React.FC = () => {
               onClick={closeAllMenus}
             >
               <nav 
-                className="absolute top-0 right-0 w-4/5 h-full bg-[#ADB2D4] p-4 shadow-lg overflow-y-auto"
+                className="absolute top-0 right-0 w-4/5 sm:w-3/5 md:w-2/5 h-full bg-[#ADB2D4] p-4 sm:p-6 shadow-lg overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex justify-between items-center mb-6 w-full ">
@@ -301,6 +306,14 @@ const Header: React.FC = () => {
                       className="block w-full text-left py-2 text-black rounded-sm hover:text-white hover:bg-navBg hover:rounded-xl pl-3 pr-3 hover:font-sans"
                     >
                       About Us
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => handleMobileServiceClick("/3d-animation")}
+                      className="block w-full text-left py-2 text-black rounded-sm hover:text-white hover:bg-navBg hover:rounded-xl pl-3 pr-3 hover:font-sans"
+                    >
+                      3D Animation
                     </button>
                   </li>
                   <li className="relative">

@@ -46,9 +46,9 @@ const Footer: React.FC = () => {
         <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-gradient-to-br from-carousel1/10 to-carousel3/10 rounded-full filter blur-3xl opacity-30"></div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
         {/* Main footer content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-8 sm:mb-12">
           {/* Company Info */}
           <div className="lg:col-span-1 space-y-6">
             <div>
@@ -181,17 +181,17 @@ const Footer: React.FC = () => {
 
 
         {/* Bottom bar */}
-        <div className="border-t border-carousel2/20 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-gray-500 text-sm">
+        <div className="border-t border-carousel2/20 pt-6 sm:pt-8">
+          <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+            <p className="text-gray-500 text-xs sm:text-sm text-center sm:text-left">
               &copy; {new Date().getFullYear()} Tech Giant. All rights reserved.
             </p>
-            <div className="flex items-center space-x-6 text-sm text-gray-500">
+            <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 text-xs sm:text-sm text-gray-500">
               <span className="flex items-center space-x-2">
-                <Shield className="w-4 h-4 text-carousel2" />
+                <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-carousel2" />
                 <span>ISO 27001 Certified</span>
               </span>
-              <span>•</span>
+              <span className="hidden sm:inline">•</span>
               <span>Made with ❤️ in India</span>
             </div>
           </div>

@@ -47,6 +47,9 @@ export default {
         scrollReverse: "scrollReverse 40s linear infinite",
         "fade-in": "fadeIn 0.5s ease-in-out",
         "slide-up": "slideUp 0.5s ease-out",
+        "infinite-float": "infiniteFloat 6s ease-in-out infinite",
+        "infinite-pulse": "infinitePulse 4s ease-in-out infinite",
+        "infinite-rotate": "infiniteRotate 20s linear infinite",
       },
       keyframes: {
         blink: {
@@ -72,6 +75,18 @@ export default {
         slideUp: {
           "0%": { transform: "translateY(20px)", opacity: "0" },
           "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        infiniteFloat: {
+          "0%, 100%": { transform: "translateY(0px) rotate(0deg)" },
+          "50%": { transform: "translateY(-20px) rotate(180deg)" },
+        },
+        infinitePulse: {
+          "0%, 100%": { opacity: "0.3", filter: "blur(0px)" },
+          "50%": { opacity: "0.6", filter: "blur(1px)" },
+        },
+        infiniteRotate: {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
         },
       },
       spacing: {

@@ -17,10 +17,10 @@ export default function HomePage() {
       <main>
         <HeroPage />
         <Gallery />
-        <div className="flex h-[170px] w-screen">
+        <div className="flex h-[120px] sm:h-[150px] md:h-[170px] w-screen">
           <TechGiantText />
         </div>
-        <div className="px-0 flex flex-col item-center justify-center ">
+        <div className="px-0 flex flex-col items-center justify-center">
           <ImageSlider2 />
           
           <WhyChooseUs />

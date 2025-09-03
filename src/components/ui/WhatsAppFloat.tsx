@@ -46,7 +46,7 @@ const WhatsAppFloat: React.FC = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50">
       {/* Tooltip */}
       <AnimatePresence>
         {showTooltip && (
@@ -54,17 +54,17 @@ const WhatsAppFloat: React.FC = () => {
             initial={{ opacity: 0, scale: 0.8, x: 20 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
             exit={{ opacity: 0, scale: 0.8, x: 20 }}
-            className="absolute bottom-16 right-0 mb-2"
+            className="absolute bottom-12 sm:bottom-16 right-0 mb-2"
           >
             <div className="relative">
-              <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-3 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 max-w-xs">
+              <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 sm:px-4 py-2 sm:py-3 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 max-w-[200px] sm:max-w-xs">
                 <button
                   onClick={handleTooltipClose}
                   className="absolute top-1 right-1 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
                 >
                   <X className="w-3 h-3" />
                 </button>
-                <p className="text-sm font-medium mb-1">Need Help?</p>
+                <p className="text-xs sm:text-sm font-medium mb-1">Need Help?</p>
                 <p className="text-xs text-gray-600 dark:text-gray-400">
                   Chat with us on WhatsApp for instant support!
                 </p>
@@ -83,14 +83,14 @@ const WhatsAppFloat: React.FC = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={handleWhatsAppClick}
-        className="group relative w-14 h-14 bg-[#25D366] hover:bg-[#20b954] text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center"
+        className="group relative w-12 h-12 sm:w-14 sm:h-14 bg-[#25D366] hover:bg-[#20b954] text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center"
         aria-label="Chat on WhatsApp"
       >
         {/* Background glow effect */}
         <div className="absolute inset-0 bg-[#25D366] rounded-full opacity-30 group-hover:opacity-50 transition-opacity duration-300 animate-pulse"></div>
         
         {/* WhatsApp Icon */}
-        <MessageCircle className="w-7 h-7 relative z-10" />
+        <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7 relative z-10" />
         
         {/* Ripple effect on hover */}
         <div className="absolute inset-0 rounded-full border-2 border-[#25D366] opacity-0 group-hover:opacity-100 group-hover:animate-ping"></div>
