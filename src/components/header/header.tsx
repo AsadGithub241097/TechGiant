@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useNavigate, Link } from "react-router-dom";
 import Icon from "../../icons/techgiant";
+import { useAuth } from "../../contexts/FirebaseAuthContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -57,6 +58,7 @@ const DropdownItem = memo(({
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
@@ -184,13 +186,40 @@ const Header: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/LMS" className="text-white hover:text-blue-600">
-                  LMS
-                </Link>
-              </li>
-              <li>
                 <Link to="/about" className="text-white hover:text-blue-600">
                   About Us
+                </Link>
+              </li>
+              {isAuthenticated ? (
+                <>
+                  <li>
+                    <Link to="/dashboard" className="text-white hover:text-blue-600">
+                      Dashboard
+                    </Link>
+                  </li>
+                  <li>
+                    <button 
+                      onClick={async () => {
+                        await logout();
+                        navigate('/');
+                      }}
+                      className="text-white hover:text-red-400 transition-colors duration-300"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <li>
+                  <Link to="/login" className="text-white hover:text-blue-600">
+                    Login
+                  </Link>
+                </li>
+              )}
+              {/* Temporarily hidden - keeping code for future use
+              <li>
+                <Link to="/LMS" className="text-white hover:text-blue-600">
+                  LMS
                 </Link>
               </li>
               <li>
@@ -198,6 +227,7 @@ const Header: React.FC = () => {
                   3D Animation
                 </Link>
               </li>
+              */}
               <li
                 className="relative"
                 onMouseEnter={handleMouseEnter}
@@ -294,18 +324,52 @@ const Header: React.FC = () => {
                   </li>
                   <li>
                     <button
-                      onClick={() => handleMobileServiceClick("/LMS")}
-                      className="block w-full text-left py-2 text-black rounded-sm hover:text-white hover:bg-navBg hover:rounded-xl pl-3 pr-3 hover:font-sans"
-                    >
-                      LMS
-                    </button>
-                  </li>
-                  <li>
-                    <button
                       onClick={() => handleMobileServiceClick("/about")}
                       className="block w-full text-left py-2 text-black rounded-sm hover:text-white hover:bg-navBg hover:rounded-xl pl-3 pr-3 hover:font-sans"
                     >
                       About Us
+                    </button>
+                  </li>
+                  {isAuthenticated ? (
+                    <>
+                      <li>
+                        <button
+                          onClick={() => handleMobileServiceClick("/dashboard")}
+                          className="block w-full text-left py-2 text-black rounded-sm hover:text-white hover:bg-navBg hover:rounded-xl pl-3 pr-3 hover:font-sans"
+                        >
+                          Dashboard
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          onClick={async () => {
+                            await logout();
+                            closeAllMenus();
+                            navigate('/');
+                          }}
+                          className="block w-full text-left py-2 text-red-600 rounded-sm hover:text-white hover:bg-red-600 hover:rounded-xl pl-3 pr-3 hover:font-sans"
+                        >
+                          Logout
+                        </button>
+                      </li>
+                    </>
+                  ) : (
+                    <li>
+                      <button
+                        onClick={() => handleMobileServiceClick("/login")}
+                        className="block w-full text-left py-2 text-black rounded-sm hover:text-white hover:bg-navBg hover:rounded-xl pl-3 pr-3 hover:font-sans"
+                      >
+                        Login
+                      </button>
+                    </li>
+                  )}
+                  {/* Temporarily hidden - keeping code for future use
+                  <li>
+                    <button
+                      onClick={() => handleMobileServiceClick("/LMS")}
+                      className="block w-full text-left py-2 text-black rounded-sm hover:text-white hover:bg-navBg hover:rounded-xl pl-3 pr-3 hover:font-sans"
+                    >
+                      LMS
                     </button>
                   </li>
                   <li>
@@ -316,6 +380,7 @@ const Header: React.FC = () => {
                       3D Animation
                     </button>
                   </li>
+                  */}
                   <li className="relative">
                     <button
                       className="flex items-center justify-between w-full py-2 text-left text-black hover:text-white hover:bg-navBg hover:rounded-xl pl-3 pr-3 hover:font-sans"

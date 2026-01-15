@@ -1,5 +1,5 @@
-import { Suspense, lazy, useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import React, { Suspense, lazy, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import "./index.css";
 import "./App.css";
 import Header from "./components/header/header";
@@ -8,6 +8,8 @@ import ConnectWithUsSection from "./services/vapt/contactUs";
 import WhatsAppFloat from "./components/ui/WhatsAppFloat";
 import SEOHead from "./components/SEO/SEOHead";
 import { getPageSEO } from "./data/seoConfig";
+import { FirebaseAuthProvider } from "./contexts/FirebaseAuthContext";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 // Lazy load components
 const HomePage = lazy(() => import("./components/Home/homePage"));
@@ -16,7 +18,9 @@ const VaptContaner = lazy(() => import("./services/vaptContanar"));
 const DevContaner = lazy(() => import("./services/development/devContaner"));
 const MarketingPage = lazy(() => import("./services/markating/markating"));
 const LMSDashboard = lazy(() => import("./components/LMS/Dashboard"));
-const Login = lazy(() => import("./components/auth/Login"));
+const AuthPage = lazy(() => import("./components/auth/AuthPage"));
+const UserDashboard = lazy(() => import("./components/dashboard/UserDashboard"));
+const FirebaseAdminPanel = lazy(() => import("./components/admin/FirebaseAdminPanel"));
 const CourseCategories = lazy(() => import("./components/courses/CourseCategories"));
 const CourseListing = lazy(() => import("./components/courses/CourseListing"));
 const CourseDetail = lazy(() => import("./components/courses/CourseDetail"));
@@ -28,7 +32,8 @@ const LoadingSpinner = () => (
   </div>
 );
 
-function App() {
+// AppContent component that uses useLocation (must be inside Router)
+function AppContent() {
   const location = useLocation();
 
   useEffect(() => {
@@ -41,9 +46,10 @@ function App() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [location.pathname]);
 
-  // Check if current path is LMS, Login, or Courses to conditionally render footer
+  // Check if current path is LMS, Login, Dashboard, or Courses to conditionally render footer
   const isLMSPage = location.pathname === '/LMS';
   const isLoginPage = location.pathname === '/login';
+  const isDashboardPage = location.pathname === '/dashboard';
   const isCoursePage = location.pathname.startsWith('/course');
   const isAboutPage = location.pathname === '/about';
 
@@ -65,7 +71,7 @@ function App() {
       
       {/* Header with conditional styling for LMS page */}
       <div className={isLMSPage ? "lms-header-container" : ""}>
-        {!isLoginPage && !isCoursePage && !isAboutPage && <Header />}
+        {!isLoginPage && !isDashboardPage && !isCoursePage && !isAboutPage && <Header />}
       </div>
       
       <Suspense fallback={<LoadingSpinner />}>
@@ -76,7 +82,18 @@ function App() {
             <Route path="/Vapt" element={<VaptContaner />} />
             <Route path="/Development" element={<DevContaner />} />
             <Route path="/Marketing" element={<MarketingPage />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<AuthPage />} />
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <UserDashboard />
+              </ProtectedRoute>
+            } />
+              <Route path="/admin" element={
+                <ProtectedRoute adminOnly>
+                  <FirebaseAdminPanel />
+                </ProtectedRoute>
+              } />
+            {/* Keep LMS and Courses routes but they're hidden from navigation */}
             <Route path="/LMS" element={<LMSDashboard />} />
             <Route path="/courses" element={<CourseCategories />} />
             <Route path="/courses/:category" element={<CourseListing />} />
@@ -84,12 +101,23 @@ function App() {
           </Routes>
         </div>
       </Suspense>
-      {!isLMSPage && !isLoginPage && !isCoursePage && !isAboutPage && <ConnectWithUsSection />}
-      {!isLMSPage && !isLoginPage && !isCoursePage && !isAboutPage && <Footer />}
+      {!isLMSPage && !isLoginPage && !isDashboardPage && !isCoursePage && !isAboutPage && <ConnectWithUsSection />}
+      {!isLMSPage && !isLoginPage && !isDashboardPage && !isCoursePage && !isAboutPage && <Footer />}
       
-      {/* WhatsApp Float Button - Show on all pages */}
-      <WhatsAppFloat />
+      {/* WhatsApp Float Button - Show on all pages except login and dashboard */}
+      {!isLoginPage && !isDashboardPage && <WhatsAppFloat />}
     </div>
+  );
+}
+
+// Main App component with Router wrapper
+function App() {
+  return (
+    <Router>
+      <FirebaseAuthProvider>
+        <AppContent />
+      </FirebaseAuthProvider>
+    </Router>
   );
 }
 

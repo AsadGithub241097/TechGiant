@@ -13,6 +13,7 @@
     "seo:validate": "npm run seo:test"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@fontsource/big-shoulders-stencil": "^5.2.1",
     "@gsap/react": "^2.1.2",
     "@lottiefiles/lottie-player": "^2.0.12",
@@ -20,6 +21,7 @@
     "@react-three/fiber": "^9.3.0",
     "@types/three": "^0.179.0",
     "clsx": "^2.1.1",
+    "firebase": "^12.7.0",
     "framer-motion": "^11.11.15",
     "gsap": "^3.12.5",
     "lottie-react": "^2.4.1",

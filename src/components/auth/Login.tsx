@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Lock, Mail, User, ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/FirebaseAuthContext';
 
 interface LoginFormData {
   email: string;
@@ -17,6 +18,7 @@ interface LoginErrors {
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const { login, socialLogin, isAuthenticated, isLoading: authLoading } = useAuth();
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
     password: '',
@@ -26,6 +28,13 @@ const Login: React.FC = () => {
   const [errors, setErrors] = useState<LoginErrors>({});
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
 
   // const validateForm = (): boolean => {
   //   const newErrors: LoginErrors = {};
@@ -64,26 +73,74 @@ const Login: React.FC = () => {
     }
   };
 
+  const validateForm = (): boolean => {
+    const newErrors: LoginErrors = {};
+
+    // Email validation
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!validateForm()) {
+      return;
+    }
+
     setIsLoading(true);
     setErrors({});
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const result = await login(formData.email, formData.password);
       
-      // For demo purposes, redirect to LMS regardless of credentials
-      // In a real app, you would validate credentials here
-      console.log('Login attempt:', formData);
-      
-      // Redirect to LMS page
-      navigate('/LMS');
-      
-    } catch (error) {
+      if (result.success) {
+        // Redirect to dashboard on successful login
+        navigate('/dashboard');
+      } else {
+        setErrors({
+          general: result.message,
+        });
+      }
+    } catch (error: any) {
       setErrors({
-        general: 'Login failed. Please check your credentials and try again.',
+        general: error.message || 'Login failed. Please check your credentials and try again.',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSocialLogin = async (provider: 'google' | 'facebook') => {
+    setIsLoading(true);
+    setErrors({});
+
+    try {
+      const result = await socialLogin(provider);
+      
+      if (result.success) {
+        navigate('/dashboard');
+      } else {
+        setErrors({
+          general: result.message,
+        });
+      }
+    } catch (error: any) {
+      setErrors({
+        general: error.message || 'Social login failed. Please try again.',
       });
     } finally {
       setIsLoading(false);
@@ -242,10 +299,10 @@ const Login: React.FC = () => {
             <motion.button
               variants={itemVariants}
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || authLoading}
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all duration-200 flex items-center justify-center group disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? (
+              {(isLoading || authLoading) ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
                 <>
@@ -282,7 +339,9 @@ const Login: React.FC = () => {
             <div className="mt-4 grid grid-cols-2 gap-3">
               <button
                 type="button"
-                className="w-full bg-white/10 border border-white/20 text-white py-2 px-4 rounded-lg hover:bg-white/20 transition-all duration-200 flex items-center justify-center"
+                onClick={() => handleSocialLogin('google')}
+                disabled={isLoading || authLoading}
+                className="w-full bg-white/10 border border-white/20 text-white py-2 px-4 rounded-lg hover:bg-white/20 transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                   <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -294,12 +353,14 @@ const Login: React.FC = () => {
               </button>
               <button
                 type="button"
-                className="w-full bg-white/10 border border-white/20 text-white py-2 px-4 rounded-lg hover:bg-white/20 transition-all duration-200 flex items-center justify-center"
+                onClick={() => handleSocialLogin('facebook')}
+                disabled={isLoading || authLoading}
+                className="w-full bg-white/10 border border-white/20 text-white py-2 px-4 rounded-lg hover:bg-white/20 transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.219-5.175 1.219-5.175s-.31-.62-.31-1.538c0-1.441.833-2.515 1.869-2.515.881 0 1.307.662 1.307 1.456 0 .887-.565 2.212-.857 3.44-.244 1.032.516 1.871 1.531 1.871 1.836 0 3.247-1.935 3.247-4.73 0-2.474-1.776-4.203-4.312-4.203-2.94 0-4.67 2.204-4.67 4.484 0 .887.341 1.838.767 2.357.084.102.096.191.071.295-.079.33-.254 1.028-.289 1.172-.045.183-.147.221-.339.133-1.249-.581-2.03-2.407-2.03-3.874 0-3.154 2.292-6.052 6.608-6.052 3.469 0 6.165 2.472 6.165 5.776 0 3.447-2.173 6.22-5.19 6.22-1.013 0-1.966-.527-2.29-1.155l-.623 2.378c-.226.869-.835 1.958-1.244 2.621.937.29 1.931.446 2.962.446 6.624 0 11.99-5.367 11.99-11.99C24.007 5.367 18.641.001 12.017.001z"/>
+                  <path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/>
                 </svg>
-                GitHub
+                Facebook
               </button>
             </div>
           </motion.div>
