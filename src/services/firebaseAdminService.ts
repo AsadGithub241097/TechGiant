@@ -7,21 +7,22 @@ import {
   query,
   where,
   orderBy,
-  addDoc,
   getDoc,
   writeBatch,
-  Timestamp
+  Timestamp,
 } from 'firebase/firestore';
 import { 
-  createUserWithEmailAndPassword,
   sendPasswordResetEmail,
-  deleteUser as deleteAuthUser
 } from 'firebase/auth';
 import { db, auth } from '../config/firebase';
+import { ADMIN_EMAILS, getAdminNotificationEmail } from '../utils/adminUtils';
+import { parseFirestoreDate, resolveUserDisplayName } from '../utils/userDisplay';
 
 export interface FirebaseUser {
   id: string;
   name: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
   status: 'pending' | 'approved' | 'denied';
   loginMethod: 'manual' | 'google' | 'facebook';
@@ -42,16 +43,22 @@ export interface UserStats {
   newThisMonth: number;
 }
 
+export interface AdminRegistrationNotification {
+  id: string;
+  userId: string;
+  userName: string;
+  userEmail: string;
+  loginMethod: string;
+  createdAt: string;
+  read: boolean;
+  status: 'pending' | 'approved' | 'denied';
+}
+
 class FirebaseAdminService {
   private usersCollection = 'users';
-  // Admin emails - add more admin emails here if needed
-  private adminEmails = [
-    'asadmulla241097@gmail.com',
-    'asadmulla2407@gmail.com' // Added your current email
-  ];
   
   private isAdmin(email: string): boolean {
-    return this.adminEmails.includes(email);
+    return ADMIN_EMAILS.includes(email.toLowerCase());
   }
 
   // Check if Firebase is available
@@ -59,11 +66,45 @@ class FirebaseAdminService {
     return db !== null && auth !== null;
   }
 
+  private normalizeUser(id: string, data: Record<string, unknown>): FirebaseUser {
+    const raw = data as Partial<FirebaseUser>;
+    const name = resolveUserDisplayName({
+      name: raw.name,
+      firstName: raw.firstName,
+      lastName: raw.lastName,
+      email: raw.email,
+    });
+
+    return {
+      id,
+      name,
+      firstName: raw.firstName,
+      lastName: raw.lastName,
+      email: raw.email ?? '',
+      status: raw.status ?? 'pending',
+      loginMethod: (raw.loginMethod === 'email' ? 'manual' : raw.loginMethod) ?? 'manual',
+      createdAt: parseFirestoreDate(raw.createdAt as Parameters<typeof parseFirestoreDate>[0]).toISOString(),
+      approvedAt: raw.approvedAt
+        ? parseFirestoreDate(raw.approvedAt as Parameters<typeof parseFirestoreDate>[0]).toISOString()
+        : undefined,
+      lastLogin: raw.lastLogin
+        ? parseFirestoreDate(raw.lastLogin as Parameters<typeof parseFirestoreDate>[0]).toISOString()
+        : (raw as { lastLoginAt?: Parameters<typeof parseFirestoreDate>[0] }).lastLoginAt
+          ? parseFirestoreDate(
+              (raw as { lastLoginAt?: Parameters<typeof parseFirestoreDate>[0] }).lastLoginAt,
+            ).toISOString()
+          : undefined,
+      profilePicture: raw.profilePicture,
+      phoneNumber: raw.phoneNumber,
+      role: raw.role,
+    };
+  }
+
   // Get all users with optional filtering
   async getAllUsers(statusFilter?: string, searchTerm?: string): Promise<FirebaseUser[]> {
     if (!this.isFirebaseAvailable()) {
-      console.warn('Firebase not available, returning mock data');
-      return this.getMockUsers();
+      console.warn('Firebase not available');
+      return [];
     }
 
     try {
@@ -74,31 +115,36 @@ class FirebaseAdminService {
       }
 
       const querySnapshot = await getDocs(q);
-      let users = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as FirebaseUser[];
+      let users = querySnapshot.docs.map((userDoc) =>
+        this.normalizeUser(userDoc.id, userDoc.data() as Record<string, unknown>),
+      );
 
-      // Client-side search filtering
       if (searchTerm) {
         const searchLower = searchTerm.toLowerCase();
         users = users.filter(user => 
           user.name.toLowerCase().includes(searchLower) ||
-          user.email.toLowerCase().includes(searchLower)
+          user.email.toLowerCase().includes(searchLower) ||
+          (user.firstName?.toLowerCase().includes(searchLower) ?? false) ||
+          (user.lastName?.toLowerCase().includes(searchLower) ?? false)
         );
       }
 
       return users;
     } catch (error) {
       console.error('Error fetching users:', error);
-      return this.getMockUsers();
+      return [];
     }
+  }
+
+  async getUsersMap(): Promise<Map<string, FirebaseUser>> {
+    const users = await this.getAllUsers();
+    return new Map(users.map((user) => [user.id, user]));
   }
 
   // Get user statistics
   async getUserStats(): Promise<UserStats> {
     if (!this.isFirebaseAvailable()) {
-      return this.getMockStats();
+      return { total: 0, pending: 0, approved: 0, denied: 0, newThisWeek: 0, newThisMonth: 0 };
     }
 
     try {
@@ -117,7 +163,7 @@ class FirebaseAdminService {
       };
     } catch (error) {
       console.error('Error fetching user stats:', error);
-      return this.getMockStats();
+      return { total: 0, pending: 0, approved: 0, denied: 0, newThisWeek: 0, newThisMonth: 0 };
     }
   }
 
@@ -130,7 +176,7 @@ class FirebaseAdminService {
 
     try {
       const userRef = doc(db, this.usersCollection, userId);
-      const updateData: any = { 
+      const updateData: { status: 'approved' | 'denied'; updatedAt: Timestamp; approvedAt?: Timestamp } = { 
         status,
         updatedAt: Timestamp.now()
       };
@@ -140,6 +186,7 @@ class FirebaseAdminService {
       }
 
       await updateDoc(userRef, updateData);
+      await this.resolveRegistrationNotifications(userId, status);
       
       // Send notification email to user
       await this.sendStatusNotificationEmail(userId, status);
@@ -160,7 +207,7 @@ class FirebaseAdminService {
 
     try {
       const batch = writeBatch(db);
-      const updateData: any = { 
+      const updateData: { status: 'approved' | 'denied'; updatedAt: Timestamp; approvedAt?: Timestamp } = { 
         status,
         updatedAt: Timestamp.now()
       };
@@ -214,19 +261,90 @@ class FirebaseAdminService {
   // Get user by ID
   async getUserById(userId: string): Promise<FirebaseUser | null> {
     if (!this.isFirebaseAvailable()) {
-      const mockUsers = this.getMockUsers();
-      return mockUsers.find(u => u.id === userId) || null;
+      return null;
     }
 
     try {
       const userDoc = await getDoc(doc(db, this.usersCollection, userId));
       if (userDoc.exists()) {
-        return { id: userDoc.id, ...userDoc.data() } as FirebaseUser;
+        return this.normalizeUser(userDoc.id, userDoc.data() as Record<string, unknown>);
       }
       return null;
     } catch (error) {
       console.error('Error fetching user:', error);
       return null;
+    }
+  }
+
+  async getPendingRegistrationNotifications(): Promise<AdminRegistrationNotification[]> {
+    if (!this.isFirebaseAvailable()) {
+      return [];
+    }
+
+    try {
+      let snapshot;
+      try {
+        const q = query(
+          collection(db, 'adminNotifications'),
+          where('status', '==', 'pending'),
+          orderBy('createdAt', 'desc'),
+        );
+        snapshot = await getDocs(q);
+      } catch {
+        const fallbackQuery = query(collection(db, 'adminNotifications'));
+        snapshot = await getDocs(fallbackQuery);
+      }
+
+      return snapshot.docs
+        .filter((notificationDoc) => notificationDoc.data().status === 'pending')
+        .map((notificationDoc) => {
+        const data = notificationDoc.data();
+        return {
+          id: notificationDoc.id,
+          userId: String(data.userId ?? ''),
+          userName: String(data.userName ?? ''),
+          userEmail: String(data.userEmail ?? ''),
+          loginMethod: String(data.loginMethod ?? ''),
+          createdAt: parseFirestoreDate(
+            data.createdAt as Parameters<typeof parseFirestoreDate>[0],
+          ).toISOString(),
+          read: Boolean(data.read),
+          status: (data.status as AdminRegistrationNotification['status']) ?? 'pending',
+        };
+      })
+        .sort(
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
+    } catch (error) {
+      console.error('Error fetching admin notifications:', error);
+      return [];
+    }
+  }
+
+  private async resolveRegistrationNotifications(
+    userId: string,
+    status: 'approved' | 'denied',
+  ): Promise<void> {
+    if (!this.isFirebaseAvailable()) return;
+
+    try {
+      const q = query(
+        collection(db, 'adminNotifications'),
+        where('userId', '==', userId),
+        where('status', '==', 'pending'),
+      );
+      const snapshot = await getDocs(q);
+      await Promise.all(
+        snapshot.docs.map((notificationDoc) =>
+          updateDoc(notificationDoc.ref, {
+            status,
+            read: true,
+            resolvedAt: Timestamp.now(),
+          }),
+        ),
+      );
+    } catch (error) {
+      console.error('Error resolving admin notifications:', error);
     }
   }
 
@@ -298,6 +416,7 @@ class FirebaseAdminService {
   }
 
   private getDeniedEmailTemplate(userName: string): string {
+    const supportEmail = getAdminNotificationEmail() || 'support@techgiant.com';
     return `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="background: #dc3545; padding: 30px; text-align: center;">
@@ -315,7 +434,7 @@ class FirebaseAdminService {
             <p style="margin: 0; color: #333;">
               <strong>Support Contact:</strong><br>
               Phone: +91 8008771893<br>
-              Email: asadmulla241097@gmail.com
+              Email: ${supportEmail}
             </p>
           </div>
         </div>
@@ -323,68 +442,6 @@ class FirebaseAdminService {
     `;
   }
 
-  // Mock data for when Firebase is not available
-  private getMockUsers(): FirebaseUser[] {
-    return [
-      {
-        id: '1',
-        name: 'John Doe',
-        email: 'john@example.com',
-        status: 'pending',
-        loginMethod: 'manual',
-        createdAt: '2024-01-15T10:30:00Z',
-        profilePicture: 'https://via.placeholder.com/40'
-      },
-      {
-        id: '2',
-        name: 'Jane Smith',
-        email: 'jane@example.com',
-        status: 'approved',
-        loginMethod: 'google',
-        createdAt: '2024-01-14T15:45:00Z',
-        approvedAt: '2024-01-14T16:00:00Z',
-        lastLogin: '2024-01-16T09:15:00Z'
-      },
-      {
-        id: '3',
-        name: 'Mike Johnson',
-        email: 'mike@example.com',
-        status: 'denied',
-        loginMethod: 'facebook',
-        createdAt: '2024-01-13T12:20:00Z'
-      },
-      {
-        id: '4',
-        name: 'Sarah Wilson',
-        email: 'sarah@example.com',
-        status: 'approved',
-        loginMethod: 'manual',
-        createdAt: '2024-01-12T08:10:00Z',
-        approvedAt: '2024-01-12T08:30:00Z',
-        lastLogin: '2024-01-16T14:22:00Z'
-      },
-      {
-        id: '5',
-        name: 'Alex Brown',
-        email: 'alex@example.com',
-        status: 'pending',
-        loginMethod: 'google',
-        createdAt: '2024-01-16T11:20:00Z'
-      }
-    ];
-  }
-
-  private getMockStats(): UserStats {
-    const users = this.getMockUsers();
-    return {
-      total: users.length,
-      pending: users.filter(u => u.status === 'pending').length,
-      approved: users.filter(u => u.status === 'approved').length,
-      denied: users.filter(u => u.status === 'denied').length,
-      newThisWeek: 2,
-      newThisMonth: 5
-    };
-  }
 }
 
 export const firebaseAdminService = new FirebaseAdminService();

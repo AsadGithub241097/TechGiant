@@ -5,7 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Users, CheckCircle, TrendingUp, Award, Star, ArrowRight } from 'lucide-react';
 import { IMAGE_URLS } from "../../constants/mediaUrls";
 import { LoadingImage } from "../../components/ui/LoadingImage";
-import { openConsultationEmail } from "../../utils/emailUtils";
+import DevelopmentConsultationButton from "../../components/ui/DevelopmentConsultationButton";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -105,7 +105,7 @@ const SupportDev = () => {
             viewport={{ once: true }}
           >
             Why Seek Support With
-            <span className="text-green-400 block">
+            <span className="block bg-gradient-to-r from-carousel3 to-carousel2 bg-clip-text text-transparent">
               Web Development?
             </span>
           </motion.h2>
@@ -214,15 +214,13 @@ const SupportDev = () => {
               </div>
             </div>
 
-            <button 
-              className="px-8 py-4 bg-gradient-to-r from-carousel1 to-carousel3 text-white font-semibold rounded-xl hover:from-carousel3 hover:to-carousel2 transition-all duration-300 shadow-lg hover:shadow-carousel1/25 hover:scale-105"
-              onClick={() => openConsultationEmail('Development', 'Support')}
+            <DevelopmentConsultationButton
+              section="Support"
+              className="inline-flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-carousel1 to-carousel3 text-white font-semibold rounded-xl hover:from-carousel3 hover:to-carousel2 transition-all duration-300 shadow-lg hover:shadow-carousel1/25 hover:scale-105"
             >
-              <span className="flex items-center space-x-2">
-                <span>Join Our Success Stories</span>
-                <ArrowRight className="w-5 h-5" />
-              </span>
-            </button>
+              <span>Join Our Success Stories</span>
+              <ArrowRight className="w-5 h-5" />
+            </DevelopmentConsultationButton>
           </div>
         </motion.div>
       </div>

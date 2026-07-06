@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
-import { X, Play, Pause, Maximize2, Volume2, VolumeX } from 'lucide-react';
+import { X } from 'lucide-react';
 import { Recording } from '../../services/recordingsService';
 
 interface VideoPlayerProps {
@@ -13,13 +13,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   recording, 
   onClose, 
   onProgressUpdate,
-  userId 
 }) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Extract YouTube video ID from URL (handles multiple formats)
@@ -96,20 +92,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     };
   }, [stableOnProgressUpdate]); // Only depend on the stable callback
 
-  const handleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-      setIsFullscreen(true);
-    } else {
-      document.exitFullscreen();
-      setIsFullscreen(false);
-    }
-  };
-
   if (!embedUrl) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
-        <div className="bg-gray-900 rounded-xl p-8 max-w-md w-full border border-gray-700">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4">
+        <div className="w-full max-w-md rounded-2xl border border-white/10 bg-navBg p-8">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-bold text-white">Invalid Video URL</h3>
             <button
@@ -132,10 +118,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-95 flex items-center justify-center z-50 p-4">
-      <div className="w-full max-w-6xl bg-black rounded-xl overflow-hidden border border-gray-700">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 bg-gray-900 border-b border-gray-700">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4">
+      <div className="w-full max-w-6xl overflow-hidden rounded-2xl border border-white/10 bg-navBg shadow-2xl shadow-carousel2/10">
+        <div className="flex items-center justify-between border-b border-white/10 p-4 sm:p-5">
           <div className="flex-1">
             <h3 className="text-lg font-semibold text-white">{recording.title}</h3>
             {recording.description && (
@@ -167,12 +152,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
         {/* Progress Bar */}
         {onProgressUpdate && (
-          <div className="p-4 bg-gray-900 border-t border-gray-700">
+          <div className="border-t border-white/10 p-4 sm:p-5">
             <div className="flex items-center space-x-4">
               <div className="flex-1">
-                <div className="w-full bg-gray-700 rounded-full h-2">
+                <div className="h-2 w-full rounded-full bg-white/10">
                   <div
-                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                    className="h-2 rounded-full bg-gradient-to-r from-carousel2 to-carousel3 transition-all duration-300"
                     style={{ width: `${progress}%` }}
                   />
                 </div>

@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
+import { Megaphone, Clock, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const MarketingPage = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -7,57 +9,88 @@ const MarketingPage = () => {
   useEffect(() => {
     setIsVisible(true);
     const interval = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 100) {
+      setProgress((prev) => {
+        if (prev >= 75) {
           clearInterval(interval);
-          return 100;
+          return 75;
         }
         return prev + 1;
       });
-    }, 50);
+    }, 40);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className={`min-h-screen flex flex-col items-center justify-center bg-bgColor p-6 transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-      <div className="max-w-md w-full bg-white rounded-xl shadow-lg overflow-hidden p-8 transform transition-all duration-500 hover:scale-105">
-        <div className="flex flex-col items-center">
-          <div className="relative mb-6">
-            <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center animate-pulse">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-12 w-12 text-blue-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+    <div
+      className={`relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-bgColor p-6 transition-opacity duration-1000 ${
+        isVisible ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      {/* Brand background: grid + aurora */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.18]"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, rgba(170,96,200,0.12) 1px, transparent 1px), linear-gradient(to bottom, rgba(170,96,200,0.12) 1px, transparent 1px)",
+          backgroundSize: "56px 56px",
+          maskImage:
+            "radial-gradient(ellipse 70% 60% at 50% 50%, #000 40%, transparent 100%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse 70% 60% at 50% 50%, #000 40%, transparent 100%)",
+        }}
+      />
+      <div className="pointer-events-none absolute left-1/2 top-1/3 h-72 w-[36rem] -translate-x-1/2 rounded-full bg-carousel1/25 blur-[120px]" />
+
+      <div className="relative z-10 w-full max-w-lg rounded-3xl glass-panel p-10 text-center shadow-2xl">
+        <div className="mb-8 flex justify-center">
+          <div className="relative">
+            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-carousel2 to-carousel1 shadow-lg shadow-carousel2/30">
+              <Megaphone className="h-9 w-9 text-white" />
             </div>
-            <div className="absolute -inset-2 border-4 border-blue-200 rounded-full animate-spin-slow opacity-70"></div>
+            <span className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full border border-white/20 bg-carousel3">
+              <Clock className="h-3.5 w-3.5 text-bgColor" />
+            </span>
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2 transform transition-transform duration-700 hover:translate-x-1">
-            Page Under Maintenance
-          </h1>
-          <p className="text-gray-600 text-center mb-6">
-            We're currently working on improving our website. Please check back soon.
-          </p>
-          <div className="w-full bg-gray-200 rounded-full h-2.5 mb-6">
-            <div
-              className="bg-bgColor h-2.5 rounded-full transition-all duration-300 ease-out"
-              style={{ width: `${progress}%` }}
-            ></div>
-          </div>
-          <p className="text-sm text-gray-500 font-medium">
-            {progress < 100 ? 'Work in progress...' : 'Maintenance complete soon!'}
-          </p>
         </div>
+
+        <span className="inline-flex items-center gap-2 rounded-full border border-carousel2/30 bg-carousel2/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-carousel3">
+          Coming Soon
+        </span>
+
+        <h1 className="mt-5 text-3xl font-extrabold text-white sm:text-4xl">
+          Marketing that{" "}
+          <span className="bg-gradient-to-r from-carousel4 via-carousel3 to-carousel2 bg-clip-text text-transparent">
+            moves the needle
+          </span>
+        </h1>
+        <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-gray-400">
+          We're crafting something exceptional. Our marketing services page is
+          under construction — check back soon for creative strategies that grow
+          your brand.
+        </p>
+
+        {/* Progress */}
+        <div className="mt-8">
+          <div className="mb-2 flex items-center justify-between text-xs text-gray-500">
+            <span>In progress</span>
+            <span className="font-semibold text-carousel3">{progress}%</span>
+          </div>
+          <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-carousel2 to-carousel3 transition-all duration-300 ease-out"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </div>
+
+        <Link
+          to="/"
+          className="group mt-8 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:border-carousel2/60 hover:bg-white/10"
+        >
+          Back to Home
+          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+        </Link>
       </div>
     </div>
   );

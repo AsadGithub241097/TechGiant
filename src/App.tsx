@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useEffect } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import "./index.css";
 import "./App.css";
@@ -24,11 +24,12 @@ const FirebaseAdminPanel = lazy(() => import("./components/admin/FirebaseAdminPa
 const CourseCategories = lazy(() => import("./components/courses/CourseCategories"));
 const CourseListing = lazy(() => import("./components/courses/CourseListing"));
 const CourseDetail = lazy(() => import("./components/courses/CourseDetail"));
+const NotFoundPage = lazy(() => import("./components/pages/NotFoundPage"));
 
 // Loading component
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center min-h-screen">
-    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-carousel2"></div>
   </div>
 );
 
@@ -52,12 +53,13 @@ function AppContent() {
   const isDashboardPage = location.pathname === '/dashboard';
   const isCoursePage = location.pathname.startsWith('/course');
   const isAboutPage = location.pathname === '/about';
+  const isAdminPage = location.pathname === '/admin';
 
   // Get SEO configuration for current page
   const currentPageSEO = getPageSEO(location.pathname);
 
   return (
-    <div className="bg-bgColor overflow-x-hidden">
+    <div className={`bg-bgColor ${isAboutPage ? "overflow-x-clip" : "overflow-x-hidden"}`}>
       {/* SEO Head Component */}
       <SEOHead 
         title={currentPageSEO.title}
@@ -71,7 +73,7 @@ function AppContent() {
       
       {/* Header with conditional styling for LMS page */}
       <div className={isLMSPage ? "lms-header-container" : ""}>
-        {!isLoginPage && !isDashboardPage && !isCoursePage && !isAboutPage && <Header />}
+        {!isLoginPage && !isDashboardPage && !isCoursePage && !isAboutPage && !isAdminPage && <Header />}
       </div>
       
       <Suspense fallback={<LoadingSpinner />}>
@@ -98,11 +100,12 @@ function AppContent() {
             <Route path="/courses" element={<CourseCategories />} />
             <Route path="/courses/:category" element={<CourseListing />} />
             <Route path="/course/:courseId" element={<CourseDetail />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>
       </Suspense>
-      {!isLMSPage && !isLoginPage && !isDashboardPage && !isCoursePage && !isAboutPage && <ConnectWithUsSection />}
-      {!isLMSPage && !isLoginPage && !isDashboardPage && !isCoursePage && !isAboutPage && <Footer />}
+      {!isLMSPage && !isLoginPage && !isDashboardPage && !isCoursePage && !isAboutPage && !isAdminPage && <ConnectWithUsSection />}
+      {!isLMSPage && !isLoginPage && !isDashboardPage && !isCoursePage && !isAboutPage && !isAdminPage && <Footer />}
       
       {/* WhatsApp Float Button - Show on all pages except login and dashboard */}
       {!isLoginPage && !isDashboardPage && <WhatsAppFloat />}

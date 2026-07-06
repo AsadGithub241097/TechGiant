@@ -2,8 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Shield, Server, AlertCircle, FileSearch, ArrowRight, CheckCircle } from 'lucide-react';
-import { openConsultationEmail } from "../../utils/emailUtils";
+import { Shield, Server, AlertCircle, FileSearch, CheckCircle } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -222,17 +221,6 @@ const SecurityCard: React.FC<SecurityCardProps> = ({
           </div>
         ))}
     </div>
-
-      {/* Button */}
-      <button 
-        className="group/btn w-full px-6 py-3 bg-gradient-to-r from-red-600/20 to-orange-600/20 border border-red-600/30 text-red-400 font-semibold rounded-xl hover:from-red-600 hover:to-orange-600 hover:text-white hover:border-transparent transition-all duration-300 hover:shadow-lg hover:shadow-red-600/25"
-        onClick={() => openConsultationEmail('VAPT', title)}
-      >
-        <span className="flex items-center justify-center space-x-2">
-          <span>Learn More</span>
-          <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-        </span>
-      </button>
     </motion.div>
   );
 };
@@ -361,25 +349,9 @@ const TechgiantSecurityComponent: React.FC = () => {
             <h3 className="text-3xl font-bold text-white mb-4">
               Ready to Secure Your Digital Assets?
             </h3>
-            <p className="text-gray-300 mb-8 max-w-2xl mx-auto text-lg">
+            <p className="text-gray-300 max-w-2xl mx-auto text-lg">
               Contact our cybersecurity experts to discuss how our comprehensive VAPT services can protect your organization.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button 
-                className="px-8 py-4 bg-gradient-to-r from-red-600 to-orange-600 text-white font-semibold rounded-xl hover:from-red-500 hover:to-orange-500 transition-all duration-300 shadow-lg hover:shadow-red-600/25 hover:scale-105"
-                onClick={() => openConsultationEmail('VAPT', 'Services')}
-              >
-                <span className="flex items-center space-x-2">
-                  <span>Get Security Assessment</span>
-                  <ArrowRight className="w-5 h-5" />
-                </span>
-              </button>
-              
-              <div className="flex items-center space-x-2 text-gray-400">
-                <CheckCircle className="w-5 h-5 text-green-400" />
-                <span>Free initial consultation</span>
-              </div>
-            </div>
           </div>
         </motion.div>
       </div>

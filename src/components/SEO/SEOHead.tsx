@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { DEFAULT_OG_IMAGE } from '../../constants/mediaUrls';
+import { siteUrl } from '../../constants/siteConfig';
 
 interface SEOHeadProps {
   title?: string;
@@ -14,12 +16,12 @@ const SEOHead: React.FC<SEOHeadProps> = ({
   title = "Tech Giant - Leading IT Services Company | Web Development, QA, Digital Marketing & Training",
   description = "Tech Giant is India's premier IT services company specializing in innovative web development, quality assurance, digital marketing, and professional training. Founded by industry experts Sameer and Ibrahim, we deliver cutting-edge technology solutions to startups, SMEs, and enterprises worldwide.",
   keywords = "tech giant, tech giant company, IT services, web development, digital marketing, quality assurance, training placement, software solutions, technology company, web development company, SEO services, app development",
-  ogImage = "https://tgcloud.s3.ap-south-1.amazonaws.com/TGpng.png",
+  ogImage = DEFAULT_OG_IMAGE,
   canonical,
   structuredData
 }) => {
   const location = useLocation();
-  const currentUrl = `https://techgiant.com${location.pathname}`;
+  const currentUrl = siteUrl(location.pathname);
   const canonicalUrl = canonical || currentUrl;
 
   useEffect(() => {
@@ -113,7 +115,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
         "@type": "ListItem",
         "position": 1,
         "name": "Tech Giant",
-        "item": "https://techgiant.com/"
+        "item": siteUrl('/')
       }
     ];
     
@@ -125,7 +127,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
         "@type": "ListItem",
         "position": index + 2,
         "name": name,
-        "item": `https://techgiant.com${currentPath}`
+        "item": siteUrl(currentPath)
       });
     });
     

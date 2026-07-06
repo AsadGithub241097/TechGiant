@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Code, Zap, Star, CheckCircle } from "lucide-react";
+import { Code, Zap, Star, CheckCircle } from "lucide-react";
 import { TypewriterEffectSmooth } from "../../ui/typewriter_effect";
-import { openConsultationEmail } from "../../utils/emailUtils";
+
 
 const DevelopmentHero: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -16,11 +16,11 @@ const DevelopmentHero: React.FC = () => {
     },
     {
       text: "Web",
-      className: "text-blue-400"
+      className: "text-carousel3"
     },
     {
       text: "Development",
-      className: "text-purple-400"
+      className: "text-carousel2"
     },
     {
       text: "Solutions",
@@ -94,7 +94,7 @@ const DevelopmentHero: React.FC = () => {
         >
           <iframe
             ref={iframeRef}
-            className="w-full h-full object-cover bg-white"
+            className="w-full h-full object-cover bg-bgColor"
             src="https://www.youtube.com/embed/rA7fwt-cBuc?autoplay=1&mute=1&loop=1&playlist=rA7fwt-cBuc&controls=0&rel=0&disablekb=1"
             title="YouTube video player"
             frameBorder="0"
@@ -114,7 +114,7 @@ const DevelopmentHero: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <div className="inline-flex items-center space-x-2 bg-gray-800/30 backdrop-blur-sm border border-gray-700/30 rounded-full px-6 py-3 mb-8">
+              <div className="inline-flex items-center space-x-2 glass-eyebrow border border-gray-700/30 rounded-full px-6 py-3 mb-8">
                 <Code className="w-5 h-5 text-gray-300" />
                 <span className="text-sm font-medium text-gray-300">Web Development Excellence</span>
               </div>
@@ -130,7 +130,7 @@ const DevelopmentHero: React.FC = () => {
                 <TypewriterEffectSmooth 
                   words={typewriterWords}
                   className="mb-6 w-full overflow-visible"
-                  gradientColors={["#3b82f6", "#8b5cf6", "#ec4899", "#f59e0b"]}
+                  gradientColors={["#EABDE6", "#D69ADE", "#AA60C8", "#500073"]}
                   duration={3}
                 />
               </div>
@@ -155,7 +155,7 @@ const DevelopmentHero: React.FC = () => {
               {features.map((feature, index) => {
                 const IconComponent = feature.icon;
                 return (
-                  <div key={index} className="flex items-center space-x-2 bg-gray-800/50 backdrop-blur-sm border border-gray-700/30 rounded-full px-4 py-2 hover:bg-gray-700/50 hover:border-gray-600/50 transition-all duration-300">
+                  <div key={index} className="flex items-center space-x-2 glass-chip border border-gray-700/30 rounded-full px-4 py-2 hover:bg-gray-700/50 hover:border-gray-600/50 transition-all duration-300">
                     <IconComponent className="w-4 h-4 text-gray-300" />
                     <span className="text-sm text-gray-300">{feature.label}</span>
                   </div>
@@ -170,7 +170,7 @@ const DevelopmentHero: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
             >
-              <button 
+              {/* <button 
                 className="group px-8 py-4 bg-gradient-to-r from-carousel2 to-carousel1 text-white font-semibold rounded-xl hover:from-carousel1 hover:to-carousel3 transition-all duration-300 shadow-lg hover:shadow-carousel2/25 hover:scale-105"
                 onClick={() => openConsultationEmail('Development', 'Hero')}
               >
@@ -178,12 +178,12 @@ const DevelopmentHero: React.FC = () => {
                   <span>Get Free Consultation</span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </span>
-              </button>
+              </button> */}
               
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                    <Star key={i} className="w-4 h-4 text-amber-400 fill-current" />
                   ))}
                 </div>
                 <span className="text-sm text-gray-300">
@@ -201,26 +201,26 @@ const DevelopmentHero: React.FC = () => {
             transition={{ duration: 0.8, delay: 1 }}
           >
             <div className="grid grid-cols-2 gap-4">
-              <div className="p-6 bg-gradient-to-br from-gray-800/50 via-bgColor to-gray-800/50 backdrop-blur-sm border border-carousel2/30 rounded-2xl">
+              <div className="p-6 glass-panel border border-carousel2/30 rounded-2xl">
                 <div className="text-3xl font-bold text-carousel2 mb-2">500+</div>
                 <div className="text-sm text-gray-400">Projects Delivered</div>
               </div>
-              <div className="p-6 bg-gradient-to-br from-gray-800/50 via-bgColor to-gray-800/50 backdrop-blur-sm border border-carousel1/30 rounded-2xl">
+              <div className="p-6 glass-panel border border-carousel1/30 rounded-2xl">
                 <div className="text-3xl font-bold text-carousel1 mb-2">99%</div>
                 <div className="text-sm text-gray-400">Client Satisfaction</div>
               </div>
-              <div className="p-6 bg-gradient-to-br from-gray-800/50 via-bgColor to-gray-800/50 backdrop-blur-sm border border-carousel3/30 rounded-2xl">
+              <div className="p-6 glass-panel border border-carousel3/30 rounded-2xl">
                 <div className="text-3xl font-bold text-carousel3 mb-2">24/7</div>
                 <div className="text-sm text-gray-400">Support Available</div>
               </div>
-              <div className="p-6 bg-gradient-to-br from-gray-800/50 via-bgColor to-gray-800/50 backdrop-blur-sm border border-carousel2/30 rounded-2xl">
+              <div className="p-6 glass-panel border border-carousel2/30 rounded-2xl">
                 <div className="text-3xl font-bold text-carousel2 mb-2">5+</div>
                 <div className="text-sm text-gray-400">Years Experience</div>
               </div>
             </div>
 
             {/* Technology badges */}
-            <div className="p-6 bg-gradient-to-br from-gray-800/30 via-bgColor to-gray-800/30 backdrop-blur-sm border border-gray-700/30 rounded-2xl">
+            <div className="p-6 glass-section border border-gray-700/30 rounded-2xl">
               <h3 className="text-lg font-semibold text-white mb-4">Technologies We Master</h3>
               <div className="flex flex-wrap gap-2">
                 {['React', 'Node.js', 'Next.js', 'TypeScript', 'Python', 'AWS'].map((tech, index) => (

@@ -1,8 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Shield, ArrowRight, CheckCircle, Zap, Lock } from "lucide-react";
+import { Shield, Zap, Lock } from "lucide-react";
 import ScrollDown from "../../icons/scrollDown";
-import { openConsultationEmail } from "../../utils/emailUtils";
 
 const SecurityOperationsHero: React.FC = () => {
   const securityFeatures = [
@@ -72,35 +71,6 @@ const SecurityOperationsHero: React.FC = () => {
                   </div>
                 );
               })}
-            </motion.div>
-
-            {/* CTA buttons */}
-            <motion.div 
-              className="flex flex-col sm:flex-row gap-4 items-start sm:items-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-            >
-              <button 
-                className="group px-8 py-4 bg-gradient-to-r from-red-600 to-orange-600 text-white font-semibold rounded-xl hover:from-red-500 hover:to-orange-500 transition-all duration-300 shadow-lg hover:shadow-red-600/25 hover:scale-105"
-                onClick={() => openConsultationEmail('VAPT', 'Hero')}
-              >
-                <span className="flex items-center space-x-2">
-                  <span>Get Security Assessment</span>
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </span>
-              </button>
-              
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-1">
-                  {[...Array(5)].map((_, i) => (
-                    <CheckCircle key={i} className="w-4 h-4 text-green-400 fill-current" />
-                  ))}
-                </div>
-                <span className="text-sm text-gray-300">
-                  Trusted by 100+ enterprises
-                </span>
-              </div>
             </motion.div>
           </div>
 

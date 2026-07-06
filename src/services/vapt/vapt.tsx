@@ -2,10 +2,9 @@ import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Shield, Lock, Eye, AlertTriangle, CheckCircle, ArrowRight } from 'lucide-react';
+import { Shield, Lock, Eye, AlertTriangle, CheckCircle } from 'lucide-react';
 import { IMAGE_URLS } from "../../constants/mediaUrls";
 import { LoadingImage } from "../../components/ui/LoadingImage";
-import { openConsultationEmail } from "../../utils/emailUtils";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -181,16 +180,6 @@ const TGCyberDefense = () => {
                 </div>
               ))}
             </div>
-
-            <button 
-              className="group px-6 py-3 bg-gradient-to-r from-red-600 to-orange-600 text-white font-semibold rounded-xl hover:from-red-500 hover:to-orange-500 transition-all duration-300 shadow-lg hover:shadow-red-600/25 hover:scale-105"
-              onClick={() => openConsultationEmail('VAPT', 'Overview')}
-            >
-              <span className="flex items-center space-x-2">
-                <span>Learn More</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </span>
-            </button>
           </motion.div>
         </div>
 
@@ -246,18 +235,9 @@ const TGCyberDefense = () => {
             <h3 className="text-2xl font-bold text-white mb-4">
               Ready to Strengthen Your Cyber Resilience?
             </h3>
-            <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
+            <p className="text-gray-300 max-w-2xl mx-auto">
               Get a comprehensive security assessment and discover how our VAPT services can protect your digital assets.
             </p>
-            <button 
-              className="px-8 py-4 bg-gradient-to-r from-red-600 to-orange-600 text-white font-semibold rounded-xl hover:from-red-500 hover:to-orange-500 transition-all duration-300 shadow-lg hover:shadow-red-600/25 hover:scale-105"
-              onClick={() => openConsultationEmail('VAPT', 'CTA')}
-            >
-              <span className="flex items-center space-x-2">
-                <span>Get Free Security Consultation</span>
-                <ArrowRight className="w-5 h-5" />
-              </span>
-            </button>
           </div>
         </motion.div>
       </div>

@@ -67,7 +67,8 @@ log('🗺️  Testing sitemap.xml Content:', 'blue');
 if (fs.existsSync('public/sitemap.xml')) {
   const sitemapContent = fs.readFileSync('public/sitemap.xml', 'utf8');
   test('sitemap.xml is valid XML', sitemapContent.includes('<?xml version="1.0"'));
-  test('sitemap.xml contains homepage', sitemapContent.includes('https://techgiant.com/'));
+  test('sitemap.xml contains homepage', sitemapContent.includes('https://tech-giant.in/'));
+  test('sitemap.xml uses correct domain', !sitemapContent.includes('techgiant.com'));
   test('sitemap.xml contains about page', sitemapContent.includes('/about'));
   test('sitemap.xml contains services', sitemapContent.includes('/Development'));
 } else {
@@ -86,8 +87,10 @@ if (fs.existsSync('index.html')) {
   test('HTML contains Open Graph tags', htmlContent.includes('property="og:title"'));
   test('HTML contains structured data', htmlContent.includes('"@type": "Organization"'));
   test('HTML contains keywords meta', htmlContent.includes('meta name="keywords"'));
+  test('HTML contains canonical domain', htmlContent.includes('https://tech-giant.in/'));
+  test('HTML does not reference wrong domain', !htmlContent.includes('techgiant.com'));
 } else {
-  failed += 5;
+  failed += 7;
 }
 
 console.log('');

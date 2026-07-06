@@ -32,8 +32,8 @@ export default {
         doto: ["Doto", "sans-serif"],
       },
       colors: {
-        bgColor: "#11071F",
-        navBg: "#1A0B2E",
+        bgColor: "#0A0A0A",
+        navBg: "#120A1A",
         cardBg: "#726EFF",
         carousel1: "#500073",
         carousel2: "#AA60C8",
@@ -50,6 +50,11 @@ export default {
         "infinite-float": "infiniteFloat 6s ease-in-out infinite",
         "infinite-pulse": "infinitePulse 4s ease-in-out infinite",
         "infinite-rotate": "infiniteRotate 20s linear infinite",
+        marquee: "marquee 45s linear infinite",
+        "marquee-reverse": "marqueeReverse 45s linear infinite",
+        "marquee-fast": "marquee 30s linear infinite",
+        shimmer: "shimmer 2.5s linear infinite",
+        "gradient-x": "gradientX 6s ease infinite",
       },
       keyframes: {
         blink: {
@@ -87,6 +92,22 @@ export default {
         infiniteRotate: {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
+        },
+        marquee: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
+        marqueeReverse: {
+          "0%": { transform: "translateX(-50%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+        shimmer: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
+        gradientX: {
+          "0%, 100%": { "background-position": "0% 50%" },
+          "50%": { "background-position": "100% 50%" },
         },
       },
       spacing: {

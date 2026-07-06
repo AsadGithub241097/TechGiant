@@ -2,11 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Shield, Clock, Users, Award, CheckCircle, ArrowRight, Star } from 'lucide-react';
+import { Shield, Clock, Users, Award, CheckCircle, Star } from 'lucide-react';
 import { StreamlineThreatBrowser1 } from "../../icons/threat";
 import { SecurityOprations } from "../../icons/securityOprations";
 import { ProtectionIcon } from "../../icons/protectionIcon";
-import { openConsultationEmail } from "../../utils/emailUtils";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -277,25 +276,9 @@ const WhyWorkWithUsSection: React.FC = () => {
             <h3 className="text-3xl font-bold text-white mb-4">
               Experience Enterprise-Grade Security
             </h3>
-            <p className="text-gray-300 mb-8 max-w-2xl mx-auto text-lg">
-              Join hundreds of organizations who trust Tech Giant to protect their digital infrastructure. Get started with a comprehensive security assessment.
+            <p className="text-gray-300 max-w-2xl mx-auto text-lg">
+              Join hundreds of organizations who trust Tech Giant to protect their digital infrastructure.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button 
-                className="px-8 py-4 bg-gradient-to-r from-red-600 to-orange-600 text-white font-semibold rounded-xl hover:from-red-500 hover:to-orange-500 transition-all duration-300 shadow-lg hover:shadow-red-600/25 hover:scale-105"
-                onClick={() => openConsultationEmail('VAPT', 'Why Choose Us')}
-              >
-                <span className="flex items-center space-x-2">
-                  <span>Start Your Security Journey</span>
-                  <ArrowRight className="w-5 h-5" />
-                </span>
-              </button>
-              
-              <div className="flex items-center space-x-2 text-gray-400">
-                <CheckCircle className="w-5 h-5 text-green-400" />
-                <span>No commitment • Free consultation</span>
-              </div>
-            </div>
           </div>
         </motion.div>
       </div>

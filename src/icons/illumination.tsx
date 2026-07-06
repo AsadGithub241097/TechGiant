@@ -1,6 +1,6 @@
 const TechGiantText: React.FC = () => {
   return (
-    <div className="flex justify-center items-center w-full min-h-[120px] h-[30vw] max-h-[250px] bg-bgColor overflow-hidden font-doto px-2">
+    <div className="flex justify-center items-center w-full min-h-[120px] h-[30vw] max-h-[250px] overflow-hidden font-doto px-2">
       <div className="h-[2px] w-full bg-white"></div>
       <div className="w-full max-w-[90%] md:max-w-[700px] h-full flex items-center justify-center">
         <svg

@@ -1,13 +1,15 @@
 import emailjs from '@emailjs/browser';
-import { User } from '../contexts/AuthContext';
+import type { LegacyUser as User } from '../types/user';
+import { getAdminNotificationEmail } from '../utils/adminUtils';
 
-// EmailJS configuration
-const EMAILJS_SERVICE_ID = 'service_techgiant'; // You'll need to set this up
-const EMAILJS_TEMPLATE_ID = 'template_user_approval'; // You'll need to create this template
-const EMAILJS_PUBLIC_KEY = 'your_public_key_here'; // You'll need to get this from EmailJS
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID ?? '';
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID ?? '';
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY ?? '';
+const WEB3FORMS_ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY ?? '';
 
-// Initialize EmailJS
-emailjs.init(EMAILJS_PUBLIC_KEY);
+if (EMAILJS_PUBLIC_KEY) {
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+}
 
 export interface EmailNotificationData {
   user: User;
@@ -17,11 +19,9 @@ export interface EmailNotificationData {
 
 export const sendAdminNotificationEmail = async (data: EmailNotificationData): Promise<boolean> => {
   try {
-    // For now, let's use a simple email service approach
-    // In production, you would use EmailJS, SendGrid, or your own backend API
-    
+    const adminInbox = getAdminNotificationEmail();
     const emailData = {
-      to_email: 'asadmulla241097@gmail.com',
+      to_email: adminInbox || 'configure@VITE_ADMIN_NOTIFICATION_EMAIL',
       to_name: 'TechGiant Admin',
       user_name: data.user.name,
       user_email: data.user.email,
@@ -29,8 +29,8 @@ export const sendAdminNotificationEmail = async (data: EmailNotificationData): P
       registration_date: new Date(data.user.createdAt).toLocaleDateString(),
       registration_time: new Date(data.user.createdAt).toLocaleTimeString(),
       user_id: data.user.id,
-      approval_url: `${window.location.origin}/admin/approve/${data.user.id}`,
-      deny_url: `${window.location.origin}/admin/deny/${data.user.id}`,
+      approval_url: `${window.location.origin}/admin`,
+      deny_url: `${window.location.origin}/admin`,
       subject: `New User Registration - ${data.user.name}`,
       message: `
         A new user has registered on TechGiant platform:
@@ -44,8 +44,11 @@ export const sendAdminNotificationEmail = async (data: EmailNotificationData): P
       `
     };
 
-    // Method 1: Using EmailJS (requires setup)
-    if (EMAILJS_SERVICE_ID !== 'service_techgiant') {
+    if (
+      EMAILJS_SERVICE_ID &&
+      EMAILJS_TEMPLATE_ID &&
+      EMAILJS_PUBLIC_KEY
+    ) {
       const result = await emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
@@ -55,33 +58,34 @@ export const sendAdminNotificationEmail = async (data: EmailNotificationData): P
       return true;
     }
 
-    // Method 2: Using Web3Forms (free email service)
-    try {
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          access_key: 'YOUR_WEB3FORMS_KEY', // You'll need to get this from web3forms.com
-          to_email: 'asadmulla241097@gmail.com',
-          from_name: 'TechGiant Registration System',
-          subject: emailData.subject,
-          message: emailData.message,
-          user_name: data.user.name,
-          user_email: data.user.email,
-          login_method: data.user.loginMethod,
-          registration_date: emailData.registration_date,
-          user_id: data.user.id
-        }),
-      });
+    if (WEB3FORMS_ACCESS_KEY && adminInbox) {
+      try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_ACCESS_KEY,
+            to_email: adminInbox,
+            from_name: 'TechGiant Registration System',
+            subject: emailData.subject,
+            message: emailData.message,
+            user_name: data.user.name,
+            user_email: data.user.email,
+            login_method: data.user.loginMethod,
+            registration_date: emailData.registration_date,
+            user_id: data.user.id
+          }),
+        });
 
-      if (response.ok) {
-        console.log('Email sent successfully via Web3Forms');
-        return true;
+        if (response.ok) {
+          console.log('Email sent successfully via Web3Forms');
+          return true;
+        }
+      } catch {
+        console.log('Web3Forms request failed, using fallback');
       }
-    } catch (error) {
-      console.log('Web3Forms not configured, using fallback method');
     }
 
     // Method 3: Using a simple webhook service (ntfy.sh for notifications)
@@ -99,15 +103,14 @@ export const sendAdminNotificationEmail = async (data: EmailNotificationData): P
       console.log('ntfy.sh notification failed:', error);
     }
 
-    // Method 4: Fallback - Console logging and user notification
-    console.log('📧 EMAIL NOTIFICATION FOR: asadmulla241097@gmail.com');
+    console.log('Email notification (fallback):', adminInbox || 'set VITE_ADMIN_NOTIFICATION_EMAIL');
     console.log('Subject:', emailData.subject);
     console.log('Content:', emailData.message);
     console.log('Approval URL:', emailData.approval_url);
     console.log('Deny URL:', emailData.deny_url);
 
     // Show a notification to the user that admin has been notified
-    showEmailNotification(data.user);
+    showEmailNotification();
     
     return true;
 
@@ -118,7 +121,7 @@ export const sendAdminNotificationEmail = async (data: EmailNotificationData): P
 };
 
 // Show a visual notification that email was sent
-const showEmailNotification = (user: User) => {
+const showEmailNotification = () => {
   // Create a toast notification
   const notification = document.createElement('div');
   notification.className = 'fixed top-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50 max-w-sm';
@@ -129,7 +132,7 @@ const showEmailNotification = (user: User) => {
       </svg>
       <div>
         <p class="font-semibold">Admin Notified!</p>
-        <p class="text-sm">Email sent to asadmulla241097@gmail.com</p>
+        <p class="text-sm">Admin notification queued</p>
       </div>
     </div>
   `;

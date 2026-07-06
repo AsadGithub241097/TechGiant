@@ -42,7 +42,7 @@ ehthumbs.db
 Thumbs.db
 *.local
 
-# Media files (now on S3)
+# Media files (hosted on Firebase Storage)
 *.mp4
 *.mov
 *.avi

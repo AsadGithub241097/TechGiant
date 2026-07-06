@@ -1,0 +1,21 @@
+.tg-graph-paper {
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(170, 96, 200, 0.16) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(170, 96, 200, 0.16) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.tg-graph-paper--page {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.22;
+}
+
+.tg-graph-paper--overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0.14;
+}

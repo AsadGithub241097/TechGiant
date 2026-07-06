@@ -1,0 +1,82 @@
+rules_version = '2';
+
+// Deploy after edits: firebase deploy --only firestore:rules
+// Unmatched paths are denied by default — do not add a catch-all `/{document=**}` that can block valid access.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn() && (
+        request.auth.token.admin == true ||
+        (request.auth.token.email != null && (
+          request.auth.token.email.lower() == "asadmulla241097@gmail.com" ||
+          request.auth.token.email.lower() == "asadmulla2407@gmail.com"
+        ))
+      );
+    }
+
+    function ownsUserDoc(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    // User profile: owner may read/write their own doc; admins may read/update/delete any user doc
+    match /users/{userId} {
+      allow get: if ownsUserDoc(userId) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if signedIn() && request.auth.uid == userId;
+      allow update: if ownsUserDoc(userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /adminNotifications/{docId} {
+      allow create: if signedIn();
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /recordings/{docId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /sections/{docId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /recordingAccessRequests/{docId} {
+      allow read: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    match /sectionAccessRequests/{docId} {
+      allow read: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'pending';
+      allow update: if isAdmin() || (
+        signedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == request.auth.uid
+        && (
+          resource.data.status == 'denied'
+          || resource.data.status == 'pending'
+        )
+        && request.resource.data.status == 'pending'
+      );
+      allow delete: if isAdmin();
+    }
+
+    match /userRecordingProgress/{docId} {
+      allow read: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow delete: if isAdmin();
+    }
+  }
+}

@@ -1,284 +1,402 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/FirebaseAuthContext';
-import { useNavigate } from 'react-router-dom';
-import { User, Settings, Video, MessageCircle, LogOut, Mail, Phone, Calendar, Clock } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import {
+  User,
+  Video,
+  MessageCircle,
+  LogOut,
+  Mail,
+  Phone,
+  Calendar,
+  Clock,
+  Shield,
+  Home,
+  CheckCircle2,
+  Sparkles,
+} from 'lucide-react';
 import RecordingsTab from '../recordings/RecordingsTab';
+import { getAdminNotificationEmail, isAdmin } from '../../utils/adminUtils';
+import { openEmailCompose } from '../../utils/emailUtils';
+import Icon from '../../icons/techgiant';
+
+type DashboardTab = 'profile' | 'recordings' | 'contact';
+
+const formatDate = (value: unknown): string => {
+  if (!value) return 'N/A';
+  if (typeof value === 'object' && value !== null && 'toDate' in value) {
+    return (value as { toDate: () => Date }).toDate().toLocaleDateString();
+  }
+  return new Date(value as string).toLocaleDateString();
+};
 
 const UserDashboard: React.FC = () => {
   const { appUser, logout } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('profile');
+  const [activeTab, setActiveTab] = useState<DashboardTab>('profile');
+  const [contactSubject, setContactSubject] = useState('');
+  const [contactMessage, setContactMessage] = useState('');
 
   if (!appUser) return null;
+
+  const userIsAdmin = isAdmin(appUser.email);
+  const supportEmail = getAdminNotificationEmail() || 'Info@tech-giant.in';
 
   const handleLogout = async () => {
     await logout();
     navigate('/');
   };
 
-  const tabs = [
-    { id: 'profile', label: 'User Details', icon: User },
+  const handleContactSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    const subject = contactSubject.trim() || 'Dashboard Support Request';
+    const body = `Hi Tech Giant Team,
+
+${contactMessage.trim() || 'I need assistance with my account or recordings.'}
+
+---
+From: ${appUser.name}
+Email: ${appUser.email}
+Sent from User Dashboard`;
+    openEmailCompose(subject, body, supportEmail);
+  };
+
+  const tabs: { id: DashboardTab; label: string; icon: typeof User }[] = [
+    { id: 'profile', label: 'Overview', icon: User },
     { id: 'recordings', label: 'Recordings', icon: Video },
-    { id: 'sessions', label: 'Recorded Sessions', icon: Video },
-    { id: 'contact', label: 'Contact Us', icon: MessageCircle }
+    { id: 'contact', label: 'Support', icon: MessageCircle },
   ];
 
-  const mockSessions = [
-    {
-      id: '1',
-      title: 'VAPT Training Session 1',
-      date: '2024-01-15',
-      duration: '2h 30m',
-      status: 'completed',
-      thumbnail: 'https://via.placeholder.com/300x200'
-    },
-    {
-      id: '2',
-      title: 'Web Development Basics',
-      date: '2024-01-10',
-      duration: '1h 45m',
-      status: 'completed',
-      thumbnail: 'https://via.placeholder.com/300x200'
-    },
-    {
-      id: '3',
-      title: 'Digital Marketing Strategy',
-      date: '2024-01-05',
-      duration: '3h 15m',
-      status: 'completed',
-      thumbnail: 'https://via.placeholder.com/300x200'
-    }
-  ];
+  const displayName =
+    appUser.name?.trim() ||
+    [appUser.firstName, appUser.lastName].filter(Boolean).join(' ') ||
+    appUser.email.split('@')[0];
+
+  const tabButtonClass = (tabId: DashboardTab) =>
+    `flex items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium transition-all duration-300 ${
+      activeTab === tabId
+        ? 'bg-gradient-to-r from-carousel2/25 to-carousel1/20 text-white shadow-lg shadow-carousel2/10 border border-carousel2/30'
+        : 'text-gray-300 hover:bg-white/5 hover:text-white border border-transparent'
+    }`;
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="relative min-h-screen bg-bgColor">
+      <div
+        className="pointer-events-none absolute inset-0"
+        aria-hidden
+        style={{
+          background: `
+            radial-gradient(ellipse 110% 70% at 0% 0%, rgba(126,34,206,0.28) 0%, transparent 55%),
+            radial-gradient(ellipse 90% 60% at 100% 100%, rgba(80,0,115,0.22) 0%, transparent 50%),
+            #0A0A0A
+          `,
+        }}
+      />
 
-      <div className="relative">
-        {/* Header */}
-        <div className="bg-black border-b border-gray-700">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              <div className="flex items-center space-x-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-primary-gray to-brand-light rounded-full flex items-center justify-center">
+      <div className="relative z-10">
+        <header className="border-b border-white/10 bg-navBg/80 backdrop-blur-xl">
+          <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center gap-4">
+              <Link to="/" className="hidden sm:block opacity-90 transition-opacity hover:opacity-100">
+                <Icon height={32} width={64} />
+              </Link>
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-carousel2/30 bg-gradient-to-br from-carousel2/30 to-carousel1/20">
                   {appUser.profilePicture ? (
-                    <img src={appUser.profilePicture} alt={appUser.name} className="w-full h-full rounded-full object-cover" />
+                    <img
+                      src={appUser.profilePicture}
+                      alt={displayName}
+                      className="h-full w-full object-cover"
+                    />
                   ) : (
-                    <User className="w-6 h-6 text-white" />
+                    <span className="text-sm font-bold text-carousel3">
+                      {displayName.charAt(0).toUpperCase()}
+                    </span>
                   )}
                 </div>
                 <div>
-                  <h1 className="text-xl font-semibold text-white">Welcome, {appUser.name}</h1>
-                  <p className="text-sm text-white">Dashboard</p>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-base font-semibold text-white sm:text-lg">{displayName}</h1>
+                    {userIsAdmin && (
+                      <span className="inline-flex items-center rounded-full border border-yellow-500/30 bg-yellow-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-yellow-300">
+                        <Shield className="mr-1 h-3 w-3" />
+                        Admin
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-400">Learning Dashboard</p>
                 </div>
               </div>
-              <button
-                onClick={handleLogout}
-                className="flex items-center space-x-2 px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg transition-colors duration-300"
+            </div>
+
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Link
+                to="/"
+                className="hidden rounded-lg border border-white/10 p-2 text-gray-300 transition-colors hover:bg-white/5 hover:text-white sm:inline-flex"
+                aria-label="Home"
               >
-                <LogOut className="w-4 h-4" />
-                <span>Logout</span>
+                <Home className="h-4 w-4" />
+              </Link>
+              {userIsAdmin && (
+                <button
+                  type="button"
+                  onClick={() => navigate('/admin')}
+                  className="hidden items-center gap-2 rounded-lg border border-carousel2/30 bg-carousel2/10 px-3 py-2 text-sm text-carousel3 transition-colors hover:bg-carousel2/20 sm:flex"
+                >
+                  <Shield className="h-4 w-4" />
+                  <span>Admin Portal</span>
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-300 transition-colors hover:bg-red-500/20"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:inline">Logout</span>
               </button>
             </div>
           </div>
-        </div>
+        </header>
 
-        {/* Main Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Sidebar */}
-            <div className="lg:col-span-1">
-              <div className="bg-gray-900 rounded-xl border border-gray-700 p-6">
-                <nav className="space-y-2">
-                  {tabs.map((tab) => {
-                    const Icon = tab.icon;
-                    return (
-                      <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors duration-300 ${
-                          activeTab === tab.id
-                            ? 'bg-gray-700 text-white'
-                            : 'text-white hover:bg-gray-800 hover:text-white'
-                        }`}
-                      >
-                        <Icon className="w-5 h-5" />
-                        <span>{tab.label}</span>
-                      </button>
-                    );
-                  })}
-                </nav>
-              </div>
-            </div>
-
-            {/* Content Area */}
-            <div className="lg:col-span-3">
-              <div className="bg-gray-900 rounded-xl border border-gray-700 p-6">
-                {activeTab === 'profile' && (
-                  <div className="space-y-6">
-                    <h2 className="text-2xl font-bold text-white mb-6">User Details</h2>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-4">
-                        <div className="bg-gray-900 rounded-lg p-4 border border-gray-700">
-                          <label className="block text-sm font-medium text-white mb-2">Full Name</label>
-                          <div className="flex items-center space-x-3">
-                            <User className="w-5 h-5 text-carousel2" />
-                            <span className="text-white">{appUser.name}</span>
-                          </div>
-                        </div>
-
-                        <div className="bg-gray-900 rounded-lg p-4 border border-gray-700">
-                          <label className="block text-sm font-medium text-white mb-2">Email Address</label>
-                          <div className="flex items-center space-x-3">
-                            <Mail className="w-5 h-5 text-carousel2" />
-                            <span className="text-white">{appUser.email}</span>
-                          </div>
-                        </div>
-
-                        <div className="bg-gray-900 rounded-lg p-4 border border-gray-700">
-                          <label className="block text-sm font-medium text-white mb-2">Login Method</label>
-                          <div className="flex items-center space-x-3">
-                            <Settings className="w-5 h-5 text-carousel2" />
-                            <span className="text-white capitalize">{appUser.loginMethod}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="space-y-4">
-                        <div className="bg-gray-900 rounded-lg p-4 border border-gray-700">
-                          <label className="block text-sm font-medium text-white mb-2">Account Status</label>
-                          <div className="flex items-center space-x-3">
-                            <div className={`w-3 h-3 rounded-full ${
-                              appUser.status === 'approved' ? 'bg-green-500' : 
-                              appUser.status === 'pending' ? 'bg-yellow-500' : 'bg-red-500'
-                            }`}></div>
-                            <span className="text-white capitalize">{appUser.status}</span>
-                          </div>
-                        </div>
-
-                        <div className="bg-gray-900 rounded-lg p-4 border border-gray-700">
-                          <label className="block text-sm font-medium text-white mb-2">Member Since</label>
-                          <div className="flex items-center space-x-3">
-                            <Calendar className="w-5 h-5 text-carousel2" />
-                            <span className="text-white">{appUser.createdAt ? (appUser.createdAt.toDate ? appUser.createdAt.toDate().toLocaleDateString() : new Date(appUser.createdAt).toLocaleDateString()) : 'N/A'}</span>
-                          </div>
-                        </div>
-
-                        {appUser.approvedAt && (
-                          <div className="bg-gray-900 rounded-lg p-4 border border-gray-700">
-                            <label className="block text-sm font-medium text-white mb-2">Approved On</label>
-                            <div className="flex items-center space-x-3">
-                              <Clock className="w-5 h-5 text-carousel2" />
-                              <span className="text-white">{appUser.approvedAt.toDate ? appUser.approvedAt.toDate().toLocaleDateString() : new Date(appUser.approvedAt).toLocaleDateString()}</span>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'recordings' && (
-                  <RecordingsTab />
-                )}
-
-                {activeTab === 'sessions' && (
-                  <div className="space-y-6">
-                    <h2 className="text-2xl font-bold text-white mb-6">Recorded Sessions</h2>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {mockSessions.map((session) => (
-                        <div key={session.id} className="bg-gray-900/50 rounded-lg overflow-hidden border border-gray-700 hover:border-carousel2/50 transition-colors duration-300">
-                          <div className="aspect-video bg-gray-800 relative">
-                            <img 
-                              src={session.thumbnail} 
-                              alt={session.title}
-                              className="w-full h-full object-cover"
-                            />
-                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-                              <button className="bg-carousel2 hover:bg-carousel1 text-white rounded-full p-3 transition-colors duration-300">
-                                <Video className="w-6 h-6" />
-                              </button>
-                            </div>
-                          </div>
-                          <div className="p-4">
-                            <h3 className="font-semibold text-white mb-2">{session.title}</h3>
-                            <div className="flex items-center justify-between text-sm text-white">
-                              <span>{session.date}</span>
-                              <span>{session.duration}</span>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'contact' && (
-                  <div className="space-y-6">
-                    <h2 className="text-2xl font-bold text-white mb-6">Contact Us</h2>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      <div className="space-y-6">
-                        <div className="bg-gray-900 rounded-lg p-6 border border-gray-700">
-                          <h3 className="text-lg font-semibold text-white mb-4">Get in Touch</h3>
-                          <div className="space-y-4">
-                            <div className="flex items-center space-x-3">
-                              <Phone className="w-5 h-5 text-carousel2" />
-                              <div>
-                                <p className="text-white text-sm">Support Phone</p>
-                                <a href="tel:+918008771893" className="text-white hover:text-carousel2 transition-colors duration-300">
-                                  +91 8008771893
-                                </a>
-                              </div>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                              <Mail className="w-5 h-5 text-carousel2" />
-                              <div>
-                                <p className="text-white text-sm">Support Email</p>
-                <a href="mailto:asadmulla241097@gmail.com" className="text-white hover:text-carousel2 transition-colors duration-300">
-                  asadmulla241097@gmail.com
-                </a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="space-y-6">
-                        <form className="bg-gray-900 rounded-lg p-6 space-y-4 border border-gray-700">
-                          <h3 className="text-lg font-semibold text-white mb-4">Send Message</h3>
-                          <div>
-                            <label className="block text-sm font-medium text-white mb-2">Subject</label>
-                            <input
-                              type="text"
-                              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-carousel2 focus:border-transparent"
-                              placeholder="Enter subject"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-white mb-2">Message</label>
-                            <textarea
-                              rows={4}
-                              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-carousel2 focus:border-transparent"
-                              placeholder="Enter your message"
-                            ></textarea>
-                          </div>
-                          <button
-                            type="submit"
-                            className="w-full bg-gradient-to-r from-carousel2 to-carousel1 hover:from-carousel1 hover:to-carousel2 text-white py-2 px-4 rounded-lg transition-all duration-300"
-                          >
-                            Send Message
-                          </button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+        <div className="border-b border-white/10 bg-navBg/40 lg:hidden">
+          <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-4 py-3 sm:px-6">
+            {tabs.map((tab) => {
+              const TabIcon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                    activeTab === tab.id
+                      ? 'bg-carousel2/20 text-white'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  <TabIcon className="h-4 w-4" />
+                  {tab.label}
+                </button>
+              );
+            })}
           </div>
         </div>
+
+        <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
+            <aside className="hidden lg:col-span-3 lg:block">
+              <div className="sticky top-8 space-y-4">
+                <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur-sm">
+                  <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-carousel3/80">
+                    Navigation
+                  </p>
+                  <nav className="space-y-2">
+                    {tabs.map((tab) => {
+                      const TabIcon = tab.icon;
+                      return (
+                        <button
+                          key={tab.id}
+                          type="button"
+                          onClick={() => setActiveTab(tab.id)}
+                          className={`w-full ${tabButtonClass(tab.id)}`}
+                        >
+                          <TabIcon className="h-5 w-5 shrink-0" />
+                          <span>{tab.label}</span>
+                        </button>
+                      );
+                    })}
+                    {userIsAdmin && (
+                      <button
+                        type="button"
+                        onClick={() => navigate('/admin')}
+                        className="mt-2 flex w-full items-center gap-3 rounded-xl border border-carousel2/30 bg-carousel2/10 px-4 py-3 text-left text-sm font-medium text-carousel3 transition-colors hover:bg-carousel2/20"
+                      >
+                        <Shield className="h-5 w-5" />
+                        Admin Portal
+                      </button>
+                    )}
+                  </nav>
+                </div>
+
+                <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-carousel2/10 to-transparent p-5">
+                  <div className="mb-2 flex items-center gap-2 text-carousel3">
+                    <Sparkles className="h-4 w-4" />
+                    <span className="text-sm font-semibold">Quick tip</span>
+                  </div>
+                  <p className="text-sm leading-relaxed text-gray-400">
+                    Request access to a recording section, then watch all videos in that section once approved.
+                  </p>
+                </div>
+              </div>
+            </aside>
+
+            <section className="lg:col-span-9">
+              {activeTab === 'profile' && (
+                <div className="space-y-6">
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-sm sm:p-8">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-carousel3/80">
+                      Welcome back
+                    </p>
+                    <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
+                      Hello, {displayName.split(' ')[0]}
+                    </h2>
+                    <p className="mt-2 max-w-2xl text-sm text-gray-400">
+                      Manage your profile, request recording access, and continue your learning from one place.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('recordings')}
+                      className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-carousel2 to-carousel1 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-carousel2/20 transition-all hover:shadow-carousel2/40"
+                    >
+                      <Video className="h-4 w-4" />
+                      Browse Recordings
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    {[
+                      { label: 'Full Name', value: displayName, icon: User },
+                      { label: 'Email Address', value: appUser.email, icon: Mail },
+                      {
+                        label: 'Account Status',
+                        value: appUser.status,
+                        icon: CheckCircle2,
+                        accent:
+                          appUser.status === 'approved'
+                            ? 'text-green-400'
+                            : appUser.status === 'pending'
+                              ? 'text-yellow-400'
+                              : 'text-red-400',
+                      },
+                      {
+                        label: 'Login Method',
+                        value: appUser.loginMethod,
+                        icon: Shield,
+                      },
+                      {
+                        label: 'Member Since',
+                        value: formatDate(appUser.createdAt),
+                        icon: Calendar,
+                      },
+                      ...(appUser.approvedAt
+                        ? [
+                            {
+                              label: 'Approved On',
+                              value: formatDate(appUser.approvedAt),
+                              icon: Clock,
+                            },
+                          ]
+                        : []),
+                    ].map((item) => {
+                      const ItemIcon = item.icon;
+                      return (
+                        <div
+                          key={item.label}
+                          className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-sm"
+                        >
+                          <div className="mb-3 flex items-center gap-2 text-carousel3">
+                            <ItemIcon className="h-4 w-4" />
+                            <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                              {item.label}
+                            </span>
+                          </div>
+                          <p className={`text-base font-medium capitalize text-white ${'accent' in item ? item.accent : ''}`}>
+                            {item.value}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'recordings' && <RecordingsTab />}
+
+              {activeTab === 'contact' && (
+                <div className="space-y-6">
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-sm sm:p-8">
+                    <h2 className="text-2xl font-bold text-white">Support</h2>
+                    <p className="mt-2 text-sm text-gray-400">
+                      Need help with recordings, access, or your account? Reach our team directly.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                    <div className="space-y-4">
+                      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+                        <h3 className="text-lg font-semibold text-white">Contact Details</h3>
+                        <div className="mt-5 space-y-5">
+                          <a
+                            href="tel:+918008771893"
+                            className="flex items-start gap-4 rounded-xl border border-white/5 bg-white/[0.02] p-4 transition-colors hover:border-carousel2/30"
+                          >
+                            <div className="rounded-lg bg-carousel2/15 p-2 text-carousel3">
+                              <Phone className="h-5 w-5" />
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-500">Phone</p>
+                              <p className="font-medium text-white">+91 8008771893</p>
+                            </div>
+                          </a>
+                          <a
+                            href={`mailto:${supportEmail}`}
+                            className="flex items-start gap-4 rounded-xl border border-white/5 bg-white/[0.02] p-4 transition-colors hover:border-carousel2/30"
+                          >
+                            <div className="rounded-lg bg-carousel2/15 p-2 text-carousel3">
+                              <Mail className="h-5 w-5" />
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-500">Email</p>
+                              <p className="font-medium text-white">{supportEmail}</p>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+
+                    <form
+                      onSubmit={handleContactSubmit}
+                      className="rounded-2xl border border-white/10 bg-white/[0.03] p-6"
+                    >
+                      <h3 className="text-lg font-semibold text-white">Send a Message</h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        Opens your email app with a pre-filled support message.
+                      </p>
+                      <div className="mt-5 space-y-4">
+                        <div>
+                          <label className="mb-2 block text-sm font-medium text-gray-300">Subject</label>
+                          <input
+                            type="text"
+                            value={contactSubject}
+                            onChange={(e) => setContactSubject(e.target.value)}
+                            className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-white placeholder-gray-500 focus:border-carousel2/50 focus:outline-none focus:ring-2 focus:ring-carousel2/20"
+                            placeholder="Recording access / account help"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-2 block text-sm font-medium text-gray-300">Message</label>
+                          <textarea
+                            rows={5}
+                            value={contactMessage}
+                            onChange={(e) => setContactMessage(e.target.value)}
+                            className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-white placeholder-gray-500 focus:border-carousel2/50 focus:outline-none focus:ring-2 focus:ring-carousel2/20"
+                            placeholder="Tell us how we can help..."
+                          />
+                        </div>
+                        <button
+                          type="submit"
+                          className="w-full rounded-lg bg-gradient-to-r from-carousel2 to-carousel1 py-3 text-sm font-semibold text-white shadow-lg shadow-carousel2/20 transition-all hover:shadow-carousel2/40"
+                        >
+                          Send via Email
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              )}
+            </section>
+          </div>
+        </main>
       </div>
     </div>
   );

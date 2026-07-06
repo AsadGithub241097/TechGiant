@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Globe, Smartphone, ShoppingCart, Zap, Server, Shield } from 'lucide-react';
-import { openConsultationEmail } from '../../utils/emailUtils';
+import DevelopmentConsultationButton from '../../components/ui/DevelopmentConsultationButton';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -102,7 +102,7 @@ const DevServices = () => {
             viewport={{ once: true }}
           >
             Achieve Your Business Goals
-            <span className="text-blue-400 block">
+            <span className="block bg-gradient-to-r from-carousel3 to-carousel2 bg-clip-text text-transparent">
               With Web Development Solutions
             </span>
           </motion.h2>
@@ -166,12 +166,12 @@ const DevServices = () => {
             <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
               Let's discuss your requirements and create a custom solution that drives your business forward.
             </p>
-            <button 
-              className="px-8 py-4 bg-gradient-to-r from-carousel2 to-carousel1 text-white font-semibold rounded-xl hover:from-carousel1 hover:to-carousel3 transition-all duration-300 shadow-lg hover:shadow-carousel2/25 hover:scale-105"
-              onClick={() => openConsultationEmail('Development', 'Services')}
+            <DevelopmentConsultationButton
+              section="Services"
+              className="inline-block px-8 py-4 bg-gradient-to-r from-carousel2 to-carousel1 text-white font-semibold rounded-xl hover:from-carousel1 hover:to-carousel3 transition-all duration-300 shadow-lg hover:shadow-carousel2/25 hover:scale-105"
             >
               Get Free Consultation
-            </button>
+            </DevelopmentConsultationButton>
           </div>
         </motion.div>
       </div>

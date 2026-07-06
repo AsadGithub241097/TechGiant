@@ -96,24 +96,8 @@ body:has(.lms-header-container) {
 
 /* Prevent white background on over-scroll */
 html, body {
-  background-color: #11071F !important;
+  background-color: #0A0A0A !important;
   overscroll-behavior: none;
-}
-
-/* Notification animations */
-@keyframes slide-in {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-.animate-slide-in {
-  animation: slide-in 0.3s ease-out;
 }
 
 

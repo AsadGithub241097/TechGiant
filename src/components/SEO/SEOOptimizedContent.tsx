@@ -1,4 +1,5 @@
 import React from 'react';
+import { siteUrl } from '../../constants/siteConfig';
 
 // SEO-optimized content components for better keyword ranking
 
@@ -35,6 +36,7 @@ export const SEOHomePageContent: React.FC = () => {
       {/* Semantic HTML structure for better SEO */}
       <main itemScope itemType="https://schema.org/Organization">
         <span itemProp="name" className="sr-only">Tech Giant</span>
+        <link itemProp="url" href={siteUrl('/')} />
         <span itemProp="description" className="sr-only">
           Leading IT services company specializing in web development, QA, digital marketing, and training
         </span>

@@ -1,231 +1,167 @@
-import React, { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Crown, Clock, Target, RefreshCw, CheckCircle, Users, BookOpen, Award } from "lucide-react";
+import React from "react";
+import { motion } from "framer-motion";
+import {
+  Crown,
+  Clock,
+  Target,
+  RefreshCw,
+  CheckCircle2,
+  Sparkles,
+  ArrowUpRight,
+} from "lucide-react";
+import {
+  SectionBackground,
+  Eyebrow,
+  GradientText,
+  SpotlightCard,
+} from "../ui/sectionDecor";
 
-gsap.registerPlugin(ScrollTrigger);
+const features = [
+  {
+    icon: Crown,
+    title: "Industry Leaders",
+    description:
+      "Learn directly from seasoned experts shaping software testing in Hyderabad.",
+    accent: "from-amber-400 to-orange-500",
+  },
+  {
+    icon: Clock,
+    title: "Learn At Your Pace",
+    description:
+      "Flexible, self-paced modules designed to fit around your schedule.",
+    accent: "from-sky-400 to-cyan-500",
+  },
+  {
+    icon: Target,
+    title: "Placement Community",
+    description:
+      "Tap into a thriving network of mentors, peers and hiring partners.",
+    accent: "from-emerald-400 to-green-500",
+  },
+  {
+    icon: RefreshCw,
+    title: "Hands-on Projects",
+    description:
+      "Build real-world confidence with practical projects and live case studies.",
+    accent: "from-fuchsia-400 to-violet-500",
+  },
+];
+
+const benefits = [
+  "Expert-led training that bridges theory and practice",
+  "Proven track record of successful placements",
+  "Unparalleled expertise in software training in Hyderabad",
+];
+
+const stats = [
+  { value: "500+", label: "Students Placed" },
+  { value: "95%", label: "Success Rate" },
+  { value: "1000+", label: "Graduates" },
+];
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, delay: i * 0.08 },
+  }),
+};
 
 const WhyChooseUs: React.FC = () => {
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const leftRef = useRef<HTMLDivElement | null>(null);
-  const rightRef = useRef<HTMLDivElement | null>(null);
-  const featureCards = useRef<(HTMLDivElement | null)[]>([]);
-  // const [hoveredCard, setHoveredCard] = useState<number | null>(null); // Removed unused state
-
-  useEffect(() => {
-    if (!sectionRef.current || !leftRef.current || !rightRef.current) return;
-
-    let ctx = gsap.context(() => {
-      // Initial setup - ensure content is visible before animation
-      gsap.set([leftRef.current, rightRef.current, ...featureCards.current], { opacity: 1 });
-      
-      // Section animation
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 75%",
-          end: "top 50%",
-          toggleActions: "play none none none",
-        }
-      });
-
-      // Animate from initial positions (but don't hide initially)
-      tl.from(leftRef.current, {
-        x: -80,
-        duration: 0.8,
-        ease: "power3.out"
-      }).from(
-        rightRef.current, 
-        { x: 80, duration: 0.8, ease: "power3.out" },
-        "-=0.4"
-      );
-
-      // Staggered animation for feature cards
-      gsap.from(featureCards.current, {
-        y: 30,
-        duration: 0.6,
-        stagger: 0.15,
-        delay: 0.4,
-        scrollTrigger: {
-          trigger: rightRef.current,
-          start: "top 70%",
-          toggleActions: "play none none none"
-        }
-      });
-    });
-
-    return () => ctx.revert();
-  }, []);
-
-  const addToRefs = (el: HTMLDivElement | null, index: number) => {
-    if (el && !featureCards.current.includes(el)) {
-      featureCards.current[index] = el;
-    }
-  };
-
-  const features = [
-    {
-      icon: Crown,
-      title: "Best Industry Leaders",
-      description: "Learn from the best industry leaders in software testing in Hyderabad.",
-      color: "from-yellow-400 to-orange-500"
-    },
-    {
-      icon: Clock,
-      title: "Learn At Your Own Pace",
-      description: "Flexible learning at your own pace for optimal progress.",
-      color: "from-blue-400 to-cyan-500"
-    },
-    {
-      icon: Target,
-      title: "Placement Community",
-      description: "Join our thriving placement community and connect with industry professionals.",
-      color: "from-green-400 to-emerald-500"
-    },
-    {
-      icon: RefreshCw,
-      title: "Hands-on Projects",
-      description: "Practical experience with real-world projects and case studies.",
-      color: "from-purple-400 to-violet-500"
-    }
-  ];
-
-  const benefits = [
-    "Expert-led training that bridges theory and practice",
-    "Proven track record of successful placements in the software testing industry",
-    "Unparalleled expertise in software training in Hyderabad"
-  ];
-
   return (
-    <section
-      ref={sectionRef}
-      className="relative bg-gradient-to-b from-bgColor via-gray-900/50 to-bgColor text-white py-12 sm:py-16 lg:py-24 overflow-hidden"
-    >
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-carousel2/5 via-transparent to-transparent"></div>
-      
-      {/* Enhanced decorative elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-0 w-32 sm:w-48 lg:w-64 h-32 sm:h-48 lg:h-64 bg-gradient-to-br from-carousel2/20 to-carousel1/20 rounded-full filter blur-3xl opacity-30"></div>
-        <div className="absolute bottom-0 right-0 w-40 sm:w-60 lg:w-80 h-40 sm:h-60 lg:h-80 bg-gradient-to-br from-carousel1/20 to-carousel3/20 rounded-full filter blur-3xl opacity-30"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 sm:w-72 lg:w-96 h-48 sm:h-72 lg:h-96 bg-gradient-to-br from-carousel3/10 to-carousel2/10 rounded-full filter blur-3xl opacity-20"></div>
-      </div>
+    <section className="relative w-full overflow-hidden py-20 sm:py-28">
+      <SectionBackground />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row items-start justify-between gap-8 sm:gap-12 lg:gap-16">
-          {/* Left Section - Enhanced */}
-          <div 
-            ref={leftRef} 
-            className="lg:w-1/2 z-10 relative"
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          {/* Left — narrative */}
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
           >
-            {/* Modern badge */}
-            <div className="inline-flex items-center space-x-2 px-3 sm:px-4 py-2 mb-4 sm:mb-6 bg-gradient-to-r from-carousel2/20 to-carousel1/20 backdrop-blur-sm border border-carousel2/30 rounded-full">
-              <Award className="w-3 h-3 sm:w-4 sm:h-4 text-carousel3" />
-              <span className="text-xs sm:text-sm font-semibold tracking-wider text-carousel3 uppercase">
-                Features of Our Courses
-              </span>
-            </div>
-
-            {/* Modern heading */}
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 sm:mb-8 leading-tight font-sans">
-              Why{" "}
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-carousel3 to-carousel2 animate-pulse">
-                Choose
-              </span>{" "}
-              Us?
+            <Eyebrow icon={Sparkles}>Why Choose Us</Eyebrow>
+            <h2 className="mt-5 text-3xl font-extrabold leading-tight text-white sm:text-4xl lg:text-5xl">
+              The smart way to <GradientText>level up</GradientText> your career
             </h2>
+            <p className="mt-5 max-w-lg text-base leading-relaxed text-gray-400">
+              We pair industry-grade curriculum with real mentorship and a
+              community that has your back — long after the course ends.
+            </p>
 
-            {/* Enhanced benefits list */}
-            <ul className="space-y-4 sm:space-y-6 mb-6 sm:mb-8">
+            <ul className="mt-8 space-y-4">
               {benefits.map((item, index) => (
-                <li key={index} className="group flex items-start space-x-3 sm:space-x-4">
-                  <div className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 mt-1 bg-gradient-to-br from-carousel2 to-carousel1 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-                  </div>
-                  <span className="text-sm sm:text-base lg:text-lg text-gray-300 group-hover:text-white transition-colors duration-300 leading-relaxed">
+                <motion.li
+                  key={index}
+                  initial={{ opacity: 0, x: -16 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: 0.1 + index * 0.1 }}
+                  className="flex items-start gap-3"
+                >
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-carousel3" />
+                  <span className="text-sm leading-relaxed text-gray-300 sm:text-base">
                     {item}
                   </span>
-                </li>
+                </motion.li>
               ))}
             </ul>
 
-            {/* Stats section */}
-            <div className="grid grid-cols-2 gap-4 sm:gap-6 mt-6 sm:mt-8">
-              <div className="text-center p-3 sm:p-4 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl border border-carousel2/20 backdrop-blur-sm">
-                <div className="text-lg sm:text-xl lg:text-2xl font-bold text-carousel2 mb-1">500+</div>
-                <div className="text-xs sm:text-sm text-gray-400">Students Placed</div>
-              </div>
-              <div className="text-center p-3 sm:p-4 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl border border-carousel2/20 backdrop-blur-sm">
-                <div className="text-lg sm:text-xl lg:text-2xl font-bold text-carousel2 mb-1">95%</div>
-                <div className="text-xs sm:text-sm text-gray-400">Success Rate</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Section - Modern Cards */}
-          <div
-            ref={rightRef}
-            className="lg:w-1/2 z-10 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6"
-          >
-            {features.map((feature, index) => {
-              const IconComponent = feature.icon;
-              return (
-                <div 
-                  key={index}
-                  ref={el => addToRefs(el, index)}
-                  className="group relative cursor-pointer"
-                  onMouseEnter={() => {/* Future hover logic */}}
-                  onMouseLeave={() => {/* Future hover logic */}}
+            {/* Stat strip */}
+            <div className="mt-10 grid grid-cols-3 gap-3 sm:gap-4">
+              {stats.map((stat) => (
+                <div
+                  key={stat.label}
+                  className="rounded-2xl glass-panel p-4 text-center"
                 >
-                  {/* Modern feature card */}
-                  <div className="relative p-4 sm:p-6 bg-gradient-to-br from-gray-800/50 via-bgColor to-gray-800/50 backdrop-blur-sm border border-carousel2/30 rounded-xl sm:rounded-2xl group-hover:border-carousel2/60 transition-all duration-500 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-carousel2/25 h-full">
-                    {/* Glow effect */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-carousel2/10 via-transparent to-carousel1/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl sm:rounded-2xl"></div>
-                    
-                    {/* Content */}
-                    <div className="relative z-10">
-                      {/* Icon with gradient background */}
-                      <div className={`inline-flex p-2 sm:p-3 mb-3 sm:mb-4 bg-gradient-to-br ${feature.color} rounded-lg sm:rounded-xl group-hover:scale-110 transition-transform duration-300`}>
-                        <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                      </div>
-
-                      {/* Title */}
-                      <h3 className="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-carousel3 group-hover:to-carousel2 transition-all duration-300">
-                        {feature.title}
-                      </h3>
-
-                      {/* Description */}
-                      <p className="text-gray-400 text-xs sm:text-sm leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
-                        {feature.description}
-                      </p>
-                    </div>
-
-                    {/* Bottom gradient line */}
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-carousel2/50 to-transparent group-hover:via-carousel1 transition-all duration-500 rounded-b-2xl"></div>
-
-                    {/* Animated border */}
-                    <div className="absolute inset-0 rounded-2xl border-2 border-carousel2/30 opacity-0 group-hover:opacity-100 group-hover:animate-pulse transition-opacity duration-300"></div>
+                  <div className="bg-gradient-to-r from-carousel4 to-carousel2 bg-clip-text text-2xl font-extrabold text-transparent sm:text-3xl">
+                    {stat.value}
+                  </div>
+                  <div className="mt-1 text-[11px] uppercase tracking-wide text-gray-500 sm:text-xs">
+                    {stat.label}
                   </div>
                 </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Right — feature bento */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <motion.div
+                  key={feature.title}
+                  custom={index}
+                  variants={cardVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-60px" }}
+                >
+                  <SpotlightCard className="h-full p-6">
+                    <div
+                      className={`mb-4 inline-flex rounded-xl bg-gradient-to-br ${feature.accent} p-3 shadow-lg transition-transform duration-300 group-hover:scale-110`}
+                    >
+                      <Icon className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="text-lg font-bold text-white">
+                        {feature.title}
+                      </h3>
+                      <ArrowUpRight className="h-5 w-5 flex-shrink-0 text-gray-600 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-carousel3" />
+                    </div>
+                    <p className="mt-2 text-sm leading-relaxed text-gray-400">
+                      {feature.description}
+                    </p>
+                  </SpotlightCard>
+                </motion.div>
               );
             })}
           </div>
         </div>
-
-        {/* Bottom CTA section */}
-        <div className="mt-16 text-center">
-          <div className="inline-flex items-center space-x-2 text-gray-500 text-sm">
-            <Users className="w-4 h-4 text-carousel2" />
-            <span>Join <span className="text-carousel2 font-semibold">1000+</span> successful graduates</span>
-            <span className="mx-4">•</span>
-            <BookOpen className="w-4 h-4 text-carousel2" />
-            <span><span className="text-carousel2 font-semibold">Industry-verified</span> curriculum</span>
-          </div>
-        </div>
       </div>
-
-      {/* Bottom gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-bgColor to-transparent"></div>
     </section>
   );
 };

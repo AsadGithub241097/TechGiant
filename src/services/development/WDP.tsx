@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Lightbulb, Settings, Palette, Code, Rocket, ArrowRight } from "lucide-react";
-import { openConsultationEmail } from "../../utils/emailUtils";
+import DevelopmentConsultationButton from "../../components/ui/DevelopmentConsultationButton";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -187,7 +187,7 @@ const WebDevelopmentProcess: React.FC = () => {
             viewport={{ once: true }}
           >
             Leverage Our Proven
-            <span className="text-purple-400 block">
+            <span className="block bg-gradient-to-r from-carousel3 to-carousel2 bg-clip-text text-transparent">
               Web Development Process
             </span>
           </motion.h2>
@@ -260,12 +260,12 @@ const WebDevelopmentProcess: React.FC = () => {
             <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
               Let's discuss your project requirements and create a roadmap for success.
             </p>
-            <button 
-              className="px-8 py-4 bg-gradient-to-r from-carousel3 to-carousel2 text-white font-semibold rounded-xl hover:from-carousel2 hover:to-carousel1 transition-all duration-300 shadow-lg hover:shadow-carousel3/25 hover:scale-105"
-              onClick={() => openConsultationEmail('Development', 'Process')}
+            <DevelopmentConsultationButton
+              section="Process"
+              className="inline-block px-8 py-4 bg-gradient-to-r from-carousel3 to-carousel2 text-white font-semibold rounded-xl hover:from-carousel2 hover:to-carousel1 transition-all duration-300 shadow-lg hover:shadow-carousel3/25 hover:scale-105"
             >
               Start Your Project
-            </button>
+            </DevelopmentConsultationButton>
           </div>
         </motion.div>
       </div>

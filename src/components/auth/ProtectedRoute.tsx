@@ -1,11 +1,15 @@
 import React from 'react';
 import { useAuth } from '../../contexts/FirebaseAuthContext';
 import { Navigate } from 'react-router-dom';
+import { isAdmin } from '../../utils/adminUtils';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
   adminOnly?: boolean;
 }
+
+const requireEmailVerification =
+  import.meta.env.VITE_REQUIRE_EMAIL_VERIFICATION === 'true';
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, adminOnly = false }) => {
   const { currentUser, appUser, isLoading, isAuthenticated } = useAuth();
@@ -21,19 +25,47 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, adminOnly = f
     );
   }
 
-  if (!currentUser || !appUser || !isAuthenticated) {
+  if (!currentUser || !appUser) {
     return <Navigate to="/login" replace />;
   }
 
+  if (
+    requireEmailVerification &&
+    !currentUser.emailVerified &&
+    appUser.status === 'approved'
+  ) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-brand-dark via-primary-accent to-brand-dark flex items-center justify-center px-4">
+        <div className="max-w-md w-full text-center">
+          <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-6 mb-6">
+            <h2 className="text-xl font-semibold text-amber-400 mb-2">Verify your email</h2>
+            <p className="text-primary-gray mb-4">
+              Please verify your email address to access your account. Check your inbox for the
+              verification link.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              window.location.href = '/login';
+            }}
+            className="bg-gradient-to-r from-primary-accent to-primary-gray text-brand-light px-6 py-2 rounded-lg transition-all duration-300"
+          >
+            Back to login
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const userIsAdmin = isAdmin(appUser.email);
+  const hasApprovedAccount = appUser.status === 'approved';
+  const emailVerifiedOk =
+    !requireEmailVerification || currentUser.emailVerified === true;
+
   // Check admin access
   if (adminOnly) {
-    // Admin emails - add more admin emails here if needed
-    const adminEmails = [
-      'asadmulla241097@gmail.com',
-      'asadmulla2407@gmail.com' // Added your current email
-    ];
-    const isAdmin = adminEmails.includes(appUser.email);
-    if (!isAdmin) {
+    if (!userIsAdmin || !hasApprovedAccount) {
       return (
         <div className="min-h-screen bg-gradient-to-br from-brand-dark via-primary-accent to-brand-dark flex items-center justify-center px-4">
           <div className="max-w-md w-full text-center">
@@ -58,6 +90,32 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, adminOnly = f
         </div>
       );
     }
+
+    if (!emailVerifiedOk) {
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-brand-dark via-primary-accent to-brand-dark flex items-center justify-center px-4">
+          <div className="max-w-md w-full text-center">
+            <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-6 mb-6">
+              <h2 className="text-xl font-semibold text-amber-400 mb-2">Verify your email</h2>
+              <p className="text-primary-gray mb-4">
+                Please verify your admin email address before opening the admin portal.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                window.location.href = '/login';
+              }}
+              className="bg-gradient-to-r from-primary-accent to-primary-gray text-brand-light px-6 py-2 rounded-lg transition-all duration-300"
+            >
+              Back to login
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return <>{children}</>;
   }
 
   // Check user status for regular routes
@@ -123,6 +181,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, adminOnly = f
         </div>
       </div>
     );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
   }
 
   return <>{children}</>;

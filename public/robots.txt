@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://techgiant.com/sitemap.xml
+Sitemap: https://tech-giant.in/sitemap.xml
 
 # Crawl-delay for respectful crawling
 Crawl-delay: 1

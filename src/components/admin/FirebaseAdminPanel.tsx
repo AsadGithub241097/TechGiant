@@ -1,15 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Users, 
   UserCheck, 
   UserX, 
-  Mail, 
-  Calendar, 
   Filter,
   Search,
-  MoreVertical,
   Eye,
-  Edit,
   Trash2,
   Download,
   RefreshCw,
@@ -17,11 +13,15 @@ import {
   AlertTriangle,
   CheckCircle,
   Clock,
-  Send,
   Key
 } from 'lucide-react';
-import { firebaseAdminService, FirebaseUser, UserStats } from '../../services/firebaseAdminService';
-import RecordingAccessTab from './RecordingAccessTab';
+import {
+  firebaseAdminService,
+  FirebaseUser,
+  UserStats,
+  AdminRegistrationNotification,
+} from '../../services/firebaseAdminService';
+import RecordingAccessTab, { type RecordingAccessTabHandle } from './RecordingAccessTab';
 
 const FirebaseAdminPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'users' | 'recordings'>('users');
@@ -34,10 +34,13 @@ const FirebaseAdminPanel: React.FC = () => {
   const [showUserModal, setShowUserModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<FirebaseUser | null>(null);
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [pendingRegistrations, setPendingRegistrations] = useState<AdminRegistrationNotification[]>([]);
+  const recordingsTabRef = useRef<RecordingAccessTabHandle>(null);
 
   useEffect(() => {
     fetchUsers();
     fetchStats();
+    fetchPendingRegistrations();
   }, [statusFilter, searchTerm]);
 
   const showNotification = (message: string, type: 'success' | 'error') => {
@@ -67,12 +70,28 @@ const FirebaseAdminPanel: React.FC = () => {
     }
   };
 
+  const fetchPendingRegistrations = async () => {
+    try {
+      const notifications = await firebaseAdminService.getPendingRegistrationNotifications();
+      setPendingRegistrations(notifications);
+    } catch (error) {
+      console.error('Error fetching registration notifications:', error);
+    }
+  };
+
+  const handleRefresh = async () => {
+    if (activeTab === 'users') {
+      await Promise.all([fetchUsers(), fetchStats(), fetchPendingRegistrations()]);
+      return;
+    }
+    await recordingsTabRef.current?.refresh();
+  };
+
   const updateUserStatus = async (userId: string, status: 'approved' | 'denied') => {
     try {
       const success = await firebaseAdminService.updateUserStatus(userId, status);
       if (success) {
-        await fetchUsers();
-        await fetchStats();
+        await Promise.all([fetchUsers(), fetchStats(), fetchPendingRegistrations()]);
         showNotification(`User ${status} successfully!`, 'success');
       } else {
         showNotification(`Failed to ${status.toLowerCase()} user`, 'error');
@@ -190,11 +209,10 @@ const FirebaseAdminPanel: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black">
-
+    <div className="min-h-screen bg-bgColor">
       <div className="relative">
         {/* Header */}
-        <div className="bg-black border-b border-gray-700">
+        <div className="bg-navBg/90 border-b border-white/10 backdrop-blur-xl">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center space-x-4">
@@ -207,7 +225,8 @@ const FirebaseAdminPanel: React.FC = () => {
                 </div>
               </div>
               <button
-                onClick={() => activeTab === 'users' ? fetchUsers() : null}
+                type="button"
+                onClick={() => void handleRefresh()}
                 className="flex items-center space-x-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors duration-300"
               >
                 <RefreshCw className="w-4 h-4" />
@@ -218,7 +237,7 @@ const FirebaseAdminPanel: React.FC = () => {
         </div>
 
         {/* Tabs */}
-        <div className="bg-gray-900 border-b border-gray-700">
+        <div className="bg-navBg/80 border-b border-white/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex space-x-1">
               <button
@@ -289,6 +308,47 @@ const FirebaseAdminPanel: React.FC = () => {
             </div>
           </div>
 
+          {pendingRegistrations.length > 0 && (
+            <div className="bg-gray-900 rounded-xl border border-yellow-500/30 p-6 mb-8">
+              <h3 className="text-lg font-semibold text-white mb-4 flex items-center space-x-2">
+                <Clock className="w-5 h-5 text-yellow-400" />
+                <span>Pending Registration Requests ({pendingRegistrations.length})</span>
+              </h3>
+              <div className="space-y-3">
+                {pendingRegistrations.map((request) => (
+                  <div
+                    key={request.id}
+                    className="flex flex-col gap-3 rounded-lg border border-gray-700 bg-gray-800 p-4 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div>
+                      <p className="font-medium text-white">{request.userName || request.userEmail}</p>
+                      <p className="text-sm text-gray-400">{request.userEmail}</p>
+                      <p className="mt-1 text-xs text-gray-500">
+                        {request.loginMethod} • {new Date(request.createdAt).toLocaleString()}
+                      </p>
+                    </div>
+                    <div className="flex space-x-2">
+                      <button
+                        type="button"
+                        onClick={() => updateUserStatus(request.userId, 'approved')}
+                        className="rounded-lg bg-green-600 px-4 py-2 text-white transition-colors hover:bg-green-700"
+                      >
+                        Approve
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => updateUserStatus(request.userId, 'denied')}
+                        className="rounded-lg bg-red-600 px-4 py-2 text-white transition-colors hover:bg-red-700"
+                      >
+                        Deny
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Controls */}
           <div className="bg-gray-900 rounded-xl border border-gray-700 p-6 mb-8">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
@@ -310,7 +370,7 @@ const FirebaseAdminPanel: React.FC = () => {
                   <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white w-4 h-4" />
                   <select
                     value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value as any)}
+                    onChange={(e) => setStatusFilter(e.target.value as 'all' | 'pending' | 'approved' | 'denied')}
                     className="pl-10 pr-8 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent appearance-none"
                   >
                     <option value="all">All Status</option>
@@ -520,7 +580,7 @@ const FirebaseAdminPanel: React.FC = () => {
 
         {activeTab === 'recordings' && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <RecordingAccessTab />
+            <RecordingAccessTab ref={recordingsTabRef} />
           </div>
         )}
       </div>

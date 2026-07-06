@@ -3,13 +3,16 @@ import {
   doc, 
   getDoc, 
   getDocs, 
+  addDoc,
   setDoc, 
   updateDoc, 
   deleteDoc,
   query, 
   where, 
   serverTimestamp,
-  Timestamp
+  type DocumentSnapshot,
+  type FieldValue,
+  type Timestamp,
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
@@ -22,7 +25,7 @@ export interface Recording {
   duration?: string;
   category?: string;
   section?: string; // Section name (e.g., "Section 1", "Section 2", etc.)
-  createdAt: any;
+  createdAt: Timestamp | FieldValue | string;
   createdBy: string;
   isActive: boolean;
 }
@@ -31,18 +34,34 @@ export interface RecordingAccess {
   userId: string;
   recordingId: string;
   status: 'pending' | 'approved' | 'denied';
-  requestedAt: any;
-  approvedAt?: any;
+  requestedAt: Timestamp | FieldValue | string;
+  approvedAt?: Timestamp | FieldValue | string;
   approvedBy?: string;
 }
 
 export interface SectionAccess {
+  requestId?: string;
   userId: string;
+  userName?: string;
+  userEmail?: string;
   section: string;
   status: 'pending' | 'approved' | 'denied';
-  requestedAt: any;
-  approvedAt?: any;
+  requestedAt: Timestamp | FieldValue | string;
+  approvedAt?: Timestamp | FieldValue | string;
   approvedBy?: string;
+}
+
+export type SectionAccessRequestCode =
+  | 'created'
+  | 'already_pending'
+  | 'already_approved'
+  | 'reopened'
+  | 'error';
+
+export interface SectionAccessRequestResult {
+  success: boolean;
+  code: SectionAccessRequestCode;
+  message: string;
 }
 
 export interface Section {
@@ -50,7 +69,7 @@ export interface Section {
   name: string;
   description?: string;
   order: number;
-  createdAt: any;
+  createdAt: Timestamp | FieldValue | string;
   createdBy: string;
   isActive: boolean;
 }
@@ -59,7 +78,7 @@ export interface UserRecordingProgress {
   userId: string;
   recordingId: string;
   progress: number; // 0-100
-  lastWatchedAt: any;
+  lastWatchedAt: Timestamp | FieldValue | string;
   completed: boolean;
   watchedDuration: number; // in seconds
   totalDuration: number; // in seconds
@@ -304,7 +323,7 @@ class RecordingsService {
       const accessId = `${userId}_${recordingId}`;
       const docRef = doc(db, this.accessRequestsCollection, accessId);
       
-      const updateData: any = {
+      const updateData = {
         status,
         approvedBy,
         approvedAt: serverTimestamp()
@@ -429,32 +448,215 @@ class RecordingsService {
 
   // ========== SECTION ACCESS METHODS ==========
 
-  // Request access to a section
-  async requestSectionAccess(userId: string, section: string): Promise<boolean> {
-    if (!this.isFirebaseAvailable()) {
-      return false;
+  private normalizeSectionName(section: string): string {
+    return section.trim();
+  }
+
+  private legacySectionAccessDocIds(userId: string, section: string): string[] {
+    const normalized = this.normalizeSectionName(section);
+    return [
+      `${userId}_${normalized}`,
+      `${userId}_${section}`,
+      `${userId}__${encodeURIComponent(normalized)}`,
+      normalized,
+    ];
+  }
+
+  private mapSectionAccessDoc(
+    docSnap: DocumentSnapshot,
+  ): SectionAccess {
+    const data = docSnap.data() ?? {};
+    let userId = String(data.userId ?? '');
+    let section = String(data.section ?? '');
+
+    if (!section || !userId) {
+      const id = docSnap.id;
+      if (id.includes('__')) {
+        const [maybeUserId, ...rest] = id.split('__');
+        userId = userId || maybeUserId;
+        try {
+          section = section || decodeURIComponent(rest.join('__'));
+        } catch {
+          section = section || rest.join('__');
+        }
+      } else {
+        const splitIndex = id.indexOf('_');
+        if (splitIndex > 0) {
+          userId = userId || id.slice(0, splitIndex);
+          section = section || id.slice(splitIndex + 1).trim();
+        } else if (!section) {
+          section = id;
+        }
+      }
     }
 
+    return {
+      requestId: docSnap.id,
+      userId,
+      userName: data.userName as string | undefined,
+      userEmail: data.userEmail as string | undefined,
+      section: this.normalizeSectionName(section),
+      status: (data.status as SectionAccess['status']) ?? 'pending',
+      requestedAt: data.requestedAt as SectionAccess['requestedAt'],
+      approvedAt: data.approvedAt as SectionAccess['approvedAt'],
+      approvedBy: data.approvedBy as string | undefined,
+    };
+  }
+
+  private async findSectionAccessDoc(
+    userId: string,
+    section: string,
+  ): Promise<DocumentSnapshot | null> {
+    const normalizedSection = this.normalizeSectionName(section);
+
     try {
-      const accessId = `${userId}_${section}`;
-      const docRef = doc(db, this.sectionAccessCollection, accessId);
-      
-      // Check if request already exists
-      const existingDoc = await getDoc(docRef);
-      if (existingDoc.exists()) {
-        return false; // Request already exists
+      const byFields = query(
+        collection(db, this.sectionAccessCollection),
+        where('userId', '==', userId),
+        where('section', '==', normalizedSection),
+      );
+      const fieldMatches = await getDocs(byFields);
+      if (!fieldMatches.empty) {
+        return fieldMatches.docs[0];
+      }
+    } catch (error) {
+      console.warn('Section access field query failed, trying legacy doc IDs:', error);
+    }
+
+    for (const legacyId of this.legacySectionAccessDocIds(userId, normalizedSection)) {
+      try {
+        const legacyRef = doc(db, this.sectionAccessCollection, legacyId);
+        const legacySnap = await getDoc(legacyRef);
+        if (!legacySnap.exists()) continue;
+
+        const mapped = this.mapSectionAccessDoc(legacySnap);
+        const idBelongsToUser =
+          legacyId.startsWith(`${userId}_`) || legacyId.startsWith(`${userId}__`);
+        if (idBelongsToUser || !mapped.userId || mapped.userId === userId) {
+          return legacySnap;
+        }
+      } catch {
+        // Ignore unreadable legacy docs and continue.
+      }
+    }
+
+    return null;
+  }
+
+  private dedupeSectionAccessRequests(requests: SectionAccess[]): SectionAccess[] {
+    const byKey = new Map<string, SectionAccess>();
+
+    for (const request of requests) {
+      const key = `${request.userId}::${request.section}`;
+      const existing = byKey.get(key);
+      if (!existing) {
+        byKey.set(key, request);
+        continue;
       }
 
-      await setDoc(docRef, {
-        userId,
-        section,
+      const existingTime = this.getTimestampMillis(existing.requestedAt);
+      const nextTime = this.getTimestampMillis(request.requestedAt);
+      if (nextTime >= existingTime) {
+        byKey.set(key, request);
+      }
+    }
+
+    return Array.from(byKey.values());
+  }
+
+  private getTimestampMillis(value: SectionAccess['requestedAt']): number {
+    if (!value) return 0;
+    if (typeof value === 'object' && value !== null && 'toDate' in value) {
+      return (value as Timestamp).toDate().getTime();
+    }
+    return new Date(value as string).getTime();
+  }
+
+  // Request access to a section
+  async requestSectionAccess(
+    userId: string,
+    section: string,
+    userName?: string,
+    userEmail?: string,
+  ): Promise<SectionAccessRequestResult> {
+    if (!this.isFirebaseAvailable()) {
+      return {
+        success: false,
+        code: 'error',
+        message: 'Recording service is unavailable. Please try again later.',
+      };
+    }
+
+    const normalizedSection = this.normalizeSectionName(section);
+    const identityFields = {
+      userId,
+      section: normalizedSection,
+      ...(userName ? { userName } : {}),
+      ...(userEmail ? { userEmail } : {}),
+    };
+
+    try {
+      const existingDoc = await this.findSectionAccessDoc(userId, normalizedSection);
+
+      if (existingDoc) {
+        const existing = this.mapSectionAccessDoc(existingDoc);
+
+        if (existing.status === 'approved') {
+          return {
+            success: false,
+            code: 'already_approved',
+            message: `You already have access to ${normalizedSection}.`,
+          };
+        }
+
+        if (existing.status === 'pending') {
+          await updateDoc(existingDoc.ref, {
+            ...identityFields,
+            requestedAt: serverTimestamp(),
+          });
+          return {
+            success: true,
+            code: 'already_pending',
+            message: `Your request for ${normalizedSection} is already pending admin approval.`,
+          };
+        }
+
+        await updateDoc(existingDoc.ref, {
+          ...identityFields,
+          status: 'pending',
+          requestedAt: serverTimestamp(),
+          approvedAt: null,
+          approvedBy: null,
+        });
+        return {
+          success: true,
+          code: 'reopened',
+          message: `Access request for ${normalizedSection} submitted again for admin review.`,
+        };
+      }
+
+      await addDoc(collection(db, this.sectionAccessCollection), {
+        ...identityFields,
         status: 'pending',
-        requestedAt: serverTimestamp()
+        requestedAt: serverTimestamp(),
       });
-      return true;
+
+      return {
+        success: true,
+        code: 'created',
+        message: `Access request for ${normalizedSection} submitted! Admin will review it.`,
+      };
     } catch (error) {
       console.error('Error requesting section access:', error);
-      return false;
+      const firebaseError = error as { code?: string; message?: string };
+      return {
+        success: false,
+        code: 'error',
+        message:
+          firebaseError.code === 'permission-denied'
+            ? 'Unable to submit request due to permissions. Please log out and log in again.'
+            : firebaseError.message || 'Failed to request access. Please try again.',
+      };
     }
   }
 
@@ -473,12 +675,13 @@ class RecordingsService {
       }
       
       const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({
-        ...doc.data()
-      } as SectionAccess));
+      const mapped = querySnapshot.docs.map((requestDoc) =>
+        this.mapSectionAccessDoc(requestDoc),
+      );
+      return this.dedupeSectionAccessRequests(mapped);
     } catch (error) {
       console.error('Error fetching section access requests:', error);
-      return [];
+      throw error;
     }
   }
 
@@ -494,9 +697,10 @@ class RecordingsService {
         where('userId', '==', userId)
       );
       const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({
-        ...doc.data()
-      } as SectionAccess));
+      const mapped = querySnapshot.docs.map((requestDoc) =>
+        this.mapSectionAccessDoc(requestDoc),
+      );
+      return this.dedupeSectionAccessRequests(mapped);
     } catch (error) {
       console.error('Error fetching user section access requests:', error);
       return [];
@@ -515,16 +719,21 @@ class RecordingsService {
     }
 
     try {
-      const accessId = `${userId}_${section}`;
-      const docRef = doc(db, this.sectionAccessCollection, accessId);
-      
-      const updateData: any = {
+      const existingDoc = await this.findSectionAccessDoc(userId, section);
+      if (!existingDoc) {
+        console.error('Section access request not found for update:', userId, section);
+        return false;
+      }
+
+      const updateData = {
+        userId,
+        section: this.normalizeSectionName(section),
         status,
         approvedBy,
-        approvedAt: serverTimestamp()
+        approvedAt: serverTimestamp(),
       };
 
-      await updateDoc(docRef, updateData);
+      await updateDoc(existingDoc.ref, updateData);
       return true;
     } catch (error) {
       console.error('Error updating section access request:', error);
@@ -539,15 +748,9 @@ class RecordingsService {
     }
 
     try {
-      const accessId = `${userId}_${section}`;
-      const docRef = doc(db, this.sectionAccessCollection, accessId);
-      const docSnap = await getDoc(docRef);
-      
-      if (docSnap.exists()) {
-        const data = docSnap.data() as SectionAccess;
-        return data.status === 'approved';
-      }
-      return false;
+      const existingDoc = await this.findSectionAccessDoc(userId, section);
+      if (!existingDoc) return false;
+      return this.mapSectionAccessDoc(existingDoc).status === 'approved';
     } catch (error) {
       console.error('Error checking section access:', error);
       return false;

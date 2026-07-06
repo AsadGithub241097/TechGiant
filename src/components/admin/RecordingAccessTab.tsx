@@ -1,32 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useImperativeHandle, forwardRef } from 'react';
 import { 
   CheckCircle, 
   XCircle, 
   Clock, 
   Video, 
   User as UserIcon, 
-  Mail, 
-  Calendar,
   Plus,
   Loader2,
   AlertCircle,
-  Play,
   Eye,
   Trash2,
   Edit,
   Save,
-  X
+  X,
+  ChevronDown,
+  ChevronRight
 } from 'lucide-react';
 import { 
   recordingsService, 
   Recording, 
-  RecordingAccess,
   SectionAccess,
   Section
 } from '../../services/recordingsService';
 import { firebaseAdminService } from '../../services/firebaseAdminService';
+import { useAuth } from '../../contexts/FirebaseAuthContext';
+import { getAdminNotificationEmail } from '../../utils/adminUtils';
+import { resolveUserDisplayName } from '../../utils/userDisplay';
 
-const RecordingAccessTab: React.FC = () => {
+export type RecordingAccessTabHandle = {
+  refresh: () => Promise<void>;
+};
+
+const RecordingAccessTab = forwardRef<RecordingAccessTabHandle>((_, ref) => {
+  const { currentUser } = useAuth();
+  const adminActorEmail = useMemo(
+    () => currentUser?.email?.trim() || getAdminNotificationEmail() || '',
+    [currentUser?.email],
+  );
   const [activeView, setActiveView] = useState<'requests' | 'recordings' | 'add' | 'sections'>('requests');
   const [sectionAccessRequests, setSectionAccessRequests] = useState<(SectionAccess & { userName?: string; userEmail?: string })[]>([]);
   const [recordings, setRecordings] = useState<Recording[]>([]);
@@ -49,38 +59,67 @@ const RecordingAccessTab: React.FC = () => {
   const [sectionEditName, setSectionEditName] = useState('');
   const [newSectionName, setNewSectionName] = useState('');
   const [newSectionDescription, setNewSectionDescription] = useState('');
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    loadData();
+    void loadData();
   }, []);
 
   const loadData = async () => {
     setLoading(true);
     try {
-      // Load section access requests
-      const requests = await recordingsService.getAllSectionAccessRequests();
-      
-      // Enrich requests with user info
-      const enrichedRequests = await Promise.all(
-        requests.map(async (request) => {
-          const user = await firebaseAdminService.getUserById(request.userId);
-          return {
-            ...request,
-            userName: user?.name || 'Unknown',
-            userEmail: user?.email || 'Unknown'
-          };
-        })
-      );
-      
+      let requests: Awaited<ReturnType<typeof recordingsService.getAllSectionAccessRequests>>;
+      try {
+        requests = await recordingsService.getAllSectionAccessRequests();
+      } catch (error) {
+        console.error('Admin could not load section access requests:', error);
+        setMessage({
+          type: 'error',
+          text: 'Unable to load recording access requests. Confirm your admin email is authorized in Firestore rules.',
+        });
+        requests = [];
+      }
+
+      const usersMap = await firebaseAdminService.getUsersMap();
+
+      const enrichedRequests = requests.map((request) => {
+        const user = usersMap.get(request.userId);
+        return {
+          ...request,
+          userName:
+            request.userName ||
+            resolveUserDisplayName(user ?? { email: request.userEmail }),
+          userEmail: request.userEmail || user?.email || 'Unknown',
+        };
+      });
+
       setSectionAccessRequests(enrichedRequests);
 
-      // Load all recordings
+      // Load all recordings and sort by createdAt (oldest first - FIFO)
       const allRecordings = await recordingsService.getAllRecordings();
-      setRecordings(allRecordings);
+      // Sort by createdAt ascending (oldest first)
+      const sortedRecordings = allRecordings.sort((a, b) => {
+        const aTime = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 
+                     (a.createdAt ? new Date(a.createdAt).getTime() : 0);
+        const bTime = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 
+                     (b.createdAt ? new Date(b.createdAt).getTime() : 0);
+        return aTime - bTime; // Ascending order (oldest first - FIFO)
+      });
+      setRecordings(sortedRecordings);
 
       // Load all sections
       const allSections = await recordingsService.getAllSectionsWithMetadata();
       setSections(allSections);
+      
+      // Auto-expand all sections when data is loaded so admins can see all videos
+      if (sortedRecordings.length > 0) {
+        const allSectionNames = new Set(
+          sortedRecordings
+            .map(r => r.section || 'Uncategorized')
+            .filter(Boolean)
+        );
+        setExpandedSections(allSectionNames);
+      }
     } catch (error) {
       console.error('Error loading data:', error);
       setMessage({ type: 'error', text: 'Failed to load data' });
@@ -89,14 +128,17 @@ const RecordingAccessTab: React.FC = () => {
     }
   };
 
+  useImperativeHandle(ref, () => ({
+    refresh: loadData,
+  }));
+
   const handleApproveSectionRequest = async (userId: string, section: string) => {
     try {
-      const adminEmail = 'asadmulla241097@gmail.com'; // Get from context in production
       const success = await recordingsService.updateSectionAccessRequest(
         userId,
         section,
         'approved',
-        adminEmail
+        adminActorEmail
       );
       
       if (success) {
@@ -105,19 +147,18 @@ const RecordingAccessTab: React.FC = () => {
       } else {
         setMessage({ type: 'error', text: 'Failed to approve access' });
       }
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: 'Error approving access' });
     }
   };
 
   const handleDenySectionRequest = async (userId: string, section: string) => {
     try {
-      const adminEmail = 'asadmulla241097@gmail.com';
       const success = await recordingsService.updateSectionAccessRequest(
         userId,
         section,
         'denied',
-        adminEmail
+        adminActorEmail
       );
       
       if (success) {
@@ -126,7 +167,7 @@ const RecordingAccessTab: React.FC = () => {
       } else {
         setMessage({ type: 'error', text: 'Failed to deny access' });
       }
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: 'Error denying access' });
     }
   };
@@ -140,8 +181,6 @@ const RecordingAccessTab: React.FC = () => {
     }
 
     try {
-      const adminEmail = 'asadmulla241097@gmail.com';
-      
       // Check if section exists, if not create it
       const sectionExists = sections.some(s => s.name === newRecording.section.trim());
       if (!sectionExists && newRecording.section.trim()) {
@@ -151,7 +190,7 @@ const RecordingAccessTab: React.FC = () => {
           name: newRecording.section.trim(),
           description: '',
           order: maxOrder + 1,
-          createdBy: adminEmail,
+          createdBy: adminActorEmail,
           isActive: true
         });
         
@@ -171,7 +210,7 @@ const RecordingAccessTab: React.FC = () => {
         duration: newRecording.duration,
         category: newRecording.category,
         section: newRecording.section.trim(),
-        createdBy: adminEmail,
+        createdBy: adminActorEmail,
         isActive: true
       });
 
@@ -180,17 +219,20 @@ const RecordingAccessTab: React.FC = () => {
         setNewRecording({ title: '', description: '', youtubeUrl: '', duration: '', category: '', section: '' });
         setActiveView('recordings');
         await loadData();
+        // Auto-expand the section where the new recording was added
+        if (newRecording.section.trim()) {
+          setExpandedSections(prev => new Set(prev).add(newRecording.section.trim()));
+        }
       } else {
         setMessage({ type: 'error', text: 'Failed to add recording' });
       }
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: 'Error adding recording' });
     }
   };
 
   const handleQuickAddRecording = async () => {
     try {
-      const adminEmail = 'asadmulla241097@gmail.com';
       const recordingId = await recordingsService.createRecording({
         title: 'Software Architecture',
         description: 'Testing Fundamentals',
@@ -198,7 +240,7 @@ const RecordingAccessTab: React.FC = () => {
         duration: '',
         category: 'Training',
         section: sections.length > 0 ? sections[0].name : 'Section 1', // Use first section if available
-        createdBy: adminEmail,
+        createdBy: adminActorEmail,
         isActive: true
       });
 
@@ -209,7 +251,7 @@ const RecordingAccessTab: React.FC = () => {
       } else {
         setMessage({ type: 'error', text: 'Failed to add recording' });
       }
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: 'Error adding recording' });
     }
   };
@@ -227,7 +269,7 @@ const RecordingAccessTab: React.FC = () => {
       } else {
         setMessage({ type: 'error', text: 'Failed to delete recording' });
       }
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: 'Error deleting recording' });
     }
   };
@@ -259,7 +301,7 @@ const RecordingAccessTab: React.FC = () => {
       } else {
         setMessage({ type: 'error', text: 'Failed to update section' });
       }
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: 'Error updating section' });
     }
   };
@@ -271,13 +313,12 @@ const RecordingAccessTab: React.FC = () => {
     }
 
     try {
-      const adminEmail = 'asadmulla241097@gmail.com';
       const maxOrder = sections.length > 0 ? Math.max(...sections.map(s => s.order)) : 0;
       const sectionId = await recordingsService.createSection({
         name: newSectionName.trim(),
         description: newSectionDescription.trim(),
         order: maxOrder + 1,
-        createdBy: adminEmail,
+        createdBy: adminActorEmail,
         isActive: true
       });
 
@@ -289,7 +330,7 @@ const RecordingAccessTab: React.FC = () => {
       } else {
         setMessage({ type: 'error', text: 'Failed to create section' });
       }
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: 'Error creating section' });
     }
   };
@@ -307,7 +348,7 @@ const RecordingAccessTab: React.FC = () => {
       } else {
         setMessage({ type: 'error', text: 'Failed to delete section' });
       }
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: 'Error deleting section' });
     }
   };
@@ -315,6 +356,57 @@ const RecordingAccessTab: React.FC = () => {
   const pendingRequests = sectionAccessRequests.filter(req => req.status === 'pending');
   const approvedRequests = sectionAccessRequests.filter(req => req.status === 'approved');
   const deniedRequests = sectionAccessRequests.filter(req => req.status === 'denied');
+
+  // Group recordings by section and sort within each section (oldest first - FIFO)
+  const recordingsBySection = useMemo(() => {
+    const grouped: Record<string, Recording[]> = {};
+    
+    recordings.forEach(recording => {
+      const sectionName = recording.section || 'Uncategorized';
+      if (!grouped[sectionName]) {
+        grouped[sectionName] = [];
+      }
+      grouped[sectionName].push(recording);
+    });
+    
+    // Sort recordings within each section by createdAt (oldest first - FIFO)
+    Object.keys(grouped).forEach(sectionName => {
+      grouped[sectionName].sort((a, b) => {
+        const aTime = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 
+                     (a.createdAt ? new Date(a.createdAt).getTime() : 0);
+        const bTime = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 
+                     (b.createdAt ? new Date(b.createdAt).getTime() : 0);
+        return aTime - bTime; // Ascending order (oldest first - FIFO)
+      });
+    });
+    
+    return grouped;
+  }, [recordings]);
+
+  // Get section order based on sections array
+  const getSectionOrder = (sectionName: string): number => {
+    const section = sections.find(s => s.name === sectionName);
+    return section ? section.order : 999;
+  };
+
+  // Sort sections by order
+  const sortedSectionNames = useMemo(() => {
+    return Object.keys(recordingsBySection).sort((a, b) => {
+      return getSectionOrder(a) - getSectionOrder(b);
+    });
+  }, [recordingsBySection, sections]);
+
+  const toggleSection = (sectionName: string) => {
+    setExpandedSections(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(sectionName)) {
+        newSet.delete(sectionName);
+      } else {
+        newSet.add(sectionName);
+      }
+      return newSet;
+    });
+  };
 
   if (loading) {
     return (
@@ -427,7 +519,7 @@ const RecordingAccessTab: React.FC = () => {
               <div className="space-y-4">
                 {pendingRequests.map((request) => (
                   <div
-                    key={`${request.userId}_${request.section}`}
+                    key={request.requestId ?? `${request.userId}_${request.section}`}
                     className="bg-gray-800 rounded-lg p-4 border border-gray-700"
                   >
                     <div className="flex items-start justify-between">
@@ -492,7 +584,7 @@ const RecordingAccessTab: React.FC = () => {
               <div className="space-y-2">
                 {approvedRequests.map((request) => (
                   <div
-                    key={`${request.userId}_${request.section}`}
+                    key={request.requestId ?? `${request.userId}_${request.section}`}
                     className="bg-gray-800 rounded-lg p-3 border border-gray-700 flex items-center justify-between"
                   >
                     <div className="flex items-center space-x-3">
@@ -521,7 +613,7 @@ const RecordingAccessTab: React.FC = () => {
               <div className="space-y-2">
                 {deniedRequests.map((request) => (
                   <div
-                    key={`${request.userId}_${request.section}`}
+                    key={request.requestId ?? `${request.userId}_${request.section}`}
                     className="bg-gray-800 rounded-lg p-3 border border-gray-700 flex items-center justify-between"
                   >
                     <div className="flex items-center space-x-3">
@@ -547,49 +639,97 @@ const RecordingAccessTab: React.FC = () => {
           {recordings.length === 0 ? (
             <p className="text-gray-400 text-center py-8">No recordings available. Add one to get started!</p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {recordings.map((recording) => (
-                <div
-                  key={recording.id}
-                  className="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition-colors"
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-center space-x-3 flex-1 min-w-0">
-                      <Video className="w-5 h-5 text-white flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-white font-medium truncate">{recording.title}</h4>
-                        {recording.section && (
-                          <p className="text-blue-400 text-xs mt-1">Section: {recording.section}</p>
-                        )}
-                      </div>
-                    </div>
+            <div className="space-y-4">
+              {sortedSectionNames.map((sectionName) => {
+                const sectionRecordings = recordingsBySection[sectionName];
+                const isExpanded = expandedSections.has(sectionName);
+                const sectionInfo = sections.find(s => s.name === sectionName);
+                
+                return (
+                  <div
+                    key={sectionName}
+                    className="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden"
+                  >
+                    {/* Section Header */}
                     <button
-                      onClick={() => handleDeleteRecording(recording.id, recording.title)}
-                      className="ml-2 text-red-400 hover:text-red-300 transition-colors flex-shrink-0"
-                      title="Delete recording"
+                      onClick={() => toggleSection(sectionName)}
+                      className="w-full flex items-center justify-between p-4 hover:bg-gray-700 transition-colors text-left"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <div className="flex items-center space-x-3 flex-1">
+                        {isExpanded ? (
+                          <ChevronDown className="w-5 h-5 text-white flex-shrink-0" />
+                        ) : (
+                          <ChevronRight className="w-5 h-5 text-white flex-shrink-0" />
+                        )}
+                        <Video className="w-5 h-5 text-blue-400 flex-shrink-0" />
+                        <div>
+                          <h4 className="text-white font-semibold text-lg">{sectionName}</h4>
+                          <p className="text-gray-400 text-sm">
+                            {sectionRecordings.length} {sectionRecordings.length === 1 ? 'recording' : 'recordings'}
+                            {sectionInfo?.description && (
+                              <span className="ml-2">• {sectionInfo.description}</span>
+                            )}
+                          </p>
+                        </div>
+                      </div>
                     </button>
+                    
+                    {/* Section Recordings */}
+                    {isExpanded && (
+                      <div className="border-t border-gray-700 p-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {sectionRecordings.map((recording) => (
+                            <div
+                              key={recording.id}
+                              className="bg-gray-900 rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition-colors"
+                            >
+                              <div className="flex items-start justify-between mb-2">
+                                <div className="flex items-center space-x-3 flex-1 min-w-0">
+                                  <Video className="w-4 h-4 text-white flex-shrink-0" />
+                                  <div className="flex-1 min-w-0">
+                                    <h5 className="text-white font-medium truncate">{recording.title}</h5>
+                                    {recording.createdAt && (
+                                      <p className="text-gray-500 text-xs mt-1">
+                                        Added: {recording.createdAt?.toDate 
+                                          ? recording.createdAt.toDate().toLocaleDateString()
+                                          : new Date(recording.createdAt).toLocaleDateString()}
+                                      </p>
+                                    )}
+                                  </div>
+                                </div>
+                                <button
+                                  onClick={() => handleDeleteRecording(recording.id, recording.title)}
+                                  className="ml-2 text-red-400 hover:text-red-300 transition-colors flex-shrink-0"
+                                  title="Delete recording"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                              {recording.description && (
+                                <p className="text-gray-400 text-sm mb-2 line-clamp-2">{recording.description}</p>
+                              )}
+                              <div className="flex items-center justify-between mt-3">
+                                <span className="text-gray-400 text-xs">
+                                  {recording.duration || 'N/A'}
+                                </span>
+                                <a
+                                  href={recording.youtubeUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-400 hover:text-blue-300 text-xs flex items-center space-x-1"
+                                >
+                                  <Eye className="w-3 h-3" />
+                                  <span>View</span>
+                                </a>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  {recording.description && (
-                    <p className="text-gray-400 text-sm mb-2 line-clamp-2">{recording.description}</p>
-                  )}
-                  <div className="flex items-center justify-between mt-3">
-                    <span className="text-gray-400 text-xs">
-                      {recording.duration || 'N/A'}
-                    </span>
-                    <a
-                      href={recording.youtubeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-400 hover:text-blue-300 text-xs flex items-center space-x-1"
-                    >
-                      <Eye className="w-3 h-3" />
-                      <span>View</span>
-                    </a>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -845,6 +985,8 @@ const RecordingAccessTab: React.FC = () => {
       )}
     </div>
   );
-};
+});
+
+RecordingAccessTab.displayName = 'RecordingAccessTab';
 
 export default RecordingAccessTab;

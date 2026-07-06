@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, ExternalLink, Rocket, Eye } from "lucide-react";
-import { openConsultationEmail } from "../../utils/emailUtils";
+import DevelopmentConsultationButton from "../../components/ui/DevelopmentConsultationButton";
 import DevProjectScreen from "../development/devProjectScreen";
 import { VIDEO_URLS } from "../../constants/mediaUrls";
 
@@ -117,15 +117,14 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({
                     <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                   </a>
 
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <DevelopmentConsultationButton
+                    section="Project Inquiry"
+                    projectName={title}
                     className="group inline-flex items-center justify-center px-6 py-3 border border-carousel2/50 text-white font-semibold rounded-xl hover:bg-carousel2/10 transition-all duration-300 backdrop-blur-sm"
                   >
                     <span>Learn More</span>
                     <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </a>
+                  </DevelopmentConsultationButton>
                 </div>
 
                 {/* Project Stats */}
@@ -184,15 +183,14 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({
                     <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                   </a>
 
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <DevelopmentConsultationButton
+                    section="Project Inquiry"
+                    projectName={title}
                     className="group inline-flex items-center justify-center px-6 py-3 border border-carousel2/50 text-white font-semibold rounded-xl hover:bg-carousel2/10 transition-all duration-300 backdrop-blur-sm"
                   >
                     <span>Learn More</span>
                     <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </a>
+                  </DevelopmentConsultationButton>
                 </div>
 
                 {/* Project Stats */}
@@ -304,7 +302,7 @@ const ProjectsContaner = () => {
             viewport={{ once: true }}
           >
             Featured
-            <span className="text-cyan-400 block">
+            <span className="block bg-gradient-to-r from-carousel3 to-carousel2 bg-clip-text text-transparent">
               Success Stories
             </span>
           </motion.h2>
@@ -351,15 +349,13 @@ const ProjectsContaner = () => {
             <p className="text-gray-300 mb-8 max-w-2xl mx-auto text-lg">
               Join our portfolio of successful clients and let us help you create a digital solution that drives real results.
             </p>
-            <button 
-              className="px-8 py-4 bg-gradient-to-r from-carousel2 to-carousel3 text-white font-semibold rounded-xl hover:from-carousel3 hover:to-carousel1 transition-all duration-300 shadow-lg hover:shadow-carousel2/25 hover:scale-105"
-              onClick={() => openConsultationEmail('Development', 'Projects')}
+            <DevelopmentConsultationButton
+              section="Projects"
+              className="inline-flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-carousel2 to-carousel3 text-white font-semibold rounded-xl hover:from-carousel3 hover:to-carousel1 transition-all duration-300 shadow-lg hover:shadow-carousel2/25 hover:scale-105"
             >
-              <span className="flex items-center space-x-2">
-                <span>Start Your Project</span>
-                <ArrowRight className="w-5 h-5" />
-              </span>
-            </button>
+              <span>Start Your Project</span>
+              <ArrowRight className="w-5 h-5" />
+            </DevelopmentConsultationButton>
           </div>
         </motion.div>
       </div>

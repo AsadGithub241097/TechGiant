@@ -1,0 +1,351 @@
+.webgl-hero {
+  --tg-accent: #aa60c8;
+  --tg-accent-2: #d69ade;
+  --tg-white: #eee8de;
+  --tg-dim: rgba(238, 232, 222, 0.45);
+  --tg-bg: #1a1424;
+  --tg-bg-light: #221a2e;
+}
+
+.home-webgl-shell {
+  position: relative;
+  width: 100%;
+}
+
+.home-webgl-shell__content {
+  position: relative;
+  z-index: 2;
+}
+
+.webgl-hero__intro {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  color: var(--tg-white);
+}
+
+.webgl-hero__stage {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 1;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 45%, rgba(126, 34, 206, 0.28) 0%, transparent 58%),
+    radial-gradient(ellipse 75% 55% at 20% 18%, rgba(170, 96, 200, 0.22) 0%, transparent 52%),
+    radial-gradient(ellipse 60% 45% at 85% 75%, rgba(80, 0, 115, 0.15) 0%, transparent 50%),
+    linear-gradient(165deg, var(--tg-bg-light) 0%, var(--tg-bg) 45%, #15101c 100%);
+  color: var(--tg-white);
+  transition: visibility 0.3s ease, opacity 0.3s ease;
+}
+
+.webgl-hero__stage--hidden {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.webgl-hero__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: auto;
+}
+
+.webgl-hero__scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(0, 0, 0, 0.04) 3px,
+    rgba(0, 0, 0, 0.04) 4px
+  );
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0.3;
+  animation: webglHeroScan 8s linear infinite;
+}
+
+@keyframes webglHeroScan {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(4px);
+  }
+}
+
+.webgl-hero__glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  background: radial-gradient(
+    circle at 50% 46%,
+    rgba(170, 96, 200, 0.18) 0%,
+    transparent 58%
+  );
+  animation: webglHeroGlow 6s ease-in-out infinite;
+}
+
+.webgl-hero__vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+  background: radial-gradient(circle at 50% 46%, transparent 38%, rgba(0, 0, 0, 0.32) 100%);
+}
+
+@keyframes webglHeroGlow {
+  0%,
+  100% {
+    opacity: 0.65;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.webgl-hero__content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 5rem 1.5rem 2.5rem;
+  pointer-events: none;
+}
+
+.webgl-hero__content--intro {
+  min-height: 100vh;
+  justify-content: center;
+  padding: 0 1.5rem 2.5rem;
+}
+
+.webgl-hero__ring-anchor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 56rem;
+  margin-top: -2vh;
+}
+
+.webgl-hero__donut-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(72vw, 640px);
+  height: min(72vw, 640px);
+  text-align: center;
+}
+
+.webgl-hero__center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  max-width: 56rem;
+}
+
+.webgl-hero__title {
+  font-family: "Big Shoulders Stencil", "Doto", sans-serif;
+  font-size: clamp(2.75rem, 11vw, 8.5rem);
+  font-weight: 800;
+  line-height: 0.86;
+  letter-spacing: -0.04em;
+  opacity: 0;
+  transform: translateY(30px);
+  text-align: center;
+  text-transform: uppercase;
+  color: rgba(238, 232, 222, 0.92);
+  min-height: 1.78em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+.webgl-hero__title--in-ring {
+  font-size: clamp(3rem, 12vw, 9rem);
+  line-height: 0.86;
+  letter-spacing: 0.02em;
+  min-height: auto;
+  width: 100%;
+  max-width: 32rem;
+}
+
+.webgl-hero__title--flicker {
+  animation: webglHeroBrandPulse 1.2s ease-in-out infinite;
+}
+
+.webgl-hero__title--settled {
+  animation: webglHeroBrandGlow 4s ease-in-out infinite;
+}
+
+@keyframes webglHeroBrandPulse {
+  0%,
+  100% {
+    opacity: 0.88;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes webglHeroBrandGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 18px rgba(170, 96, 200, 0.2));
+  }
+  50% {
+    filter: drop-shadow(0 0 28px rgba(214, 154, 222, 0.38));
+  }
+}
+
+.webgl-hero__title-word {
+  display: block;
+  white-space: nowrap;
+}
+
+.webgl-hero__title-char-accent {
+  color: #d69ade;
+  text-shadow: 0 0 32px rgba(170, 96, 200, 0.55);
+}
+
+.webgl-hero__meta {
+  margin: 1.5rem 0 0;
+  padding: 0 1rem;
+  max-width: 42ch;
+  font-family: "Roboto", sans-serif;
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  font-weight: 400;
+  line-height: 1.65;
+  text-align: center;
+  color: var(--tg-dim);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: webglHeroMetaGlow 5s ease-in-out infinite;
+}
+
+.webgl-hero__meta--below-ring {
+  margin-top: clamp(1.75rem, 6vw, 3.25rem);
+  max-width: 36ch;
+}
+
+@keyframes webglHeroMetaGlow {
+  0%,
+  100% {
+    color: rgba(238, 232, 222, 0.4);
+  }
+  50% {
+    color: rgba(238, 232, 222, 0.55);
+  }
+}
+
+.webgl-hero__cta {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  opacity: 0;
+  pointer-events: all;
+}
+
+.webgl-hero__cta-label {
+  font-family: "Roboto", sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--tg-dim);
+}
+
+.webgl-hero__cta-arrow {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(170, 96, 200, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tg-accent-2);
+  transition: border-color 0.3s, background 0.3s;
+  animation: webglHeroFloat 2.5s ease-in-out infinite;
+}
+
+@keyframes webglHeroFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.webgl-hero__cta-arrow:hover {
+  border-color: var(--tg-accent);
+  background: rgba(170, 96, 200, 0.12);
+}
+
+@media (max-width: 768px) {
+  .webgl-hero__content--intro {
+    padding: 0 1rem 2rem;
+  }
+
+  .webgl-hero__ring-anchor {
+    margin-top: -1vh;
+  }
+
+  .webgl-hero__donut-slot {
+    width: min(88vw, 440px);
+    height: min(88vw, 440px);
+  }
+
+  .webgl-hero__title--in-ring {
+    font-size: clamp(2.6rem, 13vw, 5.75rem);
+    max-width: 20rem;
+  }
+
+  .webgl-hero__meta--below-ring {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .webgl-hero__meta {
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .webgl-hero__cta {
+    bottom: 2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .webgl-hero__cta-arrow,
+  .webgl-hero__title--flicker,
+  .webgl-hero__title--settled,
+  .webgl-hero__scanlines,
+  .webgl-hero__glow,
+  .webgl-hero__meta {
+    animation: none;
+  }
+}
